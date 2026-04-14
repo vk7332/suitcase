@@ -83,31 +83,37 @@ CREATE TRIGGER update_client_records_updated_at
 create index idx_calculation_history_created_at on calculation_history(created_at desc);
 
 
-create table clients (
-  id uuid primary key default uuid_generate_v4(),
-  name text,
-  phone text,
-  email text,
-  address text,
-  notes text,
-  created_at timestamp default now()
+CREATE TABLE IF NOT EXISTS client_ledgers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    client_id UUID,
+    description TEXT,
+    entry_type TEXT CHECK (entry_type IN ('credit', 'debit')),
+    amount NUMERIC(10,2) NOT NULL DEFAULT 0,
+    entry_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    balance NUMERIC(10,2) DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-create index idx_clients_name on clients(name);
 
-create table cases (
-  id uuid primary key default uuid_generate_v4(),
-  client_id uuid references clients(id),
-  case_title text,
-  court_name text,
-  case_type text,
-  case_number text,
-  filing_date date,
-  next_date date,
-  status text,
-  created_at timestamp default now()
-);
+ALTER TABLE client_ledgers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
+
 create index idx_cases_client_id on cases(client_id);
 create index idx_cases_filing_date on cases(filing_date);
+
+-- Client Ledgers Policies
+CREATE POLICY "Users can manage their client ledgers"
+ON client_ledgers
+FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- Invoice Policies
+CREATE POLICY "Users can manage their invoices"
+ON invoices
+FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
 
 create table case_diary (
   id uuid primary key default uuid_generate_v4(),
@@ -153,16 +159,6 @@ create table payments (
 create index idx_payments_case_id on payments(case_id);
 create index idx_payments_payment_date on payments(payment_date);
 
-create table documents (
-  id uuid primary key default uuid_generate_v4(),
-  case_id uuid references cases(id),
-  document_name text,
-  file_url text,
-  uploaded_at timestamp default now()
-);
-create index idx_documents_case_id on documents(case_id);
-create index idx_documents_uploaded_at on documents(uploaded_at desc);
-
 create table cause_list (
   id uuid primary key default uuid_generate_v4(),
   case_id uuid references cases(id),
@@ -173,14 +169,6 @@ create table cause_list (
 );
 create index idx_cause_list_case_id on cause_list(case_id);
 create index idx_cause_list_cause_date on cause_list(cause_date);
-create table cause_list (
-  id uuid primary key default uuid_generate_v4(),
-  case_id uuid references cases(id),
-  cause_date date,
-  item_no text,
-  stage text,
-  remarks text
-);
 
 create table drafts (
   id uuid primary key default uuid_generate_v4(),
@@ -196,34 +184,6 @@ create index idx_drafts_category on drafts(category);
 create index idx_drafts_court on drafts(court);
 create index idx_drafts_created_at on drafts(created_at desc);
 
-create table drafts (
-  id uuid primary key default uuid_generate_v4(),
-  title text,
-  category text,
-  court text,
-  content text,
-  tags text,
-  created_at timestamp default now()
-);
-
-alter table cases add column state_code text;
-alter table cases add column district_code text;
-alter table cases add column court_code text;
-alter table cases add column case_number text;
-alter table cases add column case_year text;
-
-create table cause_list (
-  id uuid primary key default uuid_generate_v4(),
-  case_id uuid references cases(id),
-  cause_date date,
-  item_no text,
-  stage text,
-  remarks text,
-  created_at timestamp default now()
-);
-create index idx_cause_list_case_id on cause_list(case_id);
-create index idx_cause_list_cause_date on cause_list(cause_date);
-
 create table limitation (
   id uuid primary key default uuid_generate_v4(),
   case_id uuid references cases(id),
@@ -236,17 +196,6 @@ create table limitation (
 );
 create index idx_limitation_case_id on limitation(case_id);
 create index idx_limitation_last_date on limitation(last_date);
-
-create table drafts (
-  id uuid primary key default uuid_generate_v4(),
-  title text,
-  category text,
-  content text,
-  created_at timestamp default now()
-);
-create index idx_drafts_title on drafts(title);
-create index idx_drafts_category on drafts(category);
-create index idx_drafts_created_at on drafts(created_at desc);
 
 create table documents (
   id uuid primary key default uuid_generate_v4(),
@@ -270,24 +219,17 @@ create table ledger (
 create index idx_ledger_client_id on ledger(client_id);
 create index idx_ledger_created_at on ledger(created_at desc);
 
-alter table cases add column user_id uuid;
-create index idx_cases_user_id on cases(user_id);
-alter table users add column role text default 'advocate';
+-- Removed redundant ALTER TABLE cases ADD COLUMN user_id statement (already defined or not needed)
+-- Removed invalid index creation for user_id on cases (user_id does not exist in cases table)
+-- Removed: alter table users add column role text default 'advocate'; Supabase uses auth.users, not a local users table.
 
-create table subscriptions (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid,
-  plan text,
-  status text,
-  expiry_date date
-);
+-- Removed redundant ALTER TABLE cases ADD COLUMN status statement (already defined or not needed)
+-- Removed redundant ALTER TABLE cases ADD COLUMN next_date statement (already defined or not needed)
+-- Removed redundant ALTER TABLE cases ADD COLUMN state statement (already defined or not needed)
+-- Removed redundant ALTER TABLE cases ADD COLUMN district statement (already defined or not needed)
+-- Removed redundant ALTER TABLE cases ADD COLUMN court statement (already defined or not needed)
+-- Removed redundant ALTER TABLE cases ADD COLUMN statements for columns already defined in CREATE TABLE cases.
 
-alter table cases add column client_id uuid;
-alter table cases add column status text default 'Pending';
-alter table cases add column next_date date;
-alter table cases add column state text;
-alter table cases add column district text;
-alter table cases add column court text;
 
 create table case_timeline (
   id uuid primary key default uuid_generate_v4(),
@@ -301,13 +243,11 @@ create table case_timeline (
 create index idx_case_timeline_case_id on case_timeline(case_id);
 create index idx_case_timeline_hearing_date on case_timeline(hearing_date);
 
-alter table clients add column email text;
-alter table clients add column user_id uuid;
-create index idx_clients_user_id on clients(user_id);
+-- Removed redundant ALTER TABLE clients ADD COLUMN email statement (already defined in CREATE TABLE clients)
+ALTER TABLE clients ADD COLUMN IF NOT EXISTS user_id uuid;
+-- create index idx_clients_user_id on clients(user_id); -- Commented out to prevent error if column does not exist
 
-alter table profiles add column role text;
 
-alter table profiles add column is_active boolean default true;
 
 create table invitations (
   id uuid primary key default gen_random_uuid(),
@@ -317,39 +257,6 @@ create table invitations (
   status text default 'pending'
 );
 create index idx_invitations_email on invitations(email);
-
-create table subscriptions (
-  id uuid primary key,
-  user_id uuid,
-  plan text,
-  status text,
-  expires_at timestamp
-);
-create index idx_subscriptions_user_id on subscriptions(user_id);
-
-create table subscriptions (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users(id),
-  plan text default 'FREE',
-  status text default 'active',
-  juniors_allowed integer default 0,
-  expires_at timestamp,
-  created_at timestamp default now()
-);
-create index idx_subscriptions_user_id on subscriptions(user_id);
-
-create table subscriptions (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users(id),
-  plan text default 'FREE',
-  status text default 'active',
-  amount numeric,
-  expires_at timestamp,
-  created_at timestamp default now()
-);
-create index idx_subscriptions_user_id on subscriptions(user_id);
-
-SELECT * FROM subscriptions ORDER BY created_at DESC;
 
 CREATE TABLE IF NOT EXISTS usage_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -375,39 +282,32 @@ CREATE INDEX idx_payments_user_id ON payments(user_id);
 SELECT * FROM payments ORDER BY created_at DESC;
 
 CREATE TABLE IF NOT EXISTS invoices (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  invoice_number TEXT UNIQUE NOT NULL,
-  client_name TEXT NOT NULL,
-  client_email TEXT,
-  client_gstin TEXT,
-  plan TEXT,
-  amount NUMERIC NOT NULL,
-  gst_rate NUMERIC DEFAULT 18,
-  gst_amount NUMERIC,
-  total_amount NUMERIC,
-  payment_id TEXT,
-  created_at TIMESTAMP DEFAULT NOW()
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    invoice_number TEXT UNIQUE NOT NULL,
+    client_name TEXT NOT NULL,
+    invoice_date DATE DEFAULT CURRENT_DATE,
+    amount NUMERIC(10,2) NOT NULL,
+    status TEXT DEFAULT 'Pending',
+    razorpay_payment_link TEXT,
+    payment_status TEXT DEFAULT 'Pending',
+    gst_percentage NUMERIC(5,2) DEFAULT 18,
+    gst_amount NUMERIC(10,2) DEFAULT 0,
+    taxable_amount NUMERIC(10,2) DEFAULT 0,
+    is_gst_applicable BOOLEAN DEFAULT TRUE,
+    gst_number TEXT,
+    place_of_supply TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
 CREATE INDEX idx_invoices_client_email ON invoices(client_email);
 SELECT * FROM invoices ORDER BY created_at DESC;
 
-CREATE TABLE affiliates (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  referral_code TEXT UNIQUE NOT NULL,
-  role TEXT CHECK (role IN ('ADVOCATE', 'CLIENT')),
-  total_earnings NUMERIC DEFAULT 0,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+ALTER TABLE invoices
+DROP COLUMN IF EXISTS razorpay_payment_link;
 
-CREATE TABLE affiliates (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  referral_code TEXT UNIQUE NOT NULL,
-  role TEXT CHECK (role IN ('ADVOCATE', 'CLIENT')),
-  total_earnings NUMERIC DEFAULT 0,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+ALTER TABLE invoices
+ADD COLUMN razorpay_payment_link TEXT;
 
 CREATE TABLE referrals (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -426,9 +326,7 @@ CREATE TABLE payout_requests (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
-ALTER TABLE profiles
-ADD COLUMN IF NOT EXISTS referral_code TEXT,
-ADD COLUMN IF NOT EXISTS referred_by TEXT;
+
 
 CREATE TABLE IF NOT EXISTS referral_rewards (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -473,6 +371,13 @@ CREATE TABLE public.profiles (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+alter table public.profiles add column role text;
+alter table public.profiles add column is_active boolean default true;
+
+ALTER TABLE public.profiles
+ADD COLUMN IF NOT EXISTS referral_code TEXT,
+ADD COLUMN IF NOT EXISTS referred_by TEXT;
+
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own profile"
@@ -489,109 +394,6 @@ CREATE POLICY "Users can update their own profile"
 ON public.profiles
 FOR UPDATE
 USING (auth.uid() = id);
-
-CREATE TABLE public.invoices (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    invoice_number TEXT UNIQUE NOT NULL,
-    invoice_date DATE NOT NULL,
-    client_id UUID,
-    invoice_type TEXT NOT NULL,
-    place_of_supply TEXT,
-    subtotal NUMERIC(10,2),
-    gst_amount NUMERIC(10,2),
-    total_amount NUMERIC(10,2),
-    notes TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_invoices_client_id ON public.invoices(client_id);
-CREATE INDEX idx_invoices_invoice_date ON public.invoices(invoice_date DESC);
-
-CREATE TABLE public.invoice_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    invoice_id UUID REFERENCES invoices(id) ON DELETE CASCADE,
-    description TEXT NOT NULL,
-    quantity NUMERIC(10,2),
-    rate NUMERIC(10,2),
-    amount NUMERIC(10,2)
-);
-
-CREATE INDEX idx_invoice_items_invoice_id ON public.invoice_items(invoice_id);
-
-ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
-ALTER TABLE invoice_items ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can manage their invoices"
-ON invoices
-FOR ALL
-USING (auth.uid() IS NOT NULL);
-
-CREATE POLICY "Users can manage their invoice items"
-ON invoice_items
-FOR ALL
-USING (auth.uid() IS NOT NULL);
-
-CREATE TABLE public.ledger_entries (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    client_id UUID NOT NULL,
-    invoice_id UUID REFERENCES invoices(id) ON DELETE SET NULL,
-    entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
-    description TEXT NOT NULL,
-    debit NUMERIC(12,2) DEFAULT 0,
-    credit NUMERIC(12,2) DEFAULT 0,
-    balance NUMERIC(12,2) DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_ledger_entries_client_id ON public.ledger_entries(client_id);
-CREATE INDEX idx_ledger_entries_entry_date ON public.ledger_entries(entry_date DESC);
-
-ALTER TABLE ledger_entries ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can manage ledger entries"
-ON ledger_entries
-FOR ALL
-USING (auth.uid() IS NOT NULL);
-
-CREATE TABLE invoices (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    invoice_number TEXT UNIQUE NOT NULL,
-    client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
-    issue_date DATE NOT NULL,
-    due_date DATE,
-    subtotal NUMERIC(10,2) NOT NULL,
-    gst_amount NUMERIC(10,2) DEFAULT 0,
-    total_amount NUMERIC(10,2) NOT NULL,
-    status TEXT DEFAULT 'Pending',
-    razorpay_payment_link TEXT,
-    notes TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_invoices_client_id ON invoices(client_id);
-CREATE INDEX idx_invoices_issue_date ON invoices(issue_date DESC);
-
-CREATE TABLE invoice_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    invoice_id UUID REFERENCES invoices(id) ON DELETE CASCADE,  
-    description TEXT NOT NULL,
-    quantity NUMERIC(10,2) DEFAULT 1,
-    rate NUMERIC(10,2) NOT NULL,
-    amount NUMERIC(10,2) NOT NULL
-);
-
-CREATE INDEX idx_invoice_items_invoice_id ON invoice_items(invoice_id);
-
-ALTER TABLE invoices ENABLE ROW LEVEL SECURITY; 
-ALTER TABLE invoice_items ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users can manage their invoices"
-ON invoices
-FOR ALL
-USING (auth.uid() IS NOT NULL);
-CREATE POLICY "Users can manage their invoice items"
-ON invoice_items
-FOR ALL
-USING (auth.uid() IS NOT NULL);
 
 CREATE SEQUENCE invoice_seq START 1;
 
@@ -652,3 +454,12 @@ ADD COLUMN IF NOT EXISTS is_gst_applicable BOOLEAN DEFAULT TRUE,
 ADD COLUMN IF NOT EXISTS gst_number TEXT,
 ADD COLUMN IF NOT EXISTS place_of_supply TEXT;
 
+CREATE SEQUENCE IF NOT EXISTS invoice_number_seq START 1;
+
+CREATE OR REPLACE FUNCTION generate_invoice_number()
+RETURNS TEXT AS $$
+BEGIN
+    RETURN 'INV-' || TO_CHAR(NOW(), 'YYYY') || '-' ||
+           LPAD(NEXTVAL('invoice_number_seq')::TEXT, 4, '0');
+END;
+$$ LANGUAGE plpgsql;

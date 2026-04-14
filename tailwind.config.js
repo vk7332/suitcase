@@ -23,3 +23,19 @@ export default {
   },
   plugins: [],
 };
+
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        legalNavy: '#0B1F3A',
+        royalGold: '#C9A227',
+        slateGray: '#6B7280',
+      },
+      fontFamily: {
+        heading: ['Cinzel', 'serif'],
+        body: ['Inter', 'sans-serif'],
+      },
+    },
+  },
+}
