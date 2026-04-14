@@ -18,8 +18,8 @@ export interface TaxReportData {
     footerNote?: string;
 }
 
-export interface CourtFeeBreakdown {
-    courtFee: number;
+export interface court-feeBreakdown {
+    court-fee: number;
     filingFee: number;
     processFee: number;
     applicationFee: number;
@@ -107,8 +107,8 @@ export const exportTaxReport = (data: TaxReportData): void => {
    EXPORT COURT FEE REPORT
 ================================ */
 
-export const exportCourtFeeReport = (
-    breakdown: CourtFeeBreakdown,
+export const exportcourt-feeReport = (
+    breakdown: court-feeBreakdown,
     caseDetails: {
         caseType: string;
         courtName: string;
@@ -166,7 +166,7 @@ export const exportCourtFeeReport = (
         startY: 85,
         head: [["Particulars", "Amount (₹)"]],
         body: [
-            ["Court Fee", formatCurrency(breakdown.courtFee)],
+            ["Court Fee", formatCurrency(breakdown.court-fee)],
             ["Filing Fee", formatCurrency(breakdown.filingFee)],
             ["Process Fee", formatCurrency(breakdown.processFee)],
             ["Application Fee", formatCurrency(breakdown.applicationFee)],

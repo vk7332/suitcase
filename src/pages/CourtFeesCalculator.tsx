@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { CourtFeeCalculatorEngine } from "../engines/courtFee/CourtFeeCalculatorEngine";
+import { court-feeCalculatorEngine } from "../engines/court-fee/court-feeCalculatorEngine";
 
-const CourtFeesCalculator = () => {
+const court-feesCalculator = () => {
     const [form, setForm] = useState({
         state: "HP",
         caseType: "moneySuit",
@@ -19,7 +19,7 @@ const CourtFeesCalculator = () => {
     const [result, setResult] = useState<any>(null);
 
     const calculateFees = () => {
-        const res = CourtFeeCalculatorEngine.calculate(form);
+        const res = court-feeCalculatorEngine.calculate(form);
         setResult(res);
     };
 
@@ -173,7 +173,7 @@ const CourtFeesCalculator = () => {
 
                     <div className="flex justify-between">
                         <span>Court Fee</span>
-                        <span>₹ {result.courtFee.toFixed(2)}</span>
+                        <span>₹ {result.court-fee.toFixed(2)}</span>
                     </div>
 
                     {form.includeFilingFee && (
@@ -245,4 +245,4 @@ const CourtFeesCalculator = () => {
     );
 };
 
-export default CourtFeesCalculator;
+export default court-feesCalculator;

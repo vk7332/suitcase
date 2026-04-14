@@ -1,4 +1,4 @@
-import { CourtFeeCalculatorEngine } from "./courtFee/CourtFeeCalculatorEngine";
+import { court-feeCalculatorEngine } from "./court-fee/court-feeCalculatorEngine";
 
 export interface TotalCaseCostInput {
     state: string;
@@ -19,7 +19,7 @@ export interface TotalCaseCostInput {
 export class TotalCaseCostEngine {
     static calculate(input: TotalCaseCostInput) {
         // 1. Court Fee Calculation
-        const courtFeeData = CourtFeeCalculatorEngine.calculate({
+        const court-feeData = court-feeCalculatorEngine.calculate({
             state: input.state as any,
             suitAmount: input.suitAmount,
             defendants: input.defendants,
@@ -38,12 +38,12 @@ export class TotalCaseCostEngine {
 
         // 4. Total Case Cost
         const totalCaseCost =
-            courtFeeData.total +
+            court-feeData.total +
             advocateFee +
             miscExpenses;
 
         return {
-            courtFeeBreakdown: courtFeeData,
+            court-feeBreakdown: court-feeData,
 
             advocateFee,
             miscExpenses,

@@ -1,20 +1,20 @@
-import hpSlabs from "../data/courtFees/HP/slabs.json";
-import hpFixed from "../data/courtFees/HP/fixedFees.json";
+import hpSlabs from "../data/court-fees/HP/slabs.json";
+import hpFixed from "../data/court-fees/HP/fixedFees.json";
 
-import pbSlabs from "../data/courtFees/Punjab/slabs.json";
-import pbFixed from "../data/courtFees/Punjab/fixedFees.json";
+import pbSlabs from "../data/court-fees/Punjab/slabs.json";
+import pbFixed from "../data/court-fees/Punjab/fixedFees.json";
 
-import hrSlabs from "../data/courtFees/Haryana/slabs.json";
-import hrFixed from "../data/courtFees/Haryana/fixedFees.json";
+import hrSlabs from "../data/court-fees/Haryana/slabs.json";
+import hrFixed from "../data/court-fees/Haryana/fixedFees.json";
 
-import dlSlabs from "../data/courtFees/Delhi/slabs.json";
-import dlFixed from "../data/courtFees/Delhi/fixedFees.json";
+import dlSlabs from "../data/court-fees/Delhi/slabs.json";
+import dlFixed from "../data/court-fees/Delhi/fixedFees.json";
 
-import upSlabs from "../data/courtFees/UP/slabs.json";
-import upFixed from "../data/courtFees/UP/fixedFees.json";
+import upSlabs from "../data/court-fees/UP/slabs.json";
+import upFixed from "../data/court-fees/UP/fixedFees.json";
 
-import rjSlabs from "../data/courtFees/Rajasthan/slabs.json";
-import rjFixed from "../data/courtFees/Rajasthan/fixedFees.json";
+import rjSlabs from "../data/court-fees/Rajasthan/slabs.json";
+import rjFixed from "../data/court-fees/Rajasthan/fixedFees.json";
 
 export function getStateFeeRules(state: string) {
     switch (state) {

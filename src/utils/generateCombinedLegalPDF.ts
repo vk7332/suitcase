@@ -241,7 +241,7 @@ export const generateCombinedLegalPDF = async (
     doc.text(`Advocate (Enrl. No. ${branding.enrollmentNumber})`, 150, y);
 
     doc.addPage();
-    let y = 40;
+    y = 40;
 
     doc.setFont("Times", "Bold");
     doc.setFontSize(14);

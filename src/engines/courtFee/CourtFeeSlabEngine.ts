@@ -1,4 +1,4 @@
-export class CourtFeeSlabEngine {
+export class court-feeSlabEngine {
     static calculate(amount: number, slabs: any[]) {
         let fee = 0;
 

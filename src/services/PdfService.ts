@@ -5,7 +5,7 @@ export function exportFeeReport(data: any) {
 
     doc.text("Court Fee Calculation Report", 20, 20);
 
-    doc.text(`Court Fee: ${data.courtFee}`, 20, 40);
+    doc.text(`Court Fee: ${data.court-fee}`, 20, 40);
     doc.text(`Filing Fee: ${data.filingFee}`, 20, 50);
     doc.text(`Process Fee: ${data.processFee}`, 20, 60);
     doc.text(`Application Fee: ${data.applicationFee}`, 20, 70);
@@ -15,5 +15,5 @@ export function exportFeeReport(data: any) {
 
     doc.text(`Total Cost: ${data.total}`, 20, 120);
 
-    doc.save("CourtFeeReport.pdf");
+    doc.save("court-feeReport.pdf");
 }

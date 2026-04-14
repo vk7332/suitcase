@@ -1,10 +1,10 @@
-import { calculateSlabEngine } from "../../engines/courtFee/CourtFeeSlabEngine";
-import { getStateFeeRules } from "../../services/CourtFeeService";
+import { calculateSlabEngine } from "../../engines/court-fee/court-feeSlabEngine";
+import { getStateFeeRules } from "../../services/court-feeService";
 import {
-    CourtFeeInput,
-    CourtFeeResult,
+    court-feeInput,
+    court-feeResult,
     FeeRules,
-} from "../../types/courtFeeTypes";
+} from "../../types/court-feeTypes";
 import { useState, ReactNode } from "react";
 import FeeBreakdown from "./FeeBreakdown";
 import CaseDetailsForm from "./CaseDetailsForm";
@@ -13,11 +13,11 @@ interface CaseDetailsFormProps {
     onCalculate: (formData: any) => void;
 }
 
-export default function CourtFeeCalculator() {
+export default function court-feeCalculator() {
     const [result, setResult] = useState<any>(null);
 
     const handleCalculate = (formData: any) => {
-        const res = CourtFeeCalculatorEngine.calculate(formData);
+        const res = court-feeCalculatorEngine.calculate(formData);
         setResult(res);
     };
 
@@ -29,11 +29,11 @@ export default function CourtFeeCalculator() {
     );
 }
 
-export class CourtFeeCalculatorEngine {
-    static calculate(input: CourtFeeInput): CourtFeeResult {
+export class court-feeCalculatorEngine {
+    static calculate(input: court-feeInput): court-feeResult {
         const { slabs, fixedFees }: FeeRules = getStateFeeRules(input.state);
 
-        let courtFee = 0;
+        let court-fee = 0;
 
         // ==============================
         // 1. COURT FEE CALCULATION
@@ -42,30 +42,30 @@ export class CourtFeeCalculatorEngine {
         switch (input.caseType) {
             case "moneySuit":
             case "propertySuit":
-                courtFee = calculateSlabEngine(
+                court-fee = calculateSlabEngine(
                     input.amount,
                     slabs.moneySuit
                 );
                 break;
 
             case "declaratorySuit":
-                courtFee = fixedFees.declaratorySuit;
+                court-fee = fixedFees.declaratorySuit;
                 break;
 
             case "injunctionSuit":
-                courtFee = fixedFees.injunctionSuit;
+                court-fee = fixedFees.injunctionSuit;
                 break;
 
             case "appeal":
-                courtFee = fixedFees.appeal || 0;
+                court-fee = fixedFees.appeal || 0;
                 break;
 
             case "execution":
-                courtFee = fixedFees.execution || 0;
+                court-fee = fixedFees.execution || 0;
                 break;
 
             default:
-                courtFee = 0;
+                court-fee = 0;
         }
 
         // ==============================
@@ -96,7 +96,7 @@ export class CourtFeeCalculatorEngine {
         // ==============================
 
         const total =
-            courtFee +
+            court-fee +
             filingFee +
             processFee +
             applicationFee +
@@ -105,7 +105,7 @@ export class CourtFeeCalculatorEngine {
             vakalatnamaFee;
 
         return {
-            courtFee,
+            court-fee,
             filingFee,
             processFee,
             applicationFee,

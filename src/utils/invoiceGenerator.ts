@@ -11,7 +11,7 @@ export function generateInvoice(data: any) {
 
     doc.text(`Client: ${data.client}`, 20, 50);
     doc.text(`Case: ${data.caseTitle}`, 20, 60);
-    doc.text(`Court Fee: ₹ ${data.courtFee}`, 20, 80);
+    doc.text(`Court Fee: ₹ ${data.court-fee}`, 20, 80);
     doc.text(`Advocate Fee: ₹ ${data.advocateFee}`, 20, 90);
     doc.text(`Expenses: ₹ ${data.expenses}`, 20, 100);
     doc.text(`Total: ₹ ${data.total}`, 20, 120);

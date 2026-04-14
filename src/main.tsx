@@ -1,13 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css'; // 👈 This must be here for Tailwind to work!
-import App from './App';;
-import { AuthProvider } from './context/AuthContext'; // Import your AuthProvider
+import React from "react";
+import ReactDOM from "react-dom/client";
+import AppRoutes from "@/routes";
+import { AuthProvider } from "@/context/AuthContext";
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthProvider> {/* The Provider must be outside of App */}
-      <App />
+    <AuthProvider>
+      <AppRoutes />
     </AuthProvider>
   </React.StrictMode>
 );

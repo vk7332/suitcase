@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { calculateCourtFee } from "../../engines/courtFee/CourtFeeCalculatorEngine";
+import { calculatecourt-fee } from "../../engines/court-fee/court-feeCalculatorEngine";
 import FeeBreakdown from "./FeeBreakdown";
-import { generateCourtFeePDF } from "../../utils/pdfExport";
+import { generatecourt-feePDF } from "../../utils/pdfExport";
 import { getProfile } from "../../services/ProfileService";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -30,7 +30,7 @@ export default function CaseDetailsForm() {
 
     // 🧮 CALCULATE
     const handleCalculate = () => {
-        const res = calculateCourtFee({
+        const res = calculatecourt-fee({
             suitValue,
             suitType,
             state,
@@ -42,7 +42,7 @@ export default function CaseDetailsForm() {
 
     // 📄 PDF EXPORT
     const handlePDF = () => {
-        generateCourtFeePDF(
+        generatecourt-feePDF(
             {
                 suitValue,
                 suitType,

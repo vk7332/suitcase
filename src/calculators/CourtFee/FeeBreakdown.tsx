@@ -14,7 +14,7 @@ const FeeBreakdown = ({ data }: any) => {
         <div className="bg-white shadow p-4 rounded">
             <h3 className="text-lg font-semibold mb-3">Fee Breakdown</h3>
 
-            <Row label="Court Fee" value={data.courtFee} />
+            <Row label="Court Fee" value={data.court-fee} />
             <Row label="Filing Fee" value={data.filingFee} />
             <Row label="Process Fee" value={data.processFee} />
             <Row label="Application Fee" value={data.applicationFee} />

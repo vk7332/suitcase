@@ -1,5 +1,5 @@
-import CourtFeeCalculator from "../calculators/CourtFee/CourtFeeCalculator";
+import court-feeCalculator from "../calculators/court-fee/court-feeCalculator";
 
-export default function CourtFeePage() {
-    return <CourtFeeCalculator />;
+export default function court-feePage() {
+    return <court-feeCalculator />;
 }

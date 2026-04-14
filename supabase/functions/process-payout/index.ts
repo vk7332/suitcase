@@ -58,7 +58,7 @@ serve(async (req: Request) => {
         const contactData = await contactRes.json();
 
         // Step 2: Create Fund Account
-        let fundAccountPayload: any = {
+        const fundAccountPayload: any = {
             contact_id: contactData.id,
             account_type:
                 method === "UPI" ? "vpa" : "bank_account",

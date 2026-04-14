@@ -1,11 +1,11 @@
-// src/engines/courtFee/CourtFeeCalculatorEngine.ts
+// src/engines/court-fee/court-feeCalculatorEngine.ts
 
-import slabs from "../../data/courtFees/HP/slabs.json";
-import fixedFees from "../../data/courtFees/HP/fixedFees.json";
+import slabs from "../../data/court-fees/HP/slabs.json";
+import fixedFees from "../../data/court-fees/HP/fixedFees.json";
 
-export function calculateCourtFee(input: any) {
+export function calculatecourt-fee(input: any) {
 
-    class CourtFeeCalculatorEngine {
+    class court-feeCalculatorEngine {
         static calculate(amount: number): number {
             if (amount <= 0) return 0;
             return Math.round(amount * 0.05);
@@ -19,14 +19,14 @@ export function calculateCourtFee(input: any) {
         includeNotary,
     } = input;
 
-    let courtFee = 0;
+    let court-fee = 0;
 
     // 🧠 SLAB CALCULATION
     // ...existing code...
     if (suitType === "money") {
         for (const slab of slabs) {
             if (suitValue <= slab.limit) {
-                courtFee =
+                court-fee =
                     (suitValue - slab.previousLimit) * slab.rate;
                 break;
             }
@@ -36,11 +36,11 @@ export function calculateCourtFee(input: any) {
 
     // 🧾 FIXED SUITS
     if (suitType === "declaration") {
-        courtFee = 98;
+        court-fee = 98;
     }
 
     if (suitType === "general") {
-        courtFee = 48;
+        court-fee = 48;
     }
 
     // 📦 OTHER FEES
@@ -52,7 +52,7 @@ export function calculateCourtFee(input: any) {
     const notaryFee = includeNotary ? 55 : 0;
 
     const total =
-        courtFee +
+        court-fee +
         filingFee +
         applicationFee +
         affidavitFee +
@@ -61,7 +61,7 @@ export function calculateCourtFee(input: any) {
         notaryFee;
 
     return {
-        courtFee,
+        court-fee,
         filingFee,
         applicationFee,
         affidavitFee,

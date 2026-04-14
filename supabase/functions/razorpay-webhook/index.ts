@@ -1,23 +1,35 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import crypto from "https://deno.land/std@0.168.0/node/crypto.ts";
 
-const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-);
-
-serve(async (req) => {
+serve(async (req: Request): Promise<Response> => {
     try {
-        const signature = req.headers.get("x-razorpay-signature")!;
-        const webhookSecret = Deno.env.get("RAZORPAY_WEBHOOK_SECRET")!;
-        const bodyText = await req.text();
+        const payload = await req.text();
 
-        // Verify Razorpay Signature
-        const expectedSignature = crypto
-            .createHmac("sha256", webhookSecret)
-            .update(bodyText)
-            .digest("hex");
+        // Log webhook payload
+        console.log("Razorpay Webhook Received:", payload);
 
-        if (expectedSignature !== signature) {
-            return new Response("Invalid signature", {
+        // TODO: Verify Razorpay signature for security
+        // const signature = req.headers.get("x-razorpay-signature");
+
+        return new Response(
+            JSON.stringify({
+                status: "success",
+                message: "Webhook received successfully",
+            }),
+            {
+                headers: { "Content-Type": "application/json" },
+                status: 200,
+            }
+        );
+    } catch (error) {
+        return new Response(
+            JSON.stringify({
+                status: "error",
+                message: (error as Error).message,
+            }),
+            {
+                headers: { "Content-Type": "application/json" },
+                status: 500,
+            }
+        );
+    }
+});

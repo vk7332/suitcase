@@ -28,13 +28,13 @@ export default function TotalCaseCostCalculator() {
             suit_amount: form.suitAmount,
             defendants: form.defendants,
 
-            court_fee: res.courtFeeBreakdown.courtFee,
-            filing_fee: res.courtFeeBreakdown.filingFee,
-            application_fee: res.courtFeeBreakdown.applicationFee,
-            affidavit_fee: res.courtFeeBreakdown.affidavitFee,
-            process_fee: res.courtFeeBreakdown.processFee,
-            vakalatnama_fee: res.courtFeeBreakdown.vakalatnama,
-            notary_fee: res.courtFeeBreakdown.notaryFee,
+            court_fee: res.court-feeBreakdown.court-fee,
+            filing_fee: res.court-feeBreakdown.filingFee,
+            application_fee: res.court-feeBreakdown.applicationFee,
+            affidavit_fee: res.court-feeBreakdown.affidavitFee,
+            process_fee: res.court-feeBreakdown.processFee,
+            vakalatnama_fee: res.court-feeBreakdown.vakalatnama,
+            notary_fee: res.court-feeBreakdown.notaryFee,
 
             advocate_fee: res.advocateFee,
             misc_expenses: res.miscExpenses,
@@ -107,7 +107,7 @@ export default function TotalCaseCostCalculator() {
 
             {result && (
                 <div className="mt-4 border p-4">
-                    <p>Court Fee Total: ₹ {result.courtFeeBreakdown.total}</p>
+                    <p>Court Fee Total: ₹ {result.court-feeBreakdown.total}</p>
                     <p>Advocate Fee: ₹ {result.advocateFee}</p>
                     <p>Misc Expenses: ₹ {result.miscExpenses}</p>
 
