@@ -1,66 +1,204 @@
-logs
+# ======================================================
+
+# SUITCASE – Court Fee & Case Manager
+
+# .gitignore File
+
+# Developed by VK Tax & Law Chamber®
+
+# ======================================================
+
+# -------------------------------
+
+# Dependencies
+
+# -------------------------------
+
+node_modules/
+jspm_packages/
+
+# -------------------------------
+
+# Production Build Files
+
+# -------------------------------
+
+dist/
+build/
+out/
+.next/
+.cache/
+.vite/
+
+# -------------------------------
+
+# Environment Variables
+
+# -------------------------------
+
+.env
+.env.*
+!.env.example
+server/.env
+
+# -------------------------------
+
+# Logs
+
+# -------------------------------
+
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# -------------------------------
+
+# OS Files
+
+# -------------------------------
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -------------------------------
+
+# IDE and Editor Files
+
+# -------------------------------
 
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+!.vscode/settings.json
+!.vscode/launch.json
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-.env
 
-# Dependencies
+# -------------------------------
 
-node_modules/
+# Testing and Coverage
 
-# Production
+# -------------------------------
 
-dist/
-build/
+coverage/
+test-results/
+playwright-report/
+playwright/.cache/
 
-# Environment Variables
-
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-server/.env
-
-# Logs
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDE Files
-
-.vscode/
-.idea/
-.DS_Store
+# -------------------------------
 
 # Supabase
 
+# -------------------------------
+
 .supabase/
+supabase/.temp/
+supabase/.branches/
 
-# Capacitor
+# -------------------------------
 
-android/
+# Capacitor and Mobile Builds
+
+# -------------------------------
+
+android/.gradle/
+android/local.properties
+android/captures/
+android/app/build/
+android/build/
+
 ios/
+DerivedData/
+
+# -------------------------------
 
 # Vercel
 
+# -------------------------------
+
 .vercel/
+
+# -------------------------------
+
+# TypeScript
+
+# -------------------------------
+
+*.tsbuildinfo
+
+# -------------------------------
+
+# Temporary Files
+
+# -------------------------------
+
+tmp/
+temp/
+*.tmp
+
+# -------------------------------
+
+# Backup Files
+
+# -------------------------------
+
+*.bak
+*.backup
+*.old
+
+# -------------------------------
+
+# Package Manager Files
+
+# -------------------------------
+
+.pnpm-store/
+.yarn/
+.yarn-cache/
+
+# -------------------------------
+
+# Miscellaneous
+
+# -------------------------------
+
+*.pid
+*.seed
+*.pid.lock
+
+# -------------------------------
+
+# Security Sensitive Files
+
+# -------------------------------
+
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+
+# -------------------------------
+
+# Local Databases
+
+# -------------------------------
+
+*.sqlite
+*.db
+
+# -------------------------------
+
+# Auto-generated Reports
+
+# -------------------------------
+
+reports/
+*.report.json
