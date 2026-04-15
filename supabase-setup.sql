@@ -463,3 +463,54 @@ BEGIN
            LPAD(NEXTVAL('invoice_number_seq')::TEXT, 4, '0');
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION set_invoice_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.invoice_number IS NULL THEN
+        NEW.invoice_number := generate_invoice_number();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER invoice_number_trigger
+BEFORE INSERT ON invoices
+FOR EACH ROW
+EXECUTE FUNCTION set_invoice_number();
+
+create table if not exists profiles (
+  id uuid references auth.users on delete cascade primary key,
+  email text unique,
+  full_name text,
+  role text default 'public',
+  created_at timestamp with time zone default now()
+);
+
+alter table profiles enable row level security;v
+
+create policy "Users can view their own profile"
+on profiles
+for select
+using (auth.uid() = id);
+
+create policy "Users can update their own profile"
+on profiles
+for update
+using (auth.uid() = id);
+
+create policy "Users can insert their own profile"
+on profiles
+for insert
+with check (auth.uid() = id);
+
+select * from profiles;
+
+-- Affiliates Table
+select * from affiliates;
+
+-- Referrals Table
+select * from referrals;
+
+-- Payout Requests Table
+select * from payout_requests;
+

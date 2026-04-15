@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import Clients from "@/pages/Clients";
+import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = () => {
     const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -14,8 +15,11 @@ const Sidebar = () => {
                 <NavLink to="/dashboard" className={linkClass}>
                     Dashboard
                 </NavLink>
-                <NavLink to="/clients" className={linkClass}>
-                    Clients
+                <Link to="/portal">Portal Login</Link>
+                <NavLink to="/clients/Litigents/Public" className={linkClass}>
+                    <Clients />
+                    <Litigents />
+                    <Public>Public Login</Public>
                 </NavLink>
                 <NavLink to="/invoices" className={linkClass}>
                     Invoices

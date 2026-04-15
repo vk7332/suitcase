@@ -1,107 +1,148 @@
-import { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import RoleBasedRoute from "@/components/auth/RoleBasedRoute";
+import { ROLES } from "@/types/roles";
 
-// Layouts
-import MainLayout from "@/components/layout/MainLayout";
+// Lazy-loaded pages
+const LoginPage = lazy(() => import("@/pages/Auth/login-page"));
+const LegalDashboard = lazy(() => import("@/pages/Dashboard/LegalDashboard"));
+const ClientsPage = lazy(() => import("@/pages/Clients/clients-page"));
+const InvoiceListPage = lazy(() => import("@/pages/Invoices/invoice-list-page"));
+const CreateInvoicePage = lazy(() => import("@/pages/Invoices/create-invoice-page"));
+const GSTInvoicePage = lazy(() => import("@/pages/Invoices/GSTInvoicePage"));
+const ClientLedgerPage = lazy(() => import("@/pages/Ledger/client-ledger-page"));
+const AffiliateDashboard = lazy(() => import("@/pages/Affiliate/AffiliateDashboard"));
+const AffiliateAnalytics = lazy(() => import("@/pages/affiliate/affiliate-analytics"));
+const NotFoundPage = lazy(() => import("@/pages/not-found/not-found"));
 
-// Lazy-loaded Pages
-const Dashboard = lazy(() => import("@/pages/Dashboard"));
-const Clients = lazy(() => import("@/pages/Clients"));
-const Invoices = lazy(() => import("@/pages/Invoices"));
-const Ledger = lazy(() => import("@/pages/Ledger"));
-const Reports = lazy(() => import("@/modules/reports/pages/Reports"));
-const Login = lazy(() => import("@/pages/Auth/Login"));
-const NotFound = lazy(() => import("@/pages/NotFound"));
+const Loader = () => (
+    <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">Loading...</p>
+    </div>
+);
 
-// Protected Route Component
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-    const { user, loading } = useAuth();
-
-    if (loading) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
-    }
-
-    return user ? children : <Navigate to="/login" replace />;
-};
-
-const AppRoutes = () => {
+const AppRoutes: React.FC = () => {
     return (
         <Router>
-            <Suspense fallback={<div className="p-6">Loading SUITCASE...</div>}>
+            <Suspense fallback={<Loader />}>
                 <Routes>
                     {/* Public Routes */}
-                    <Route path="/login" element={<Login />} />
+                    <Route path="/" element={<LoginPage />} />
+                    <Route path="/login" element={<LoginPage />} />
 
-                    {/* Protected Routes */}
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <MainLayout>
-                                    <Dashboard />
-                                </MainLayout>
-                            </ProtectedRoute>
-                        }
-                    />
-
+                    {/* Dashboard */}
                     <Route
                         path="/dashboard"
                         element={
-                            <ProtectedRoute>
-                                <MainLayout>
-                                    <Dashboard />
-                                </MainLayout>
-                            </ProtectedRoute>
+                            <RoleBasedRoute
+                                allowedRoles={[
+                                    ROLES.ADMIN,
+                                    ROLES.ADVOCATE,
+                                    ROLES.JUNIOR_ADVOCATE,
+                                    ROLES.STAFF,
+                                ]}
+                            >
+                                <LegalDashboard />
+                            </RoleBasedRoute>
                         }
                     />
 
+                    {/* Clients */}
                     <Route
                         path="/clients"
                         element={
-                            <ProtectedRoute>
-                                <MainLayout>
-                                    <Clients />
-                                </MainLayout>
-                            </ProtectedRoute>
+                            <RoleBasedRoute
+                                allowedRoles={[
+                                    ROLES.ADMIN,
+                                    ROLES.ADVOCATE,
+                                    ROLES.JUNIOR_ADVOCATE,
+                                    ROLES.STAFF,
+                                ]}
+                            >
+                                <ClientsPage />
+                            </RoleBasedRoute>
                         }
                     />
 
+                    {/* Invoices */}
                     <Route
                         path="/invoices"
                         element={
-                            <ProtectedRoute>
-                                <MainLayout>
-                                    <Invoices />
-                                </MainLayout>
-                            </ProtectedRoute>
+                            <RoleBasedRoute
+                                allowedRoles={[
+                                    ROLES.ADMIN,
+                                    ROLES.ADVOCATE,
+                                    ROLES.STAFF,
+                                ]}
+                            >
+                                <InvoiceListPage />
+                            </RoleBasedRoute>
+                        }
+                    />
+                    <Route
+                        path="/invoices/create"
+                        element={
+                            <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.ADVOCATE]}>
+                                <CreateInvoicePage />
+                            </RoleBasedRoute>
+                        }
+                    />
+                    <Route
+                        path="/invoices/gst"
+                        element={
+                            <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.ADVOCATE]}>
+                                <GSTInvoicePage />
+                            </RoleBasedRoute>
                         }
                     />
 
+                    {/* Ledger */}
                     <Route
                         path="/ledger"
                         element={
-                            <ProtectedRoute>
-                                <MainLayout>
-                                    <Ledger />
-                                </MainLayout>
-                            </ProtectedRoute>
+                            <RoleBasedRoute
+                                allowedRoles={[
+                                    ROLES.ADMIN,
+                                    ROLES.ADVOCATE,
+                                    ROLES.STAFF,
+                                ]}
+                            >
+                                <ClientLedgerPage />
+                            </RoleBasedRoute>
+                        }
+                    />
+
+                    {/* Affiliate Routes */}
+                    <Route
+                        path="/affiliate"
+                        element={
+                            <RoleBasedRoute
+                                allowedRoles={[
+                                    ROLES.ADMIN,
+                                    ROLES.ADVOCATE,
+                                    ROLES.JUNIOR_ADVOCATE,
+                                    ROLES.STAFF,
+                                    ROLES.CLIENT,
+                                    ROLES.LITIGANT,
+                                    ROLES.PUBLIC,
+                                ]}
+                            >
+                                <AffiliateDashboard />
+                            </RoleBasedRoute>
                         }
                     />
 
                     <Route
-                        path="/reports"
+                        path="/affiliate/analytics"
                         element={
-                            <ProtectedRoute>
-                                <MainLayout>
-                                    <Reports />
-                                </MainLayout>
-                            </ProtectedRoute>
+                            <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.ADVOCATE]}>
+                                <AffiliateAnalytics />
+                            </RoleBasedRoute>
                         }
                     />
 
-                    {/* Redirects */}
-                    <Route path="*" element={<NotFound />} />
+                    {/* 404 */}
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Suspense>
         </Router>

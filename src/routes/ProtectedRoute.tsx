@@ -1,33 +1,23 @@
+import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 
-export default function ProtectedRoute({
-    children,
-    allowedRoles,
-}: any) {
-    const { user, profile, loading } = useAuth();
+interface ProtectedRouteProps {
+    children: ReactNode;
+}
+
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+    const { user, loading } = useAuth();
 
     if (loading) {
-        return <div className="p-6">Loading...</div>;
-    }
-
-    // ❌ Not logged in
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
-
-    // ❌ Role not allowed
-    if (
-        allowedRoles &&
-        profile &&
-        !allowedRoles.includes(profile.role)
-    ) {
         return (
-            <div className="p-6 text-red-600">
-                Unauthorized Access
+            <div className="flex h-screen items-center justify-center">
+                <p>loading...</p>
             </div>
         );
     }
 
-    return children;
-}
+    return user ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+export default ProtectedRoute;
