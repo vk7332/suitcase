@@ -309,24 +309,18 @@ DROP COLUMN IF EXISTS razorpay_payment_link;
 ALTER TABLE invoices
 ADD COLUMN razorpay_payment_link TEXT;
 
-CREATE TABLE referrals (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  referrer_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  referred_user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  referral_code TEXT,
-  status TEXT DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT NOW()
+-- Affiliates Table
+create table referrals (
+  id uuid default gen_random_uuid(),
+  referrer_id uuid,
+  user_id uuid
 );
 
-CREATE TABLE payout_requests (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id),
-  amount NUMERIC NOT NULL,
-  status TEXT DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT NOW()
+create table earnings (
+  id uuid default gen_random_uuid(),
+  user_id uuid,
+  amount numeric
 );
-
-
 
 CREATE TABLE IF NOT EXISTS referral_rewards (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -347,6 +341,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TABLE payout_requests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
+  amount NUMERIC NOT NULL,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
 ALTER TABLE payout_requests
 ADD COLUMN IF NOT EXISTS razorpay_payout_id TEXT,
 ADD COLUMN IF NOT EXISTS payout_method TEXT,
@@ -355,6 +357,14 @@ ADD COLUMN IF NOT EXISTS ifsc TEXT,
 ADD COLUMN IF NOT EXISTS upi_id TEXT,
 ADD COLUMN IF NOT EXISTS remarks TEXT,
 ADD COLUMN IF NOT EXISTS processed_at TIMESTAMP;
+
+select * from affiliates;
+
+-- Referrals Table
+select * from referrals;
+
+-- Payout Requests Table
+select * from payout_requests;
 
 CREATE TABLE public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -486,7 +496,7 @@ create table if not exists profiles (
   created_at timestamp with time zone default now()
 );
 
-alter table profiles enable row level security;v
+alter table profiles enable row level security;
 
 create policy "Users can view their own profile"
 on profiles
@@ -505,12 +515,130 @@ with check (auth.uid() = id);
 
 select * from profiles;
 
--- Affiliates Table
-select * from affiliates;
+alter table profiles
+add column enrollment_number text,
+add column trial_start timestamp,
+add column subscription_status text,
+add column plan text;
 
--- Referrals Table
-select * from referrals;
+alter table profiles
+add constraint unique_enrollment unique(enrollment_number);
+alter table profiles add column role text;
 
--- Payout Requests Table
-select * from payout_requests;
+-- Advocate Dashboard Tables
+create table clients (
+  id uuid default gen_random_uuid(),
+  -- client can view only their cases
+auth.uid() = client_id,
+  name text
+);
 
+create table cases (
+  id uuid default gen_random_uuid(),
+  title text
+);
+case_id belongs to user OR advocate
+
+
+create table fees (
+  id uuid default gen_random_uuid(),
+  amount numeric
+);
+
+create table invoices (
+  id uuid default gen_random_uuid(),
+  client_name text,
+  amount numeric,
+  gst numeric,
+  total numeric,
+  created_at timestamp default now()
+);
+
+-- DOCUMENT UPLOAD
+
+case_documents (
+  id uuid primary key default uuid_generate_v4(),
+  case_id uuid,
+  -- client can view documents of their cases
+case_id IN (
+  SELECT id FROM cases WHERE client_id = auth.uid()
+)
+  file_name text,
+  file_url text,
+  document_type text,
+  created_at timestamp default now()
+)
+create index idx_case_documents_case_id on case_documents(case_id);
+create index idx_case_documents_document_type on case_documents(document_type);
+
+shared_documents (
+  id uuid primary key default uuid_generate_v4(),
+  document_id uuid,
+  case_id uuid,
+  shared_with text, -- client email
+  token text,
+  expires_at timestamp,
+  created_at timestamp default now()
+)
+create index idx_shared_documents_document_id on shared_documents(document_id);
+create index idx_shared_documents_shared_with on shared_documents(shared_with);
+
+notifications (
+  id uuid,
+  user_id uuid,
+  message text,
+  read boolean default false,
+  created_at timestamp
+)
+create index idx_notifications_user_id on notifications(user_id);
+create index idx_notifications_user_read 
+on notifications(user_id, read);
+
+create table notification_preferences (
+  user_id uuid primary key,
+  email boolean default true,
+  sms boolean default true,
+  in_app boolean default true
+);
+
+create table audit_logs (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid,
+  case_id uuid,
+  action text,
+  metadata jsonb,
+  created_at timestamp default now()
+);
+auth.uid() IN (
+  SELECT advocate_id FROM cases WHERE id = case_id
+)
+OR
+auth.uid() IN (
+  SELECT client_id FROM cases WHERE id = case_id
+)
+
+create index idx_audit_case on audit_logs(case_id);
+create index idx_audit_user on audit_logs(user_id);
+create index idx_audit_created on audit_logs(created_at desc);
+
+create table chambers (
+  id uuid primary key default uuid_generate_v4(),
+  name text,
+  owner_id uuid,
+  created_at timestamp default now()
+);
+
+create index idx_chambers_owner on chambers(owner_id);
+
+create table chamber_members (
+  id uuid primary key default uuid_generate_v4(),
+  chamber_id uuid,
+  user_id uuid,
+  role text, -- owner | admin | advocate | junior
+  created_at timestamp default now()
+);
+
+alter table cases add column chamber_id uuid;
+
+create index idx_chamber_members_chamber on chamber_members(chamber_id);
+create index idx_chamber_members_user on chamber_members(user_id);

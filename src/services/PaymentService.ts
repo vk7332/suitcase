@@ -27,3 +27,5 @@ export async function deletePayment(id: string) {
 
     if (error) console.error(error);
 }
+
+

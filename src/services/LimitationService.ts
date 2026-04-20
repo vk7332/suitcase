@@ -18,3 +18,5 @@ export async function deleteLimitation(id: string) {
         .delete()
         .eq("id", id);
 }
+
+

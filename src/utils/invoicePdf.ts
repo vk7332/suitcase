@@ -43,3 +43,5 @@ export const exportInvoicePDF = (invoice: Invoice) => {
 
     doc.save(`${invoice.invoice_number}.pdf`);
 };
+
+

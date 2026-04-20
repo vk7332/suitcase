@@ -23,3 +23,5 @@ const EarningsCard: React.FC<Props> = ({ affiliate }) => {
 };
 
 export default EarningsCard;
+
+

@@ -49,3 +49,5 @@ const PayoutRequestForm: React.FC<Props> = ({ affiliateId }) => {
 };
 
 export default PayoutRequestForm;
+
+

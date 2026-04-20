@@ -28,3 +28,5 @@ const LawBookCard: React.FC<Props> = ({ book }) => {
         </div>
     );
 }
+
+

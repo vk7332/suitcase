@@ -11,3 +11,5 @@ export default function RevenueCard({ title, value }: Props) {
         </div>
     );
 }
+
+

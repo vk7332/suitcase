@@ -28,3 +28,5 @@ export default function RevenueChart({ data }: Props) {
         </div>
     );
 }
+
+

@@ -9,7 +9,7 @@ import {
     calculateLimitation,
     getDaysRemaining,
     getStatus,
-} from "../../engines/LimitationEngine";
+} from "../../engines/limitation-engine";
 
 export default function LimitationPage() {
     const [list, setList] = useState<any[]>([]);
@@ -135,3 +135,5 @@ export default function LimitationPage() {
         </div>
     );
 }
+
+

@@ -14,3 +14,5 @@ export interface UsageLimits {
     documents: number;
     juniors: number;
 }
+
+

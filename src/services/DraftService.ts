@@ -12,3 +12,5 @@ export async function addDraft(draft: any) {
 export async function deleteDraft(id: string) {
     await supabase.from("drafts").delete().eq("id", id);
 }
+
+

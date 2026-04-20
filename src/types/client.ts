@@ -52,3 +52,5 @@ export interface SavedClientAudit {
     regime: 'old' | 'new';
     fullResult: AuditResult; // Stores the object for PDF regeneration
 }
+
+

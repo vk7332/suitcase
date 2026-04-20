@@ -43,13 +43,13 @@ export const ClientDatabase = () => {
     };
 
     const handleCopyLink = (client: ClientRecord) => {
-        const text = `Tax Audit Report for ${client.name}\nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}\nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}\nGenerated via VKCalc.in`;
+        const text = `Tax Audit Report for ${client.name}/nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}/nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}/nGenerated via VKCalc.in`;
         navigator.clipboard.writeText(text);
         alert("Audit summary copied to clipboard!");
     };
 
     const handleWhatsAppShare = (client: ClientRecord) => {
-        const text = `*Tax Audit Report for ${client.name}*\nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}\nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}\n\nCheck your detailed audit at VKCalc.in`;
+        const text = `*Tax Audit Report for ${client.name}*/nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}/nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}/n/nCheck your detailed audit at VKCalc.in`;
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     };
 
@@ -65,7 +65,7 @@ export const ClientDatabase = () => {
             c.taxLiability
         ]);
 
-        const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
+        const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "/n" + rows.map(e => e.join(",")).join("/n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -306,3 +306,5 @@ export const ClientDatabase = () => {
 const SearchIcon = ({ size, className }: { size: number, className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
 );
+
+

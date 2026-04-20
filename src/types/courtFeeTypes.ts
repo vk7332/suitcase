@@ -24,3 +24,5 @@ export interface FeeRules {
     slabs: any;
     fixedFees: any;
 }
+
+

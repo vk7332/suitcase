@@ -39,3 +39,5 @@ export default function RecentTransactions({ payments }: Props) {
         </div>
     );
 }
+
+

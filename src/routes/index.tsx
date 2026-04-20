@@ -1,152 +1,178 @@
-import React, { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RoleBasedRoute from "@/components/auth/RoleBasedRoute";
-import { ROLES } from "@/types/roles";
+import { createBrowserRouter } from "react-router-dom";
 
-// Lazy-loaded pages
-const LoginPage = lazy(() => import("@/pages/Auth/login-page"));
-const LegalDashboard = lazy(() => import("@/pages/Dashboard/LegalDashboard"));
-const ClientsPage = lazy(() => import("@/pages/Clients/clients-page"));
-const InvoiceListPage = lazy(() => import("@/pages/Invoices/invoice-list-page"));
-const CreateInvoicePage = lazy(() => import("@/pages/Invoices/create-invoice-page"));
-const GSTInvoicePage = lazy(() => import("@/pages/Invoices/GSTInvoicePage"));
-const ClientLedgerPage = lazy(() => import("@/pages/Ledger/client-ledger-page"));
-const AffiliateDashboard = lazy(() => import("@/pages/Affiliate/AffiliateDashboard"));
-const AffiliateAnalytics = lazy(() => import("@/pages/affiliate/affiliate-analytics"));
-const NotFoundPage = lazy(() => import("@/pages/not-found/not-found"));
+// 🔐 Auth
+import LoginPage from "@/pages/auth/login-page";
 
-const Loader = () => (
-    <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg font-semibold">Loading...</p>
-    </div>
-);
+// 📊 Dashboard (adjust if needed)
+import LegalDashboard from "@/pages/dashboard/legaldashboard";
 
-const AppRoutes: React.FC = () => {
+// 🧮 Calculator Pages (WRAPPERS ONLY)
+import CourtFeesPage from "@/pages/calculators/court-fees-page";
+import FilingCostPage from "@/pages/calculators/filing-cost-page";
+import InterestPage from "@/pages/calculators/interest-page";
+import LimitationPage from "@/pages/calculators/limitation-page";
+import StampDutyPage from "@/pages/calculators/stamp-duty-page";
+import TotalCaseCostPage from "@/pages/calculators/total-case-cost-page";
+import PartitionSuitPage from "@/pages/calculators/partition-suit-page";
+
+// 📦 Other Modules (adjust paths if needed)
+import ClientsPage from "@/pages/clients/clients-page";
+import InvoiceListPage from "@/pages/invoices/invoice-list-page";
+import CreateInvoicePage from "@/pages/invoices/create-invoice-page";
+import GSTInvoicePage from "@/pages/invoices/gstinvoicepage";
+import ClientLedgerPage from "@/pages/ledger/client-ledger-page";
+import ProtectedRoute from "./protectedroute";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+//  Admin Pages
+import SubscriptionPage from "@/pages/subscription/subscription-page";
+import AdminDashboard from "@/pages/admin/admin-dashboard";
+import AdvocateDashboard from "@/pages/advocate/dashboard";
+
+//  Advocate Pages
+import Clients from "@/pages/advocate/clients";
+import Cases from "@/pages/advocate/cases";
+import Fees from "@/pages/advocate/fees";
+
+
+import ProtectedRoute from "@/components/ProtectedRoute";
+import ClientCaseDetails from "@/pages/client/client-case-details";
+import ClientDashboard from "@/pages/client/client-dashboard";
+
+// ❌ 404 Page (create if missing)
+const NotFound = () => <div>404 - Page Not Found</div>;
+
+export default function AppRoutes() {
     return (
-        <Router>
-            <Suspense fallback={<Loader />}>
-                <Routes>
-                    {/* Public Routes */}
-                    <Route path="/" element={<LoginPage />} />
-                    <Route path="/login" element={<LoginPage />} />
+        <BrowserRouter>
+            <Routes>
 
-                    {/* Dashboard */}
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <RoleBasedRoute
-                                allowedRoles={[
-                                    ROLES.ADMIN,
-                                    ROLES.ADVOCATE,
-                                    ROLES.JUNIOR_ADVOCATE,
-                                    ROLES.STAFF,
-                                ]}
-                            >
-                                <LegalDashboard />
-                            </RoleBasedRoute>
-                        }
-                    />
+                {/* PUBLIC */}
+                <Route path="/subscription" element={<SubscriptionPage />} />
 
-                    {/* Clients */}
-                    <Route
-                        path="/clients"
-                        element={
-                            <RoleBasedRoute
-                                allowedRoles={[
-                                    ROLES.ADMIN,
-                                    ROLES.ADVOCATE,
-                                    ROLES.JUNIOR_ADVOCATE,
-                                    ROLES.STAFF,
-                                ]}
-                            >
-                                <ClientsPage />
-                            </RoleBasedRoute>
-                        }
-                    />
+                {/* ADMIN */}
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute role="admin">
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    }
+                />
 
-                    {/* Invoices */}
-                    <Route
-                        path="/invoices"
-                        element={
-                            <RoleBasedRoute
-                                allowedRoles={[
-                                    ROLES.ADMIN,
-                                    ROLES.ADVOCATE,
-                                    ROLES.STAFF,
-                                ]}
-                            >
-                                <InvoiceListPage />
-                            </RoleBasedRoute>
-                        }
-                    />
-                    <Route
-                        path="/invoices/create"
-                        element={
-                            <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.ADVOCATE]}>
-                                <CreateInvoicePage />
-                            </RoleBasedRoute>
-                        }
-                    />
-                    <Route
-                        path="/invoices/gst"
-                        element={
-                            <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.ADVOCATE]}>
-                                <GSTInvoicePage />
-                            </RoleBasedRoute>
-                        }
-                    />
+                {/* ADVOCATE */}
+                <Route
+                    path="/advocate"
+                    element={
+                        <ProtectedRoute role="advocate">
+                            <AdvocateDashboard />
+                        </ProtectedRoute>
+                    }
+                />
 
-                    {/* Ledger */}
-                    <Route
-                        path="/ledger"
-                        element={
-                            <RoleBasedRoute
-                                allowedRoles={[
-                                    ROLES.ADMIN,
-                                    ROLES.ADVOCATE,
-                                    ROLES.STAFF,
-                                ]}
-                            >
-                                <ClientLedgerPage />
-                            </RoleBasedRoute>
-                        }
-                    />
+                <Route
+                    path="/advocate/clients"
+                    element={
+                        <ProtectedRoute role="advocate">
+                            <Clients />
+                        </ProtectedRoute>
+                    }
+                />
 
-                    {/* Affiliate Routes */}
-                    <Route
-                        path="/affiliate"
-                        element={
-                            <RoleBasedRoute
-                                allowedRoles={[
-                                    ROLES.ADMIN,
-                                    ROLES.ADVOCATE,
-                                    ROLES.JUNIOR_ADVOCATE,
-                                    ROLES.STAFF,
-                                    ROLES.CLIENT,
-                                    ROLES.LITIGANT,
-                                    ROLES.PUBLIC,
-                                ]}
-                            >
-                                <AffiliateDashboard />
-                            </RoleBasedRoute>
-                        }
-                    />
+                <Route
+                    path="/advocate/cases"
+                    element={
+                        <ProtectedRoute role="advocate">
+                            <Cases />
+                        </ProtectedRoute>
+                    }
+                />
 
-                    <Route
-                        path="/affiliate/analytics"
-                        element={
-                            <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.ADVOCATE]}>
-                                <AffiliateAnalytics />
-                            </RoleBasedRoute>
-                        }
-                    />
+                <Route
+                    path="/advocate/fees"
+                    element={
+                        <ProtectedRoute role="advocate">
+                            <Fees />
+                        </ProtectedRoute>
+                    }
+                />
 
-                    {/* 404 */}
-                    <Route path="*" element={<NotFoundPage />} />
-                </Routes>
-            </Suspense>
-        </Router>
+            </Routes>
+
+            <Route path="/client" element={<ClientDashboard />} />
+            <Route path="/client/case/:id" element={<ClientCaseDetails />} />
+        </BrowserRouter>
     );
-};
+}
 
-export default AppRoutes;
+export const router = createBrowserRouter([
+    {
+        path: "/login",
+        element: <LoginPage />,
+    },
+
+    {
+        path: "/",
+        element: <LegalDashboard />,
+    },
+
+    // 📊 Core Modules
+    {
+        path: "/clients",
+        element: (
+            <ProtectedRoute allowedRoles={["advocate", "staff"]}>
+                <ClientsPage />
+            </ProtectedRoute>
+        ),
+    },
+
+    {
+        path: "/invoices/create",
+        element: <CreateInvoicePage />,
+    },
+    {
+        path: "/invoices/gst",
+        element: <GSTInvoicePage />,
+    },
+    {
+        path: "/ledger",
+        element: <ClientLedgerPage />,
+    },
+
+    // 🧮 Calculators
+    {
+        path: "/calculator/court-fee",
+        element: <CourtFeesPage />,
+    },
+    {
+        path: "/calculator/filing-cost",
+        element: <FilingCostPage />,
+    },
+    {
+        path: "/calculator/interest",
+        element: <InterestPage />,
+    },
+    {
+        path: "/calculator/limitation",
+        element: <LimitationPage />,
+    },
+    {
+        path: "/calculator/stamp-duty",
+        element: <StampDutyPage />,
+    },
+    {
+        path: "/calculator/total-case-cost",
+        element: <TotalCaseCostPage />,
+    },
+    {
+        path: "/calculator/partition-suit",
+        element: <PartitionSuitPage />,
+    },
+
+    // ❌ Fallback
+    {
+        path: "*",
+        element: <NotFound />,
+    },
+]); 

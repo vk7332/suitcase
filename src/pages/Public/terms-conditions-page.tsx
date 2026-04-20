@@ -89,7 +89,7 @@ const TermsConditionsPage: React.FC = () => {
             </button>
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
-                {termsContent.split("\n").map((line, index) => (
+                {termsContent.split("/n").map((line, index) => (
                     <p key={index}>{line}</p>
                 ))}
             </div>
@@ -98,3 +98,5 @@ const TermsConditionsPage: React.FC = () => {
 };
 
 export default TermsConditionsPage;
+
+

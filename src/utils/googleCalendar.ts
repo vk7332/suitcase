@@ -1,7 +1,7 @@
 export function addToGoogleCalendar(caseData: any) {
     const start = new Date(caseData.next_date)
         .toISOString()
-        .replace(/-|:|\.\d+/g, "");
+        .replace(/-|:|/./d+/g, "");
 
     const end = start;
 
@@ -13,3 +13,5 @@ export function addToGoogleCalendar(caseData: any) {
 
     window.open(url, "_blank");
 }
+
+

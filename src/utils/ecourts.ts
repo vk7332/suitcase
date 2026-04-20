@@ -4,3 +4,5 @@ export function openECourt(caseNumber: string) {
 
     window.open(url, "_blank");
 }
+
+

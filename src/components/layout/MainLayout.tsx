@@ -17,3 +17,5 @@ const mainlayout = () => {
 };
 
 export default mainlayout;
+
+

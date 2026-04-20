@@ -53,3 +53,5 @@ const ReferralsTable: React.FC<Props> = ({ referrals }) => {
 };
 
 export default ReferralsTable;
+
+

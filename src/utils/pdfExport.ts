@@ -100,7 +100,7 @@ export const exportTaxReport = (data: TaxReportData): void => {
     }
 
     // Save PDF
-    doc.save(`${data.title.replace(/\s+/g, "_")}.pdf`);
+    doc.save(`${data.title.replace(//s+/g, "_")}.pdf`);
 };
 
 /* ================================
@@ -210,3 +210,5 @@ export const exportcourt-feeReport = (
     // Save PDF
     doc.save("Court_Fee_Report.pdf");
 };
+
+

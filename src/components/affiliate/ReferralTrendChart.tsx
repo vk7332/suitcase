@@ -32,3 +32,5 @@ const ReferralTrendChart: React.FC<Props> = ({ data }) => {
 };
 
 export default ReferralTrendChart;
+
+

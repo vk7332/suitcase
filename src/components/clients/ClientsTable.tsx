@@ -26,3 +26,5 @@ export default function ClientsTable({ clients, onEdit, onDelete }: any) {
         </table>
     );
 }
+
+

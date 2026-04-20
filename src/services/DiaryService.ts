@@ -20,3 +20,5 @@ export async function deleteDiary(id: string) {
         .delete()
         .eq("id", id);
 }
+
+

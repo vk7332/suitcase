@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
-import { useRole } from "@/context/RoleContext";
+import { useRole } from "@/context/rolecontext";
 import { UserRole } from "@/types/roles";
 
 interface RoleBasedRouteProps {
@@ -30,3 +30,5 @@ const RoleBasedRoute = ({
 };
 
 export default RoleBasedRoute;
+
+

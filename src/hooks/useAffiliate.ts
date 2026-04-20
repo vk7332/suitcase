@@ -1,28 +1,22 @@
-import { useEffect, useState } from "react";
-import {
-    getAffiliate,
-    getReferrals,
-    getCommissions,
-} from "../services/AffiliateService";
-import { useAuth } from "./useAuth";
+import { useEffect } from "react";
+import { supabase } from "@/utils/supabase/supabaseclient";
+import { getReferralFromURL } from "@/utils/referralUtils";
 
 export const useAffiliate = () => {
-    const { user } = useAuth();
-    const [affiliate, setAffiliate] = useState<any>(null);
-    const [referrals, setReferrals] = useState<any[]>([]);
-    const [commissions, setCommissions] = useState<any[]>([]);
-
     useEffect(() => {
-        if (!user) return;
+        const saveReferral = async () => {
+            const ref = getReferralFromURL();
+            if (!ref) return;
 
-        const fetchData = async () => {
-            setAffiliate(await getAffiliate(user.id));
-            setReferrals(await getReferrals(user.id));
-            setCommissions(await getCommissions(user.id));
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            await supabase.from("referrals").insert({
+                referrer_id: ref,
+                user_id: user.id,
+            });
         };
 
-        fetchData();
-    }, [user]);
-
-    return { affiliate, referrals, commissions };
+        saveReferral();
+    }, []);
 };

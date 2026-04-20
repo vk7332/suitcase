@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import ReminderAlert from "../../components/notifications/ReminderAlert";
 import { useAuth } from "../../hooks/useAuth";
-import { runAutoReminders } from "../../engines/AutoReminderEngine";
+import { runAutoReminders } from "../../engines/auto-reminder-engine";
 import { useEffect } from "react";
 import { supabase } from "@/utils/supabase/supabaseclientClient";
 
@@ -82,3 +82,5 @@ export default function LegalDashboard() {
         </div>
     );
 }
+
+

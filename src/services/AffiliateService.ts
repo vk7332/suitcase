@@ -1,64 +1,22 @@
-import { supabase } from "../lib/supabaseClient";
-import { generateReferralCode } from "../utils/referralUtils";
+import { supabase } from "@/utils/supabase/supabaseclient";
 
-export const createAffiliate = async (userId: string, role: string) => {
-    const code = generateReferralCode();
-
-    const { data, error } = await supabase
-        .from("affiliates")
-        .insert([
-            {
-                user_id: userId,
-                referral_code: code,
-                role,
-            },
-        ])
-        .select()
-        .single();
-
-    if (error) throw error;
-    return data;
-};
-
-export const getAffiliate = async (userId: string) => {
-    const { data, error } = await supabase
-        .from("affiliates")
-        .select("*")
+export const handleReferral = async (userId: string) => {
+    const { data } = await supabase
+        .from("referrals")
+        .select("referrer_id")
         .eq("user_id", userId)
         .single();
 
-    if (error) throw error;
-    return data;
+    return data?.referrer_id || null;
 };
 
-export const getReferrals = async (userId: string) => {
-    const { data, error } = await supabase
-        .from("referrals")
-        .select("*")
-        .eq("referrer_id", userId);
+export const addCommission = async (userId: string) => {
+    const referrerId = await handleReferral(userId);
 
-    if (error) throw error;
-    return data;
-};
+    if (!referrerId) return;
 
-export const getCommissions = async (userId: string) => {
-    const { data, error } = await supabase
-        .from("commissions")
-        .select("*")
-        .eq("referrer_id", userId);
-
-    if (error) throw error;
-    return data;
-};
-
-export const requestPayout = async (
-    userId: string,
-    amount: number
-) => {
-    const { data, error } = await supabase
-        .from("payout_requests")
-        .insert([{ user_id: userId, amount }]);
-
-    if (error) throw error;
-    return data;
+    await supabase.from("earnings").insert({
+        user_id: referrerId,
+        amount: 100, // configurable later
+    });
 };

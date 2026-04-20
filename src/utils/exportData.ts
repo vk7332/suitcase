@@ -21,7 +21,7 @@ export function exportCSV(data: any[], filename: string) {
         ),
     ];
 
-    const blob = new Blob([csvRows.join("\n")], {
+    const blob = new Blob([csvRows.join("/n")], {
         type: "text/csv",
     });
 
@@ -30,3 +30,5 @@ export function exportCSV(data: any[], filename: string) {
     link.download = `${filename}.csv`;
     link.click();
 }
+
+

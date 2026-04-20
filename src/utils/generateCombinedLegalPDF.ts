@@ -173,7 +173,7 @@ export const generateCombinedLegalPDF = async (
 
     addSectionHeading("1. Developer Information");
     addParagraph(
-        `${branding.name}\nEmail: ${branding.email}\nPhone: ${branding.phone}`
+        `${branding.name}/nEmail: ${branding.email}/nPhone: ${branding.phone}`
     );
 
     addSectionHeading("2. Information We Collect");
@@ -193,7 +193,7 @@ export const generateCombinedLegalPDF = async (
 
     addSectionHeading("5. Contact Information");
     addParagraph(
-        `Email: ${branding.email}\nPhone: ${branding.phone}`
+        `Email: ${branding.email}/nPhone: ${branding.phone}`
     );
 
     doc.addPage();
@@ -280,3 +280,5 @@ export const generateCombinedLegalPDF = async (
     // Save PDF
     doc.save("SUITCASE_Legal_Documents_Branded.pdf");
 };
+
+

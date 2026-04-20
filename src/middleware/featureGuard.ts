@@ -12,3 +12,5 @@ export const hasFeatureAccess = (
 
     return hierarchy[userPlan] >= hierarchy[requiredPlan];
 }
+
+

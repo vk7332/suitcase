@@ -50,3 +50,5 @@ export interface PayoutRequest {
     status: "pending" | "approved" | "rejected" | "paid";
     created_at: string;
 }
+
+

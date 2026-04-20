@@ -28,3 +28,5 @@ export async function getDocuments(caseId: string) {
 
     return data;
 }
+
+

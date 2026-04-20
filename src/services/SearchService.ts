@@ -19,3 +19,5 @@ export async function searchCases(query: string) {
 
     return data;
 }
+
+

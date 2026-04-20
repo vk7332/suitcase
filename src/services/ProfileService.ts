@@ -9,3 +9,5 @@ export async function getProfile(userId: string) {
 
     return data;
 }
+
+

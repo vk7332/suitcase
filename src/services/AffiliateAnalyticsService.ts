@@ -62,3 +62,5 @@ export const getTopAffiliates = async (): Promise<TopAffiliate[]> => {
     if (error || !data) return [];
     return data;
 };
+
+

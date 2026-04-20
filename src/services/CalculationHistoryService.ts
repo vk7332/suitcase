@@ -30,3 +30,5 @@ export async function deleteCalculation(id: string) {
         .delete()
         .eq("id", id);
 }
+
+

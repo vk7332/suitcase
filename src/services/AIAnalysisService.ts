@@ -10,7 +10,7 @@ export async function analyzeCase(caseText: string) {
             messages: [
                 {
                     role: "user",
-                    content: `Analyze this legal case and suggest strategy:\n${caseText}`,
+                    content: `Analyze this legal case and suggest strategy:/n${caseText}`,
                 },
             ],
         }),
@@ -19,3 +19,5 @@ export async function analyzeCase(caseText: string) {
     const data = await res.json();
     return data.choices[0].message.content;
 }
+
+

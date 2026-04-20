@@ -17,3 +17,5 @@ export const PLAN_LIMITS: Record<PlanType, UsageLimits> = {
         juniors: 5,
     },
 };
+
+

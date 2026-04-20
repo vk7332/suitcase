@@ -31,3 +31,5 @@ const LegalDocumentsPage: React.FC = () => {
         </button>
     );
 };
+
+

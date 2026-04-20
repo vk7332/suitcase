@@ -16,3 +16,5 @@ export interface TopAffiliate {
     total_referrals: number;
     total_earnings: number;
 }
+
+

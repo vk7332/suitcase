@@ -23,3 +23,5 @@ export async function deleteTimeline(id: string) {
         .delete()
         .eq("id", id);
 }
+
+

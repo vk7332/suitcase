@@ -32,3 +32,5 @@ const RegimeComparison: React.FC<RegimeComparisonProps> = ({ result }) => {
 };
 
 export default RegimeComparison;
+
+

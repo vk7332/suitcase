@@ -37,3 +37,5 @@ export interface GSTSummary {
     gstCollected: number;
     totalRevenue: number;
 }
+
+

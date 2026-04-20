@@ -28,3 +28,5 @@ export default function PricingCard({ plan, onSubscribe }: Props) {
         </div>
     );
 }
+
+

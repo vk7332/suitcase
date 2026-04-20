@@ -17,3 +17,5 @@ export async function inviteJunior(email: string, userId: string) {
         alert("Invitation sent");
     }
 }
+
+

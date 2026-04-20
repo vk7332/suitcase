@@ -34,3 +34,5 @@ export const useAffiliateAnalytics = () => {
 
     return { analytics, trends, topAffiliates, loading };
 };
+
+

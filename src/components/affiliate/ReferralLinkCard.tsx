@@ -39,3 +39,5 @@ const ReferralLinkCard: React.FC<Props> = ({ affiliate }) => {
 };
 
 export default ReferralLinkCard;
+
+

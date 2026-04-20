@@ -67,3 +67,5 @@ export default function DiaryForm({ caseId, onSaved }: any) {
         </div>
     );
 }
+
+

@@ -41,3 +41,5 @@ export async function deleteCase(id: string) {
 
     if (error) console.log(error);
 }
+
+

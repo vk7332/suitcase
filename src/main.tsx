@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import AppRoutes from "@/routes";
-import { RoleProvider } from "@/context/RoleContext";
+import { RoleProvider } from "@/context/rolecontext";
 import "@/index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -11,3 +11,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </RoleProvider>
   </React.StrictMode>
 );
+
+

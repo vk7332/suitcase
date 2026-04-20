@@ -20,3 +20,5 @@ export function generateInvoice(data: any) {
 
     doc.save("FeeBill.pdf");
 }
+
+

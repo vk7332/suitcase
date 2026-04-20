@@ -131,3 +131,5 @@ export const PremiumFooter: React.FC<{ onNavigate?: (path: string) => void }> = 
         </footer>
     );
 }
+
+

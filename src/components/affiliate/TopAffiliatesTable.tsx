@@ -34,3 +34,5 @@ const TopAffiliatesTable: React.FC<Props> = ({ affiliates }) => {
 };
 
 export default TopAffiliatesTable;
+
+

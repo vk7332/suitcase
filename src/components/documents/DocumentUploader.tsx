@@ -50,3 +50,5 @@ export default function DocumentUploader({ caseId }: any) {
         </div>
     );
 }
+
+

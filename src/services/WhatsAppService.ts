@@ -24,3 +24,5 @@ export async function sendWhatsAppAPI({
         alert("WhatsApp sending failed");
     }
 }
+
+

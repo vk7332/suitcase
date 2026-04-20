@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { useAuth } from "../../hooks/useAuth";
-import { getUpcomingHearings } from "../../engines/ReminderEngine";
+import { getUpcomingHearings } from "../../engines/reminder-engine";
 
 export default function ReminderAlert() {
     const { user } = useAuth();
@@ -41,3 +41,5 @@ export default function ReminderAlert() {
         </div>
     );
 }
+
+

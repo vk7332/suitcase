@@ -12,3 +12,5 @@ export function generateEcourtsLink(caseData: any) {
 
     return `${base}&${params.toString()}`;
 }
+
+

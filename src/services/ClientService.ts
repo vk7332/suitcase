@@ -35,3 +35,5 @@ export async function deleteClient(id: string) {
 
     if (error) console.log(error);
 }
+
+

@@ -1,4 +1,4 @@
-import { useRoleContext } from "@/context/RoleContext";
+import { useRoleContext } from "@/context/rolecontext";
 import { ROLES, UserRole } from "@/types/roles";
 
 export const useRole = () => {
@@ -37,3 +37,5 @@ export const useRole = () => {
         isPublic,
     };
 };
+
+

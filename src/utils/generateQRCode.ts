@@ -20,3 +20,5 @@ export const generateQRCode = async (url: string): Promise<string> => {
         throw error;
     }
 };
+
+

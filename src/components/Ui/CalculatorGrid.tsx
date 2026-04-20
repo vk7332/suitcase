@@ -238,3 +238,5 @@ const CalculatorGrid: React.FC<CalculatorGridProps> = ({ isDark, onNavigate }) =
 }
 
 export default CalculatorGrid;
+
+

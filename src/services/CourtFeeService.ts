@@ -40,3 +40,5 @@ export function getStateFeeRules(state: string) {
             return { slabs: hpSlabs, fixedFees: hpFixed };
     }
 }
+
+

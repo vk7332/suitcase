@@ -16,3 +16,5 @@ export const ROLES = {
     LITIGANT: "litigant" as UserRole,
     PUBLIC: "public" as UserRole,
 };
+
+
