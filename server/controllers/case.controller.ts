@@ -1,88 +1,122 @@
-// server/controllers/case.controller.ts
+import { supabase } from "../config/supabase";
+import { Request, Response } from 'express';
+import { getCasesByTenant } from "../services/case.service";
 
-import { sendEmail } from "../services/email.service";
-import { sendSMS } from "../services/sms.service";
-import { getPreferences } from "../services/notificationPreference.service";
-import { logAction } from "../services/audit.service";
-
-const prefs = await getPreferences(clientId);
-
-
-export const getCases = async (req, res) => {
-    const { data } = await supabase
-        .from("cases")
-        .select("*");
-    res.json({ cases: data });
-};
-
-export const updateCaseStatus = async (req, res) => {
-    await logAction({
-        userId,
-        caseId,
-        action: "CASE_STATUS_UPDATED",
-        metadata: { status },
-    });
-
+// ==============================
+// CREATE CASE
+// ==============================
+export const createCase = async (req: Request, res: Response) => {
     try {
-        const { caseId, status } = req.body;
+        const user = req.user;
 
-        const { data: updatedCase } = await supabase
+        const {
+            client_id,
+            case_title,
+            case_number,
+            court_name,
+        } = req.body;
+
+        if (!case_title) {
+            return res.status(400).json({ error: "case_title is required" });
+        }
+
+        const { data, error } = await supabase
             .from("cases")
-            .update({ status })
-            .eq("id", caseId)
-            .select("*, client:client_id(email, phone)")
-            .single();
-
-        const client = updatedCase.client;
-
-        // 🔔 IN-APP
-        if (prefs?.in_app) {
-            await supabase.from("notifications").insert([
+            .insert([
                 {
-                    user_id: clientId,
-                    message: `Case updated to ${status}`,
+                    client_id,
+                    user_id: user.id,
+                    case_title,
+                    case_number,
+                    court_name,
+                    status: "active",
+                    organization_id: user.organization_id,
                 },
-            ]);
-        }
-
-        // 📧 EMAIL
-        if (prefs?.email && client?.email) {
-            await sendEmail(...);
-        }
-
-        // 📱 SMS
-        if (prefs?.sms && client?.phone) {
-            await sendSMS(...);
-        }
-
-        res.json({ success: true });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "failed" });
-    }
-};
-
-export const createCase = async (req, res) => {
-    try {
-        const { title } = req.body;
-        const userId = req.user.id;
-
-        const { data } = await supabase
-            .from("cases")
-            .insert([{ title, advocate_id: userId }])
+            ])
             .select()
             .single();
 
-        // ✅ AUDIT LOG HERE
-        await logAction({
-            userId,
-            caseId: data.id,
-            action: "CASE_CREATED",
-            metadata: { title },
-        });
+        if (error) {
+            console.error("DB error:", error);
+            return res.status(400).json({ error: error.message });
+        }
 
-        res.json(data);
-    } catch (err) {
-        res.status(500).json({ error: "failed" });
+        return res.json(data);
+    } catch (err: any) {
+        console.error("Create case error:", err);
+        return res.status(500).json({ error: "failed to create case" });
+    }
+};
+
+// ==============================
+// GET ALL CASES
+// ==============================
+export const getCasesByTenantId = async (req: Request, res: Response) => {
+    try {
+        const tenantId = req.user.tenant_id;
+        const cases = await getCasesByTenant(tenantId);
+        return res.json(cases);
+    } catch (err: any) {
+        console.error("Get cases error:", err);
+        return res.status(500).json({ error: "failed to fetch cases" });
+    }
+};
+
+export const getCases = async (req: Request, res: Response) => {
+    try {
+        const user = req.user;
+
+        const { data, error } = await supabase
+            .from("cases")
+            .select("*")
+            .eq("organization_id", user.organization_id)
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        return res.json(data);
+    } catch (err: any) {
+        console.error(err);
+        return res.status(500).json({ error: "failed to fetch cases" });
+    }
+};
+
+import { initMemory } from "../services/memory.service";
+
+export const startHearing = async (req: Request, res: Response) => {
+    const { caseId } = req.body;
+
+    // fetch from DB
+    const facts = "Case facts summary here..."; // replace with real DB
+
+    initMemory(caseId, facts);
+
+    res.json({ ok: true });
+};
+
+// ==============================
+// UPDATE STATUS
+// ==============================
+export const updateCaseStatus = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const { data, error } = await supabase
+            .from("cases")
+            .update({ status })
+            .eq("id", id)
+            .select()
+            .single();
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        return res.json(data);
+    } catch (err: any) {
+        return res.status(500).json({ error: "update failed" });
     }
 };

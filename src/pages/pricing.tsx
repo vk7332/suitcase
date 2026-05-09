@@ -1,4 +1,5 @@
 import { startSubscription } from "@/engines/billing/billing.engine";
+import { useEffect } from "react";
 
 export default function Pricing() {
     const plans = [
@@ -38,6 +39,88 @@ export default function Pricing() {
         },
     ];
 
+    const handleSubscribe = async (planId: string) => {
+        const res = await fetch("/api/subscription/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ planId }),
+        });
+
+        const data = await res.json();
+
+        const options = {
+            key: import.meta.env.VITE_RAZORPAY_KEY,
+            subscription_id: data.id,
+            name: "SUITCASE",
+
+            handler: function () {
+                // ✅ success redirect
+                window.location.href = "/payment-success";
+            },
+
+            modal: {
+                ondismiss: function () {
+                    // ❌ user closed payment
+                    window.location.href = "/payment-failed";
+                },
+            },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
+    };
+
+    const handleUpgrade = async (plan: string) => {
+        // ✅ store selected plan (for retry)
+        useEffect(() => {
+            const plan = localStorage.getItem("selectedPlan");
+
+            if (plan) {
+                // optional auto-highlight or auto-trigger
+                console.log("Retry plan:", plan);
+                localStorage.removeItem("selectedPlan");
+                handleSubscribe(plan);
+            }
+
+            if (!localStorage.getItem("onboardingComplete")) {
+                navigate("/onboarding");
+            }
+
+        }, []);
+
+        const res = await fetch("/api/subscription/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ plan }),
+        });
+
+        const data = await res.json();
+
+        const options = {
+            key: import.meta.env.VITE_RAZORPAY_KEY,
+            subscription_id: data.id,
+
+            handler: function () {
+                window.location.href = "/payment-success";
+            },
+
+            modal: {
+                ondismiss: function () {
+                    window.location.href = "/payment-failed";
+                },
+            },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
+    };
+
     return (
         <div className="min-h-screen p-10">
 
@@ -68,6 +151,19 @@ export default function Pricing() {
                             className="bg-black text-white px-4 py-2 rounded"
                         >
                             Choose Plan
+                        </button>
+                        <button
+                            onClick={() => handleUpgrade("pro")}
+                            className="bg-blue-600 text-white px-4 py-2 mt-3"
+                        >
+                            Upgrade to Pro
+                        </button>
+
+                        <button
+                            onClick={() => handleUpgrade("premium")}
+                            className="bg-blue-600 text-white px-4 py-2 mt-3"
+                        >
+                            Upgrade to Premium
                         </button>
                     </div>
                 ))}

@@ -1,0 +1,1 @@
+PKCS11_LIB: "C:\\Windows\\System32\\eTPKCS11.dll"

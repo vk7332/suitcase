@@ -1,60 +1,122 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function NotificationSettings({ user }: any) {
-    const [prefs, setPrefs] = useState({
-        email: true,
-        sms: true,
-        in_app: true,
-    });
+const NotificationSettings = () => {
+    const [phone, setPhone] = useState("");
+    const [whatsappEnabled, setWhatsappEnabled] = useState(true);
+    const [smsEnabled, setSmsEnabled] = useState(true);
+    const [pushEnabled, setPushEnabled] = useState(false);
 
     useEffect(() => {
-        fetch(`/api/notification/${user.id}`)
-            .then((res) => res.json())
-            .then(setPrefs);
-    }, [user.id]);
+        loadSettings();
+    }, []);
+
+    const loadSettings = async () => {
+        try {
+            const res = await axios.get("/api/user/notification-settings");
+            const data = res.data || {};
+
+            setPhone(data.phone || "");
+            setWhatsappEnabled(data.whatsapp ?? true);
+            setSmsEnabled(data.sms ?? true);
+            setPushEnabled(data.push ?? false);
+        } catch {
+            console.log("No existing settings");
+        }
+    };
 
     const save = async () => {
-        await fetch("/api/notification", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId: user.id, ...prefs }),
-        });
+        try {
+            await axios.post("/api/user/notification-settings", {
+                phone,
+                whatsapp: whatsappEnabled,
+                sms: smsEnabled,
+                push: pushEnabled,
+            });
 
-        alert("preferences updated");
+            alert("✅ Settings saved");
+        } catch {
+            alert("❌ Failed to save");
+        }
+    };
+
+    const enablePush = async () => {
+        try {
+            const permission = await Notification.requestPermission();
+
+            if (permission !== "granted") {
+                alert("Permission denied");
+                return;
+            }
+
+            const registration = await navigator.serviceWorker.register(
+                "/sw.js"
+            );
+
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: "<YOUR_PUBLIC_VAPID_KEY>",
+            });
+
+            await axios.post("/api/push/subscribe", subscription);
+
+            setPushEnabled(true);
+            alert("🔔 Push notifications enabled");
+        } catch (err) {
+            console.log(err);
+            alert("Push setup failed");
+        }
     };
 
     return (
-        <div className="p-6 max-w-md">
+        <div style={{ marginTop: 30 }}>
+            <h3>📲 Notification Settings</h3>
 
-            <h2 className="text-lg font-bold mb-4">
-                Notification Preferences
-            </h2>
+            <div>
+                <label>Phone Number:</label>
+                <input
+                    placeholder="+91XXXXXXXXXX"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                />
+            </div>
 
-            {["email", "sms", "in_app"].map((key) => (
-                <div key={key} className="flex justify-between mb-2">
-                    <span>{key.toUpperCase()}</span>
-
+            <div>
+                <label>
                     <input
                         type="checkbox"
-                        checked={(prefs as any)[key]}
-                        onChange={(e) =>
-                            setPrefs({
-                                ...prefs,
-                                [key]: e.target.checked,
-                            })
-                        }
+                        checked={smsEnabled}
+                        onChange={() => setSmsEnabled(!smsEnabled)}
                     />
-                </div>
-            ))}
+                    SMS Alerts
+                </label>
+            </div>
 
-            <button
-                onClick={save}
-                className="mt-4 px-4 py-2 bg-black text-white"
-            >
-                Save
-            </button>
+            <div>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={whatsappEnabled}
+                        onChange={() => setWhatsappEnabled(!whatsappEnabled)}
+                    />
+                    WhatsApp Alerts
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={pushEnabled}
+                        onChange={() => enablePush()}
+                    />
+                    Push Notifications
+                </label>
+            </div>
+
+            <button onClick={save}>Save Settings</button>
         </div>
     );
-}
+};
+
+export default NotificationSettings;

@@ -1,0 +1,21 @@
+.pricing-container {
+  padding: 40px;
+  text-align: center;
+}
+
+.plans, .addons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 250px;
+}
+
+.highlight {
+  border: 2px solid black;
+}

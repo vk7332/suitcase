@@ -1,182 +1,200 @@
 import { useEffect, useState } from "react";
-import { useSubscription } from "@/hooks/useSubscription";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import axios from "axios";
+import { supabase } from "../utils/supabase/supabaseclient";
 import { useNavigate } from "react-router-dom";
-import EmptyState from "@/components/ui/empty-state";
-import Skeleton from "@/components/ui/skeleton";
-import ErrorBoundary from "@/components/ui/error-boundary";
-import { useCases } from "@/hooks/useCases";
-
 
 export default function Dashboard() {
-    const { cases, loading } = useCases();
     const navigate = useNavigate();
 
-    export default function Dashboard() {
-        const { plan } = useSubscription();
-        const [cases, setCases] = useState<any[]>([]);
-        const navigate = useNavigate();
+    const [user, setUser] = useState<any>(null);
+    const [cases, setCases] = useState<Case[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-        useEffect(() => {
-            const fetchCases = async () => {
-                const { data } = await supabase.from("cases").select("*");
-                setCases(data || []);
-            };
+    axios.get("/api/dashboard", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    // =========================
+    // FETCH USER + CASES
+    // =========================
+    useEffect(() => {
+        const init = async () => {
+            try {
+                setLoading(true);
 
-            fetchCases();
-        }, []);
+                // 🔐 get logged-in user
+                const { data: { user: authUser } } = await supabase.auth.getUser();
+                console.log("ROLE:", profile.role);
+                console.log("ORG:", profile.organization_id);
 
-        const caseLimit = plan === "free" ? 5 : plan === "pro" ? 30 : Infinity;
+                if (!authUser) {
+                    navigate("/login");
+                    return;
+                }
 
-        return (
-            <ErrorBoundary>
-                <div className="p-6">
+                const { data: profile } = await supabase
+                    .from("users")
+                    .select("*")
+                    .eq("id", authUser.id)
+                    .single();
 
-                    <h1 className="text-2xl font-bold mb-6">
-                        Dashboard
-                    </h1>
+                setUser(authUser);
 
-                    {/* LOADING */}
-                    {loading && (
-                        <div className="space-y-3">
-                            <Skeleton height="h-6" />
-                            <Skeleton height="h-6" />
-                            <Skeleton height="h-6" />
-                        </div>
-                    )}
+                // 📂 fetch cases (temporary without org filter)
+                const { data: caseData, error: caseError } = await supabase
+                    .from("cases")
+                    .select("*")
+                    .eq("organization_id", profile.organization_id);
 
-                    {/* EMPTY */}
-                    {!loading && cases.length === 0 && (
-                        <EmptyState
-                            title="No cases yet"
-                            description="Create your first case to get started"
-                            actionLabel="Create Case"
-                            onAction={() => navigate("/cases/new")}
-                        />
-                    )}
+                if (caseError) {
+                    setError(caseError.message);
+                } else {
+                    setCases(caseData || []);
+                }
 
-                    {/* DATA */}
-                    {!loading && cases.length > 0 && (
-                        <div className="space-y-2">
-                            {cases.map((c) => (
-                                <div key={c.id} className="border p-3 rounded">
-                                    {c.title}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+            } catch (err) {
+                console.error(err);
+                setError("Failed to load dashboard");
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        init();
+    }, [navigate]);
+
+    // =========================
+    // LOGOUT
+    // =========================
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        navigate("/login");
+    };
+
+    // =========================
+    // UI STATES
+    // =========================
+    if (loading) return <p style={styles.center}>Loading...</p>;
+
+    if (error) return <p style={styles.error}>{error}</p>;
+
+    // =========================
+    // MAIN UI
+    // =========================
+    return (
+        <div style={styles.container}>
+            {/* HEADER */}
+            <div style={styles.header}>
+                <div>
+                    <h2>Dashboard</h2>
+                    <p>{user?.email}</p>
                 </div>
-            </ErrorBoundary>
-        );
-    }
-    <div className="p-6">
 
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-
-            <button
-                onClick={() => navigate("/cases/new")}
-                className="bg-black text-white px-4 py-2 rounded"
-            >
-                + New Case
-            </button>
-        </div>
-
-        {/* ANALYTICS */}
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-
-            <div className="border p-4 rounded">
-                <h3 className="text-sm text-gray-500">Total Cases</h3>
-                <p className="text-xl font-bold">{cases.length}</p>
-            </div>
-
-            <div className="border p-4 rounded">
-                <h3 className="text-sm text-gray-500">Plan</h3>
-                <p className="text-xl font-bold capitalize">{plan}</p>
-            </div>
-
-            <div className="border p-4 rounded">
-                <h3 className="text-sm text-gray-500">Usage</h3>
-                <p className="text-xl font-bold">
-                    {cases.length} / {caseLimit === Infinity ? "∞" : caseLimit}
-                </p>
-            </div>
-
-        </div>
-
-        {/* UPGRADE PROMPT */}
-        {plan !== "premium" && cases.length >= caseLimit - 2 && (
-            <div className="border p-4 mb-6 bg-yellow-50 rounded">
-
-                <p className="mb-2">
-                    You're close to your limit. Upgrade for more cases and features.
-                </p>
-
-                <button
-                    onClick={() => navigate("/pricing")}
-                    className="bg-black text-white px-4 py-2"
-                >
-                    Upgrade Now
+                <button onClick={handleLogout} style={styles.logout}>
+                    Logout
                 </button>
-
             </div>
-        )}
 
-        {/* QUICK ACTIONS */}
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-
-            <button
-                onClick={() => navigate("/calculator/court-fee")}
-                className="border p-4 rounded"
-            >
-                ⚖️ Calculate Court Fee
-            </button>
-
-            <button
-                onClick={() => navigate("/documents")}
-                className="border p-4 rounded"
-            >
-                📄 Upload Document
-            </button>
-
-            <button
-                onClick={() => navigate("/clients")}
-                className="border p-4 rounded"
-            >
-                👥 Manage Clients
-            </button>
-
-        </div>
-
-        {/* CASE LIST */}
-        <div>
-            <h2 className="text-lg font-semibold mb-2">
-                Recent Cases
-            </h2>
-
-            {cases.length === 0 ? (
-                <p className="text-gray-500">
-                    No cases yet. Create your first case.
-                </p>
-            ) : (
-                <div className="space-y-2">
-                    {cases.slice(0, 5).map((c) => (
-                        <div
-                            key={c.id}
-                            className="border p-3 rounded flex justify-between"
-                        >
-                            <span>{c.title}</span>
-                            <span className="text-sm text-gray-500">
-                                {c.status}
-                            </span>
-                        </div>
-                    ))}
+            {/* STATS */}
+            <div style={styles.stats}>
+                <div style={styles.card}>
+                    <h3>Total Cases</h3>
+                    <p>{cases.length}</p>
                 </div>
-            )}
-        </div>
 
-    </div>
+                <div style={styles.card}>
+                    <h3>Active Cases</h3>
+                    <p>{cases.filter(c => c.status === "active").length}</p>
+                </div>
+
+                <div style={styles.card}>
+                    <h3>Closed Cases</h3>
+                    <p>{cases.filter(c => c.status === "closed").length}</p>
+                </div>
+            </div>
+
+            {/* RECENT CASES */}
+            <div style={styles.section}>
+                <h3>Recent Cases</h3>
+
+                {cases.length === 0 ? (
+                    <p>No cases found</p>
+                ) : (
+                    <ul style={styles.list}>
+                        {cases.slice(0, 5).map((c) => (
+                            <li key={c.id} style={styles.listItem}>
+                                <div>
+                                    <strong>{c.case_title}</strong>
+                                    <p style={styles.meta}>{c.status}</p>
+                                </div>
+                                <span style={styles.meta}>
+                                    {new Date(c.created_at).toLocaleDateString()}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </div>
     );
 }
+
+// =========================
+// STYLES
+// =========================
+const styles: { [key: string]: React.CSSProperties } = {
+    container: {
+        padding: "2rem",
+        fontFamily: "sans-serif",
+    },
+    header: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    logout: {
+        padding: "0.5rem 1rem",
+        background: "#dc3545",
+        color: "#fff",
+        border: "none",
+        cursor: "pointer",
+    },
+    stats: {
+        display: "flex",
+        gap: "1rem",
+        marginTop: "2rem",
+    },
+    card: {
+        padding: "1rem",
+        background: "#f5f5f5",
+        borderRadius: "6px",
+        flex: 1,
+    },
+    section: {
+        marginTop: "2rem",
+    },
+    list: {
+        listStyle: "none",
+        padding: 0,
+    },
+    listItem: {
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "0.8rem",
+        borderBottom: "1px solid #ddd",
+    },
+    meta: {
+        fontSize: "0.85rem",
+        color: "#666",
+    },
+    center: {
+        textAlign: "center",
+        marginTop: "2rem",
+    },
+    error: {
+        color: "red",
+        textAlign: "center",
+    },
+};

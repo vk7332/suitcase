@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-
+import '@/styles/global.css';
 // 🔐 Auth
 import LoginPage from "@/pages/auth/login-page";
 
 // 📊 Dashboard (adjust if needed)
 import LegalDashboard from "@/pages/dashboard/legaldashboard";
+import SubscriptionGuard from "@/components/auth/subscription-guard";
 
 // 🧮 Calculator Pages (WRAPPERS ONLY)
 import CourtFeesPage from "@/pages/calculators/court-fees-page";
@@ -39,6 +40,13 @@ import Fees from "@/pages/advocate/fees";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ClientCaseDetails from "@/pages/client/client-case-details";
 import ClientDashboard from "@/pages/client/client-dashboard";
+import NotificationPreferences from "@/pages/client/notification-preferences";
+import Dashboard from "@/pages/Clients/dashboard";
+import Landing from "@/pages/landing";
+import Pricing from "@/pages/pricing";
+import Onboarding from "@/pages/onboarding";
+import PaymentSuccess from "@/pages/payment-success";
+import PaymentFailed from "@/pages/payment-failed";
 
 // ❌ 404 Page (create if missing)
 const NotFound = () => <div>404 - Page Not Found</div>;
@@ -97,11 +105,28 @@ export default function AppRoutes() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/client/preferences"
+                    element={<NotificationPreferences />}
+                />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <SubscriptionGuard>
+                            <Dashboard />
+                        </SubscriptionGuard>
+                    }
+                />
 
             </Routes>
 
             <Route path="/client" element={<ClientDashboard />} />
             <Route path="/client/case/:id" element={<ClientCaseDetails />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-failed" element={<PaymentFailed />} />
         </BrowserRouter>
     );
 }

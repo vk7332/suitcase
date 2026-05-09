@@ -1,0 +1,94 @@
+.cert-box {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin-top: 16px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Court Mode (Discreet UI) */
+.court-mode {
+  background: #000;
+  color: #ddd;
+}
+
+/* Reduce visual noise */
+.court-mode button {
+  opacity: 0.15;
+  border: none;
+}
+
+/* Minimal text */
+.court-mode * {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* Hide non-essential UI */
+.court-mode .non-essential {
+  display: none;
+}
+
+/* Suggestions look like plain text */
+.court-mode .suggestion {
+  background: transparent;
+  border: none;
+  padding: 2px 0;
+}
+
+.hearing-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top bar */
+.top-bar {
+  height: 30px;
+  font-size: 12px;
+  padding: 5px;
+}
+
+/* Main split */
+.main-area {
+  flex: 1;
+  display: flex;
+}
+
+/* Notes (left) */
+.notes-panel {
+  width: 50%;
+  padding: 8px;
+}
+
+.notes-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Suggestions (right) */
+.suggestions-panel {
+  width: 50%;
+  padding: 8px;
+}
+
+.suggestion {
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+/* Bottom controls */
+.bottom-bar {
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+}
