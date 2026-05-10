@@ -1,8 +1,24 @@
-export const ENV = {
-    SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-    SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
-    RAZORPAY_KEY_ID: import.meta.env.VITE_RAZORPAY_KEY_ID,
-    APP_NAME: "SUITCASE",
-};
+import { z } from "zod";
 
+export const envSchema = z.object({
+  NODE_ENV: z.string(),
 
+  PORT: z.string(),
+
+  OPENAI_API_KEY: z.string(),
+
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string(),
+
+  JWT_SECRET: z.string(),
+
+  REDIS_URL: z.string(),
+
+  RAZORPAY_KEY_ID: z.string(),
+  RAZORPAY_KEY_SECRET: z.string(),
+
+  TWILIO_ACCOUNT_SID: z.string(),
+  TWILIO_AUTH_TOKEN: z.string(),
+});
+
+export const env = envSchema.parse(process.env);

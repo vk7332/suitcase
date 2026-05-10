@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const useRealtimeCases = (clientId: string, onUpdate: any) => {
     useEffect(() => {

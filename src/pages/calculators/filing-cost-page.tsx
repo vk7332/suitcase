@@ -8,7 +8,7 @@ export default function FilingCostPage() {
                 Filing Cost Calculator
             </h1>
 
-            <filing-cost-calculator />
+            <FilingCostCalculator />
         </DashboardLayout>
     );
 }

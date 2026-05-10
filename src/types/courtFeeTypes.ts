@@ -1,4 +1,4 @@
-export interface court-feeInput {
+export interface CourtFeeInput {
     state: string;
     caseType: string;
     amount: number;
@@ -9,8 +9,8 @@ export interface court-feeInput {
     vakalatnama?: boolean;
 }
 
-export interface court-feeResult {
-    court-fee: number;
+export interface CourtFeeResult {
+    courtFee: number;
     filingFee: number;
     processFee: number;
     applicationFee: number;

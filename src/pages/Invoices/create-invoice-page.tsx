@@ -3,7 +3,7 @@ import {
     determineInvoiceType,
     calculateTotals,
 } from "../../utils/invoiceUtils";
-import { saveInvoice } from "../../services/invoiceService";
+import { saveInvoice } from "../../services/InvoiceService";
 import { generateGSTInvoicePDF } from "../../utils/generateGSTInvoicePDF";
 import { useProfile } from "../../hooks/useProfile";
 
@@ -48,26 +48,17 @@ const CreateInvoicePage: React.FC = () => {
             if (profile) {
                 await generateGSTInvoicePDF(
                     {
-                        name: profile.full_name,
+                        name: profile.full_name || "",
                         chamberName: profile.chamber_name,
                         address: profile.address,
                         phone: profile.phone,
                         email: profile.email,
                         website: profile.website,
-                        gstin: profile.gstin,
+                        gstin: (profile as any).gstin,
                         logoUrl: profile.logo_url,
                         signatureUrl: profile.signature_url,
                     },
-                    {
-                        invoiceNumber: invoiceData.invoice_number,
-                        invoiceDate: invoiceData.invoice_date,
-                        placeOfSupply: invoiceData.place_of_supply,
-                        clientName: client.name,
-                        clientAddress: client.address,
-                        clientGSTIN: client.gstin,
-                        items,
-                        gstRate: 18,
-                    }
+                    invoiceData as any
                 );
             }
 

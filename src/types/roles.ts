@@ -1,8 +1,8 @@
 export type UserRole =
     | "admin"
     | "advocate"
-    | "junior_advocate"
-    | "staff"
+    | "junior advocates"
+    | "staff(clerks)"
     | "client"
     | "litigant"
     | "public";
@@ -10,8 +10,8 @@ export type UserRole =
 export const ROLES = {
     ADMIN: "admin" as UserRole,
     ADVOCATE: "advocate" as UserRole,
-    JUNIOR_ADVOCATE: "junior_advocate" as UserRole,
-    STAFF: "staff" as UserRole,
+    JUNIOR_ADVOCATE: "junior advocates" as UserRole,
+    STAFF: "staff(clerks)" as UserRole,
     CLIENT: "client" as UserRole,
     LITIGANT: "litigant" as UserRole,
     PUBLIC: "public" as UserRole,

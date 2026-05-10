@@ -1,15 +1,14 @@
 import { supabase } from "../config/supabase";
 import { Request, Response } from 'express';
 import { generateAuditPDF } from "../utils/generateAuditPdf";
-import { generateAuditPdf } from "../services/pdf.service";
 import { authenticate } from "../middleware/auth.middleware";
 import { saveAuditReport } from "../services/report.service";
 import { supabaseAdmin } from "../config/supabase";
 import { parseCertificate } from "../utils/certificate.util";
-import { generateAuditPdf } from "../services/pdf.service";
 import { attachHashToLog } from "../services/hashLog.service";
 import { generate65BCertificate } from "../services/certificate65B.service";
 import { getMemory } from "../services/memory.service";
+import { verifyAudit as verifyAuditController } from "./verify.controller";
 
 export const generateAudit = async (req: Request, res: Response) => {
     try {
@@ -26,12 +25,7 @@ export const generateAudit = async (req: Request, res: Response) => {
         });
 
         // 📦 generate PDF
-        const pdfBuffer = await generateAuditPdf({
-            caseId,
-            logs: logsWithHash,
-            certificate,
-            advocateName,
-        });
+        const pdfBuffer = await generateAuditPDF(caseId);
 
         res.setHeader("Content-Type", "application/pdf");
         res.send(pdfBuffer);
@@ -95,20 +89,17 @@ export const exportDocumentAccessLogs = async (req: Request, res: Response) => {
 
 export const coCounselAudit = async (req: Request, res: Response) => {
     try {
-        const { text, caseId } = req.body;
+        const { text, caseId, document_id } = req.body;
         const memory = getMemory(caseId);
-
         const { data } = await supabase
             .from("document_access_logs")
             .select("*")
             .eq("document_id", document_id)
             .order("created_at", { ascending: true });
-
         // basic validation
         if (!data || data.length === 0) {
             return res.json({ valid: false });
         }
-
         return res.json({
             valid: true,
             document_id,
@@ -132,20 +123,14 @@ export const finalizeAudit = async (req: Request, res: Response) => {
             .single();
 
         const certInfo = parseCertificate(certificate);
+        const chamber_id = user?.chamber_id;
 
-        const pdf = await generateAuditPdf({
-            chamber_id: user.chamber_id,
-            user_name: user.full_name,
-            signature,
-            certificate,
-            certInfo,
-        });
+        const pdf = await generateAuditPDF(user.chamber_id);
 
         await saveAuditReport({
             chamber_id: user.chamber_id,
             hash,
             signature,
-            certificate,
         });
 
         const txHash = await anchorHash(hash);
@@ -173,10 +158,7 @@ export const downloadAuditReport = async (req: Request, res: Response) => {
             .eq("id", userId)
             .single();
 
-        const pdfBuffer = await generateAuditPdf({
-            chamber_id: user.chamber_id,
-            user_name: user.full_name || "Authorized Signatory",
-        });
+        const pdfBuffer = await generateAuditPDF(user.chamber_id);
 
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader(
@@ -189,6 +171,10 @@ export const downloadAuditReport = async (req: Request, res: Response) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+export const exportAuditLogs = exportDocumentAccessLogs;
+export const downloadAuditPDF = downloadAuditReport;
+export const verifyAudit = verifyAuditController;
 
 const anchorHash = async (hash: string) => {
     // Simulate anchoring on blockchain and returning a tx hash

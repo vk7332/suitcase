@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const fetchAffiliates = async () => {
     const { data, error } = await supabase
@@ -53,5 +53,6 @@ export const updateCommissionStatus = async (
 
     if (error) throw error;
 };
+
 
 

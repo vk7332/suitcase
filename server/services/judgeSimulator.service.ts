@@ -57,4 +57,4 @@ export const generateJudgeObjections = (sections: Section[]): QA[] => {
     });
 
     return qa;
-}; s
+};

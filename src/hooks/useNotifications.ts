@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const useNotifications = (userId: string) => {
     const [notifications, setNotifications] = useState<any[]>([]);

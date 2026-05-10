@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { InvoiceData } from "../types/invoice";
 
 export const generateInvoiceNumber = (): string => {
@@ -6,6 +6,20 @@ export const generateInvoiceNumber = (): string => {
     return `INV-${date.getFullYear()}${(date.getMonth() + 1)
         .toString()
         .padStart(2, "0")}-${Date.now()}`;
+};
+
+export const fetchInvoices = async (): Promise<InvoiceData[]> => {
+    const { data, error } = await supabase
+        .from("invoices")
+        .select("*, client:client_id(name, address, gstin)")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+
+    return data;
 };
 
 export const fetchGSTSummary = async () => {

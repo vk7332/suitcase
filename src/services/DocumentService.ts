@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function uploadDocument(file: File, caseId: string) {
     const filePath = `${caseId}/${file.name}`;

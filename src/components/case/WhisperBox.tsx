@@ -1,12 +1,20 @@
 import React, { useState, CSSProperties } from "react";
 import { useClipboard } from "./useClipboard";
 
-const WhisperBox = ({ suggestion, onAccept, onIgnore, onSave }) => {
+interface WhisperBoxProps {
+    suggestion: string;
+    onAccept?: () => void;
+    onIgnore?: () => void;
+    onSave?: (text: string) => void;
+}
+
+const WhisperBox = ({ suggestion, onAccept, onIgnore, onSave }: WhisperBoxProps) => {
     const { copy } = useClipboard();
+    const [pinned, setPinned] = useState(false);
+    const [copied, setCopied] = useState(false);
 
     if (!suggestion) return null;
 
-    const [copied, setCopied] = useState(false);
     const handleCopy = async () => {
         const textToCopy = suggestion.startsWith("Objection")
             ? suggestion
@@ -15,35 +23,39 @@ const WhisperBox = ({ suggestion, onAccept, onIgnore, onSave }) => {
         const success = await copy(textToCopy);
 
         if (success) {
-            // 🧠 AUTO-SAVE
+            setCopied(true);
             onSave?.(textToCopy);
+            setTimeout(() => setCopied(false), 2000);
         }
     };
 
     const isCritical = suggestion?.toLowerCase().includes("objection");
+
+    const dynamicBoxStyle: CSSProperties = {
+        ...styles.box,
+        border: isCritical ? "2px solid red" : "1px solid #444",
+        animation: isCritical ? "pulse 0.8s ease-in-out 2" : "none",
+    };
+
     return (
-        <div style={styles.box}>
+        <div style={dynamicBoxStyle}>
             <p style={styles.text}>⚖️ {suggestion}</p>
 
             <div style={styles.actions}>
-                <button onClick={handleCopy} style={styles.copy}>
-                    📋
-                </button>
-
-                <button onClick={onAccept} style={styles.accept}>
-                    ✔
-                </button>
-
-                <button onClick={onIgnore} style={styles.ignore}>
-                    ✖
-                </button>
-
-                <button>
+                <button onClick={handleCopy} style={styles.copy} title="Copy Objection">
                     {copied ? "✅" : "📋"}
                 </button>
 
-                <button onClick={onPin}>
-                    {pinned ? "📌 Unpin" : "📌 Pin"}
+                <button onClick={onAccept} style={styles.accept} title="Accept">
+                    ✔
+                </button>
+
+                <button onClick={onIgnore} style={styles.ignore} title="Ignore">
+                    ✖
+                </button>
+
+                <button onClick={() => setPinned(!pinned)} title={pinned ? "Unpin" : "Pin"}>
+                    {pinned ? "📍" : "📌"}
                 </button>
             </div>
         </div>
@@ -56,49 +68,50 @@ const styles: Record<string, CSSProperties> = {
         bottom: "20px",
         right: "20px",
         maxWidth: "280px",
-        background: "rgba(0,0,0,0.75)",
+        background: "rgba(0,0,0,0.85)",
         color: "#fff",
-        padding: "10px 14px",
-        borderRadius: "10px",
-        fontSize: "13px",
+        padding: "12px 16px",
+        borderRadius: "12px",
+        fontSize: "14px",
         zIndex: 9999,
-
-        // 💡 FADE ANIMATION
         opacity: 1,
-        transition: "opacity 0.3s ease, transform 0.3s ease",
+        transition: "all 0.3s ease",
         transform: "translateY(0)",
-        border: isCritical ? "2px solid red" : "1px solid #444",
-        animation: isCritical ? "pulse 0.8s ease-in-out 2" : "none",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
     },
     text: {
         margin: 0,
-        marginBottom: "6px",
+        marginBottom: "10px",
+        lineHeight: "1.4",
     },
     actions: {
         display: "flex",
-        gap: "8px",
+        gap: "10px",
     },
     accept: {
-        background: "green",
+        background: "#22c55e",
         color: "#fff",
         border: "none",
-        borderRadius: "4px",
+        borderRadius: "6px",
         cursor: "pointer",
+        padding: "4px 8px",
     },
     ignore: {
-        background: "red",
+        background: "#ef4444",
         color: "#fff",
         border: "none",
-        borderRadius: "4px",
+        borderRadius: "6px",
         cursor: "pointer",
+        padding: "4px 8px",
     },
     copy: {
-        background: "blue",
+        background: "#3b82f6",
         color: "#fff",
         border: "none",
-        borderRadius: "4px",
+        borderRadius: "6px",
         cursor: "pointer",
-    }
+        padding: "4px 8px",
+    },
 };
 
 export default WhisperBox;

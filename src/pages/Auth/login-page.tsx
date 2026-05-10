@@ -1,20 +1,22 @@
 import { useState } from "react";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { useClientAuth } from "@/hooks/useClientAuth";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("advocate");
 
     const handleLogin = async () => {
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-
-        if (error) return alert(error.message);
-
-        alert("Login successful");
+        try {
+            const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+            if (error) throw error;
+            window.location.href = "/dashboard";
+        } catch (err: any) {
+            alert(err.message);
+        }
     };
 
     return (

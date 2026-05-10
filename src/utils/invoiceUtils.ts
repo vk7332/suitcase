@@ -27,18 +27,17 @@ export const calculateTotals = (
 
     // Advocates do not charge GST directly
     const gstAmount = 0;
-    const total = subtotal;
-
+    // total is redundant, returning subtotal directly
     return {
         subtotal,
         gstAmount,
-        total,
+        total: subtotal,
         gstRate,
     };
 };
 
-export const getGSTNote = (invoiceType: InvoiceType): string => {
-    switch (invoiceType) {
+export const getGSTNote = (_invoiceType: InvoiceType): string => {
+    switch (_invoiceType) {
         case "RECEIPT":
             return "Note: Legal services provided by an advocate are exempt from GST under Notification No. 12/2017 – Central Tax (Rate) dated 28.06.2017.";
 

@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const getAdminDashboardData = async () => {
     // Fetch all subscriptions
@@ -73,5 +73,6 @@ export const getAdminDashboardData = async () => {
         recentPayments: payments || [],
     };
 };
+
 
 

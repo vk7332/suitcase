@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
-import { useRole } from "@/context/rolecontext";
+import { useRole } from "@/context/role-context";
 import { UserRole } from "@/types/roles";
 
 interface RoleBasedRouteProps {

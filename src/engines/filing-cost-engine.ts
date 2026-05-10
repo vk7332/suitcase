@@ -12,7 +12,7 @@ export class FilingCostEngine {
 
         return {
             total:
-                input.court-fee +
+                input.courtFee +
                 fixed.filingFee +
                 input.defendants * fixed.processFee +
                 input.applications * fixed.applicationFee +

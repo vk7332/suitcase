@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { convertToWrittenStatement } from "../services/conversion.service";
 import { generateEvidenceAffidavit } from "../services/evidence.service";
-import { generateTimeline } from "../services/timeline.service";
-import { generateArguments } from "../services/arguments.service";
+import { generateWrittenArguments as generateArgumentText } from "../services/arguments.service";
 import { generatePdf } from "../services/pdf.service";
 import { generateFinalArguments } from "../services/finalArguments.service";
-import { generateWrittenArguments } from "../services/writtenArguments.service";
+import { generateWrittenArguments as generateWrittenArgumentsDoc } from "../services/writtenArguments.service";
 import { applyCitations } from "../services/citation.service";
 
 export const generateFullCaseBundle = async (req: Request, res: Response) => {
@@ -22,30 +21,35 @@ export const generateFullCaseBundle = async (req: Request, res: Response) => {
         });
 
         // 3. Timeline
-        const timeline = generateTimeline(sections);
+        const timeline = sections;
 
         // 4. Arguments
-        const argumentsList = generateArguments(sections);
+        const argumentsList = await generateArgumentText(
+            Array.isArray(sections) ? sections : [JSON.stringify(sections)]
+        );
 
         const finalArgs = generateFinalArguments({
             sections,
             caseData,
         });
 
-        const writtenArgs = generateWrittenArguments({
+        const writtenArgs = generateWrittenArgumentsDoc({
             sections,
             caseData,
         });
         const citedSections = applyCitations(sections);
 
         // 5. Generate PDF
-        const pdfBuffer = await generatePdf({
-            sections: wsSections, citedSections,
-            affidavit,
-            timeline,
-            arguments: argumentsList, finalArgs,
-            writtenArguments: writtenArgs,
-        });
+        const paragraphs = [
+            ...wsSections.flatMap((section: any) => section.content || []),
+            ...citedSections.flatMap((section: any) => section.content || []),
+            ...(Array.isArray(affidavit?.content) ? affidavit.content : []),
+            ...(Array.isArray(timeline) ? timeline.map((item: any) => JSON.stringify(item)) : []),
+            typeof argumentsList === "string" ? argumentsList : JSON.stringify(argumentsList),
+            typeof finalArgs === "string" ? finalArgs : JSON.stringify(finalArgs),
+            typeof writtenArgs === "string" ? writtenArgs : JSON.stringify(writtenArgs),
+        ];
+        const pdfBuffer = await generatePdf({ paragraphs: paragraphs.filter(Boolean), document: caseData });
 
         res.setHeader("Content-Type", "application/pdf");
         res.send(pdfBuffer);

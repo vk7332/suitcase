@@ -1,4 +1,4 @@
-import { supabase } from "./supabase/supabaseclient";
+import { supabase } from "./supabase/supabaseClient";
 
 export const generateReferralCode = (email: string): string => {
   const prefix = email.split("@")[0].substring(0, 4).toUpperCase();
@@ -27,4 +27,5 @@ export const recordReferral = async (referrerId: string) => {
       amount: 100, // ₹100 commission
     },
   ]);
+};
 

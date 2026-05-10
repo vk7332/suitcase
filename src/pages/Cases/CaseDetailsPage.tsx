@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import CaseTimeline from "../../components/cases/CaseTimeline";
 import DocumentUploader from "../../components/documents/DocumentUploader";
 import { sendWhatsAppReminder } from "../../utils/whatsapp";
@@ -141,5 +141,6 @@ Next Date: ${new Date(caseData.next_date).toLocaleDateString()}`,
         </div>
     );
 }
+
 
 

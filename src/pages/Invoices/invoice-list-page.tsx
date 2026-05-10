@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { fetchInvoices } from "../../services/InvoiceService";
 import { Link } from "react-router-dom";
 
 const InvoiceListPage: React.FC = () => {
@@ -7,23 +7,13 @@ const InvoiceListPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchInvoices();
+        loadInvoices();
     }, []);
 
-    const fetchInvoices = async () => {
-        const { data, error } = await supabase
-            .from("invoices")
-            .select(
-                `
-        *,
-        clients(name)
-      `
-            )
-            .order("created_at", { ascending: false });
-
-        if (!error) {
-            setInvoices(data || []);
-        }
+    const loadInvoices = async () => {
+        setLoading(true);
+        const data = await fetchInvoices();
+        setInvoices(data);
         setLoading(false);
     };
 

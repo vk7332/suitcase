@@ -1,8 +1,5 @@
-import {
 import { Request, Response } from 'express';
-    assignUserToCase,
-    getCaseAssignments,
-} from "../services/caseAssignment.service";
+import { assignUserToCase, getCaseAssignments } from "../services/caseAssignment.service";
 
 export const assignUser = async (req: Request, res: Response) => {
     try {
@@ -22,9 +19,10 @@ export const assignUser = async (req: Request, res: Response) => {
 
 export const getAssignments = async (req: Request, res: Response) => {
     try {
-        const { caseId } = req.params;
 
-        const data = await getCaseAssignments(caseId);
+        const { caseId } = req.params;
+        const id = Array.isArray(caseId) ? caseId[0] : caseId;
+        const data = await getCaseAssignments(id);
 
         res.json(data);
     } catch (err: any) {

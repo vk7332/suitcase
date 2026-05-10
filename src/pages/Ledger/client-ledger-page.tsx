@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { useParams } from "react-router-dom";
 
 const ClientLedgerPage: React.FC = () => {

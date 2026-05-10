@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { ClientRecord } from '@/types/client';
-import { supabase } from '@/utils/supabase/supabaseclient';
+import { supabase } from '@/utils/supabase/supabaseClient';
 import { useAuth } from './AuthContext';
 
 interface HistoryContextType {

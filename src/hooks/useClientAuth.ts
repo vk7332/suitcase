@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { useNavigate } from "react-router-dom";
 
 export const useClientAuth = () => {

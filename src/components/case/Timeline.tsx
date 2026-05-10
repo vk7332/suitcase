@@ -2,58 +2,72 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ObjectionBox from "./ObjectionBox";
 
-const Timeline = ({ caseId }) => {
-    const [events, setEvents] = useState([]);
+const Timeline = ({ caseId }: { caseId: string }) => {
+    const [events, setEvents] = useState<any[]>([]);
 
     useEffect(() => {
         axios.get(`/api/case/timeline/${caseId}`).then(res => {
             setEvents(res.data);
-        });
-
-        // inside render
-        <ObjectionBox objections={parsed.objections?.objections} />
-    }, []);
+        }).catch(console.error);
+    }, [caseId]);
 
     return (
-        <div>
-            <h3>📊 Case Timeline</h3>
-            {events.map((e: any) => (
-                <div key={e.id}>
-                    <b>{e.event_date}</b> - {e.title}
-                    <p>{e.description}</p>
-                </div>
-            ))}
+        <div className="space-y-6">
+            <h3 className="text-xl font-bold">📊 Case Timeline</h3>
+            {events.map((e: any) => {
+                const parsed = e.description ? JSON.parse(e.description) : {};
+                return (
+                    <div key={e.id} className="border p-4 rounded shadow-sm bg-white">
+                        <div className="mb-4">
+                            <b className="text-blue-600">{e.event_date}</b> - <span className="font-semibold">{e.title}</span>
+                            <p className="mt-1 text-gray-700">{e.description}</p>
+                        </div>
+
+                        {parsed.objections?.objections && (
+                            <ObjectionBox objections={parsed.objections.objections} />
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div>
+                                <h4 className="font-bold text-gray-800">👨‍⚖️ Judge</h4>
+                                {parsed.speakers?.judge?.map((l: string, i: number) => <p key={i} className="text-sm italic">{l}</p>)}
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-gray-800">⚖️ Opponent</h4>
+                                {parsed.speakers?.opponent?.map((l: string, i: number) => <p key={i} className="text-sm italic">{l}</p>)}
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-gray-800">🧑‍💼 Me</h4>
+                                {parsed.speakers?.me?.map((l: string, i: number) => <p key={i} className="text-sm italic">{l}</p>)}
+                            </div>
+                        </div>
+
+                        {parsed.contradictions?.contradictions && (
+                            <div className="mt-4">
+                                <h4 className="font-bold text-red-600">⚠️ Contradictions</h4>
+                                {parsed.contradictions.contradictions.map((c: any, i: number) => (
+                                    <div key={i} className="mt-2 p-2 bg-red-50 border-l-4 border-red-500">
+                                        <p className="text-sm">1: {c.statement1}</p>
+                                        <p className="text-sm">2: {c.statement2}</p>
+                                        <b className="text-xs">{c.issue}</b>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {parsed.crossExam?.questions && (
+                            <div className="mt-4">
+                                <h4 className="font-bold text-green-600">🎯 Cross-Examination</h4>
+                                {parsed.crossExam.questions.map((q: string, i: number) => (
+                                    <p key={i} className="text-sm">Q{i + 1}: {q}</p>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                );
+            })}
         </div>
     );
 };
-
-const parsed = JSON.parse(e.description || "{}");
-
-<h4>👨‍⚖️ Judge</h4>
-{ parsed.speakers?.judge?.map((l, i) => <p key={i}>{l}</p>) }
-
-<h4>⚖️ Opponent</h4>
-{ parsed.speakers?.opponent?.map((l, i) => <p key={i}>{l}</p>) }
-
-<h4>🧑‍💼 Me</h4>
-{ parsed.speakers?.me?.map((l, i) => <p key={i}>{l}</p>) }
-
-<h3>⚠️ Contradictions</h3>
-{
-    parsed.contradictions?.contradictions?.map((c, i) => (
-        <div key={i}>
-            <p>{c.statement1}</p>
-            <p>{c.statement2}</p>
-            <b>{c.issue}</b>
-        </div>
-    ))
-}
-
-<h3>🎯 Cross-Examination</h3>
-{
-    parsed.crossExam?.questions?.map((q, i) => (
-        <p key={i}>Q{i + 1}: {q}</p>
-    ))
-}
 
 export default Timeline;

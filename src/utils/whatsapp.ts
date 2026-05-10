@@ -10,7 +10,7 @@ Please attend court on time.
 - ${caseData.advocate || "Your Advocate"}
   `;
 
-    const phone = client.phone?.replace(//D/g, "");
+    const phone = client.phone?.replace(/\D/g, "");
 
     const url = `https://wa.me/91${phone}?text=${encodeURIComponent(
         message

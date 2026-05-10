@@ -1,36 +1,21 @@
 import { useState, useEffect } from "react";
-import { calculatecourt-fee } from "../../engines/court-fee/court-feeCalculatorEngine";
+import { calculateCourtFee } from "../../engines/courtFee/courtFeeCalculatorEngine";
 import FeeBreakdown from "./FeeBreakdown";
-import { generatecourt-feePDF } from "../../utils/pdfExport";
+import { generateCourtFeePDF } from "../../engines/pdf/courtFeePdf.engine";
 import { getProfile } from "../../services/ProfileService";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function CaseDetailsForm() {
-    const { user } = useAuth();
-
     const [suitValue, setSuitValue] = useState(0);
     const [suitType, setSuitType] = useState("money");
     const [state, setState] = useState("HP");
-
-    const [options, setOptions] = useState({
-        includeFiling: true,
-        includeApplication: true,
-        includeNotary: false,
-    });
-
+    const [options, setOptions] = useState({});
     const [result, setResult] = useState<any>(null);
     const [profile, setProfile] = useState<any>(null);
 
-    // 📥 LOAD PROFILE
-    useEffect(() => {
-        if (!user) return;
-
-        getProfile(user.id).then(setProfile);
-    }, [user]);
-
     // 🧮 CALCULATE
     const handleCalculate = () => {
-        const res = calculatecourt-fee({
+        const res = calculateCourtFee({
             suitValue,
             suitType,
             state,
@@ -42,15 +27,12 @@ export default function CaseDetailsForm() {
 
     // 📄 PDF EXPORT
     const handlePDF = () => {
-        generatecourt-feePDF(
-            {
-                suitValue,
-                suitType,
-                state,
-                result,
-            },
-            profile
-        );
+        generateCourtFeePDF({
+            suitValue,
+            suitType,
+            state,
+            result,
+        });
     };
 
     return (

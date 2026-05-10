@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const processPayout = async (payoutData: any) => {
     const { data, error } = await supabase.functions.invoke(
@@ -11,5 +11,6 @@ export const processPayout = async (payoutData: any) => {
     if (error) throw error;
     return data;
 };
+
 
 

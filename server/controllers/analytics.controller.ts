@@ -1,6 +1,6 @@
 import { analyzeCase } from "../services/analytics.service";
 import { Request, Response } from 'express';
-import { judgePattern } from "../services/judgePattern.service";
+import { judgePattern } from "../services/analytics.service";
 
 export const getAnalytics = async (req: Request, res: Response) => {
     const { facts } = req.body;

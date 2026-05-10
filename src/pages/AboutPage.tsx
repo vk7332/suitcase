@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Briefcase, GraduationCap, Award, Book, PenTool, Globe, Mail } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Award, Book, PenTool, Globe, Mail, Phone } from 'lucide-react';
 
 const AboutPage: React.FC = () => (
     <div className="max-w-6xl mx-auto space-y-20 py-16 animate-in fade-in slide-in-from-bottom-4 duration-700">

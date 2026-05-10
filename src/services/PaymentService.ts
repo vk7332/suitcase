@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getPayments(caseId: string) {
     const { data, error } = await supabase
@@ -27,5 +27,6 @@ export async function deletePayment(id: string) {
 
     if (error) console.error(error);
 }
+
 
 

@@ -24,3 +24,19 @@ Return JSON:
         return { mood: "NEUTRAL" };
     }
 };
+
+export const detectJudgeMood = (text: string) => {
+    const lower = text.toLowerCase();
+
+    if (lower.includes("hurry") || lower.includes("quickly")) {
+        return "IMPATIENT";
+    }
+    if (lower.includes("irrelevant") || lower.includes("stick to the point")) {
+        return "STRICT";
+    }
+    if (lower.includes("proceed") || lower.includes("noted")) {
+        return "FAVORABLE";
+    }
+
+    return "NEUTRAL";
+};

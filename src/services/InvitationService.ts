@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function inviteJunior(email: string, userId: string) {
     const { error } = await supabase
@@ -17,5 +17,6 @@ export async function inviteJunior(email: string, userId: string) {
         alert("Invitation sent");
     }
 }
+
 
 

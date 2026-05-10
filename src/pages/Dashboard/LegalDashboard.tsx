@@ -3,7 +3,7 @@ import ReminderAlert from "../../components/notifications/ReminderAlert";
 import { useAuth } from "../../hooks/useAuth";
 import { runAutoReminders } from "../../engines/auto-reminder-engine";
 import { useEffect } from "react";
-import { supabase } from "@/utils/supabase/supabaseclientClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function LegalDashboard() {
     const { user, loading } = useAuth();

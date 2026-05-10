@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getLimitations() {
     const { data } = await supabase
@@ -18,5 +18,6 @@ export async function deleteLimitation(id: string) {
         .delete()
         .eq("id", id);
 }
+
 
 

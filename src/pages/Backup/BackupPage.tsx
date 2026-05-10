@@ -10,10 +10,10 @@ export default function BackupPage() {
     const handleBackupCSV = async () => {
         const data = await getFullBackup();
 
-        exportCSV(data.clients, "clients");
-        exportCSV(data.cases, "cases");
-        exportCSV(data.payments, "payments");
-        exportCSV(data.diary, "diary");
+        exportCSV(data.clients || [], "clients");
+        exportCSV(data.cases || [], "cases");
+        exportCSV(data.payments || [], "payments");
+        exportCSV(data.diary || [], "diary");
     };
 
     return (

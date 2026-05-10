@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { supabase } from "../utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function AcceptInvite() {
     const [params] = useSearchParams();
@@ -46,6 +46,7 @@ export default function AcceptInvite() {
                 .eq("id", invite.id);
 
             navigate("/dashboard");
+            setLoading(false);
         };
 
         accept();

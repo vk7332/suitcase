@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getFullBackup() {
     const [clients, cases, payments, diary] = await Promise.all([
@@ -15,5 +15,6 @@ export async function getFullBackup() {
         diary: diary.data,
     };
 }
+
 
 

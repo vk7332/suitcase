@@ -1,0 +1,202 @@
+﻿
+> suitcase@1.0.0 build
+> tsc -p server
+
+server/config/openai.ts(1,20): error TS2307: Cannot find module 'openai' or its corresponding type declarations.
+server/constants/roles.ts(13,51): error TS2345: Argument of type 'Role' is not assignable to parameter of type '"ADVOCATE" | "ADMIN"'.
+  Type '"CLIENT"' is not assignable to type '"ADVOCATE" | "ADMIN"'.
+server/constants/roles.ts(17,52): error TS2345: Argument of type 'Role' is not assignable to parameter of type '"CLIENT" | "LITIGENT"'.
+  Type '"ADVOCATE"' is not assignable to type '"CLIENT" | "LITIGENT"'.
+server/controllers/analytics.controller.ts(3,30): error TS2307: Cannot find module '../services/judgePattern.service' or its corresponding type declarations.
+server/controllers/audit.controller.ts(4,10): error TS2300: Duplicate identifier 'generateAuditPdf'.
+server/controllers/audit.controller.ts(9,10): error TS2300: Duplicate identifier 'generateAuditPdf'.
+server/controllers/audit.controller.ts(30,13): error TS2353: Object literal may only specify known properties, and 'caseId' does not exist in type '{ chamber_id: string; user_name: string; generatedAt: string; hash: string; verificationId: string; logs: any[]; }'.
+server/controllers/audit.controller.ts(87,27): error TS18047: 'data' is possibly 'null'.
+server/controllers/audit.controller.ts(104,32): error TS2552: Cannot find name 'document_id'. Did you mean 'document'?
+server/controllers/audit.controller.ts(114,13): error TS2552: Cannot find name 'document_id'. Did you mean 'document'?
+server/controllers/audit.controller.ts(137,25): error TS18047: 'user' is possibly 'null'.
+server/controllers/audit.controller.ts(138,24): error TS18047: 'user' is possibly 'null'.
+server/controllers/audit.controller.ts(139,13): error TS2353: Object literal may only specify known properties, and 'signature' does not exist in type '{ chamber_id: string; user_name: string; generatedAt: string; hash: string; verificationId: string; logs: any[]; }'.
+server/controllers/audit.controller.ts(145,25): error TS18047: 'user' is possibly 'null'.
+server/controllers/audit.controller.ts(148,13): error TS2353: Object literal may only specify known properties, and 'certificate' does not exist in type '{ chamber_id: string; hash: string; signature: string; }'.
+server/controllers/audit.controller.ts(154,13): error TS18004: No value exists in scope for the shorthand property 'chamber_id'. Either declare one or provide an initializer.
+server/controllers/audit.controller.ts(176,50): error TS2345: Argument of type '{ chamber_id: any; user_name: any; }' is not assignable to parameter of type '{ chamber_id: string; user_name: string; generatedAt: string; hash: string; verificationId: string; logs: any[]; }'.
+  Type '{ chamber_id: any; user_name: any; }' is missing the following properties from type '{ chamber_id: string; user_name: string; generatedAt: string; hash: string; verificationId: string; logs: any[]; }': generatedAt, hash, verificationId, logs
+server/controllers/audit.controller.ts(177,25): error TS18047: 'user' is possibly 'null'.
+server/controllers/audit.controller.ts(178,24): error TS18047: 'user' is possibly 'null'.
+server/controllers/billing.controller.ts(13,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/controllers/calendar.controller.ts(9,37): error TS2339: Property 'date' does not exist on type '(value: string, regExp: RegExp, message?: string | Error | undefined) => void'.
+server/controllers/caseAssignment.controller.ts(24,47): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+server/controllers/caseExtra.controller.ts(4,43): error TS2307: Cannot find module '../services/document.service' or its corresponding type declarations.
+server/controllers/caseExtra.controller.ts(16,36): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+server/controllers/caseExtra.controller.ts(26,36): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+server/controllers/client.controller.ts(3,10): error TS2305: Module '"../utils/auditLogger"' has no exported member 'logDocumentAccess'.
+server/controllers/client.controller.ts(16,35): error TS2339: Property 'id' does not exist on type 'Document'.
+server/controllers/client.controller.ts(18,39): error TS2339: Property 'organization_id' does not exist on type 'Document'.
+server/controllers/client.controller.ts(32,35): error TS2339: Property 'file_url' does not exist on type 'Document'.
+server/controllers/client.controller.ts(39,18): error TS18047: 'data' is possibly 'null'.
+server/controllers/crossExam.controller.ts(1,10): error TS2305: Module '"../services/crossExam.service"' has no exported member 'generateCrossQuestions'.
+server/controllers/hearing.controller.ts(11,10): error TS2724: '"../services/objection.service"' has no exported member named 'generateObjection'. Did you mean 'generateObjections'?
+server/controllers/hearing.controller.ts(21,10): error TS2305: Module '"../services/judgeMood.service"' has no exported member 'detectJudgeMood'.
+server/controllers/hearing.controller.ts(93,37): error TS2339: Property 'lastInterruptAt' does not exist on type 'Memory'.
+server/controllers/hearing.controller.ts(104,20): error TS2339: Property 'lastInterruptAt' does not exist on type 'Memory'.
+server/controllers/hearing.controller.ts(120,17): error TS2353: Object literal may only specify known properties, and 'reason' does not exist in type '{ score: number; level: string; }'.
+server/controllers/hearing.controller.ts(141,13): error TS18004: No value exists in scope for the shorthand property 'objectionLine'. Either declare one or provide an initializer.
+server/controllers/hearing.controller.ts(151,13): error TS2304: Cannot find name 'condition'.
+server/controllers/hearing.controller.ts(201,56): error TS2554: Expected 2 arguments, but got 3.
+server/controllers/hearing.controller.ts(214,29): error TS2554: Expected 2 arguments, but got 1.
+server/controllers/limitation.controller.ts(3,10): error TS2305: Module '"../services/limitation.service"' has no exported member 'calculateFromAI'.
+server/controllers/limitation.controller.ts(5,10): error TS2305: Module '"../services/limitationAI.service"' has no exported member 'detectMultipleTriggers'.
+server/controllers/main.controller.ts(4,10): error TS2724: '"../services/timeline.service"' has no exported member named 'generateTimeline'. Did you mean 'getTimeline'?
+server/controllers/main.controller.ts(5,10): error TS2305: Module '"../services/arguments.service"' has no exported member 'generateArguments'.
+server/controllers/main.controller.ts(43,13): error TS2353: Object literal may only specify known properties, and 'sections' does not exist in type '{ paragraphs?: string[] | undefined; document?: any; signers?: any[] | undefined; }'.
+server/controllers/objection.controller.ts(1,10): error TS2305: Module '"../services/objection.service"' has no exported member 'detectObjection'.
+server/controllers/pdf.controller.ts(1,10): error TS2724: '"../services/pdf.service"' has no exported member named 'generateArgumentsPdf'. Did you mean 'generateAuditPdf'?
+server/controllers/plaint.controller.ts(1,40): error TS2307: Cannot find module '../services/plaint.service' or its corresponding type declarations.
+server/controllers/plaint.controller.ts(8,38): error TS2304: Cannot find name 'supabaseAdmin'.
+server/controllers/plaint.controller.ts(17,9): error TS2353: Object literal may only specify known properties, and 'sections' does not exist in type '{ paragraphs?: string[] | undefined; document?: any; signers?: any[] | undefined; }'.
+server/controllers/strategy.controller.ts(1,10): error TS2305: Module '"../services/strategy.service"' has no exported member 'generateStrategy'.
+server/controllers/subscription.controller.ts(20,21): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ pro: string | undefined; enterprise: string | undefined; }'.
+server/controllers/usage.controller.ts(15,20): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<PlanType, PlanLimits>'.
+server/controllers/verify.controller.ts(19,27): error TS2339: Property 'split' does not exist on type 'string | string[]'.
+  Property 'split' does not exist on type 'string[]'.
+server/controllers/verify.controller.ts(29,25): error TS18047: 'logs' is possibly 'null'.
+server/controllers/verify.controller.ts(30,13): error TS18047: 'logs' is possibly 'null'.
+server/controllers/verify.controller.ts(30,35): error TS18047: 'logs' is possibly 'null'.
+server/jobs/causeSync.job.ts(1,18): error TS2307: Cannot find module 'node-cron' or its corresponding type declarations.
+server/jobs/reminder.job.ts(1,18): error TS2307: Cannot find module 'node-cron' or its corresponding type declarations.
+server/routes/ai.routes.ts(11,10): error TS2305: Module '"../controllers/bundle.controller"' has no exported member 'downloadBundle'.
+server/routes/ai.routes.ts(28,5): error TS2305: Module '"../controllers/calendar.controller"' has no exported member 'createEvent'.
+server/routes/ai.routes.ts(29,5): error TS2305: Module '"../controllers/calendar.controller"' has no exported member 'listEvents'.
+server/routes/ai.routes.ts(32,30): error TS2307: Cannot find module '../controllers/causeList.controller' or its corresponding type declarations.
+server/routes/arguments.routes.ts(2,33): error TS2307: Cannot find module '../controllers/arguments.controller' or its corresponding type declarations.
+server/routes/billing.routes.ts(4,5): error TS2305: Module '"../controllers/billing.controller"' has no exported member 'razorpayWebhook'.
+server/routes/document.routes.ts(3,10): error TS2305: Module '"../controllers/audit.controller"' has no exported member 'downloadAuditPDF'.
+server/routes/document.routes.ts(3,28): error TS2724: '"../controllers/audit.controller"' has no exported member named 'exportAuditLogs'. Did you mean 'getAuditLogs'?
+server/routes/document.routes.ts(3,45): error TS2305: Module '"../controllers/audit.controller"' has no exported member 'verifyAudit'.
+server/routes/document.routes.ts(13,38): error TS2307: Cannot find module '../controllers/docx.controller' or its corresponding type declarations.
+server/routes/verify.routes.ts(2,10): error TS2724: '"../utils/hash.util"' has no exported member named 'generateFileHash'. Did you mean 'generateHash'?
+server/routes/verify.routes.ts(6,1): error TS2304: Cannot find name 'router'.
+server/routes/verify.routes.ts(6,54): error TS7006: Parameter 'req' implicitly has an 'any' type.
+server/routes/verify.routes.ts(6,59): error TS7006: Parameter 'res' implicitly has an 'any' type.
+server/routes/verify.routes.ts(12,32): error TS2304: Cannot find name 'supabaseAdmin'.
+server/routes/verify.routes.ts(32,41): error TS18046: 'err' is of type 'unknown'.
+server/routes/verify.routes.ts(36,1): error TS2304: Cannot find name 'router'.
+server/routes/verify.routes.ts(36,24): error TS7006: Parameter 'req' implicitly has an 'any' type.
+server/routes/verify.routes.ts(36,29): error TS7006: Parameter 'res' implicitly has an 'any' type.
+server/routes/verify.routes.ts(39,28): error TS2304: Cannot find name 'supabaseAdmin'.
+server/routes/verify.routes.ts(51,9): error TS2304: Cannot find name 'computedHash'.
+server/routes/verify.routes.ts(55,18): error TS2304: Cannot find name 'computedHash'.
+server/services/affidavit.service.ts(1,25): error TS7016: Could not find a declaration file for module 'pdfkit'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/pdfkit/js/pdfkit.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pdfkit` if it exists or add a new declaration (.d.ts) file containing `declare module 'pdfkit';`
+server/services/argumentGenerator.service.ts(16,14): error TS7006: Parameter 'c' implicitly has an 'any' type.
+server/services/arguments.service.ts(1,20): error TS2307: Cannot find module 'openai' or its corresponding type declarations.
+server/services/arguments.service.ts(72,19): error TS1378: Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', 'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.
+server/services/arguments.service.ts(72,40): error TS2304: Cannot find name 'query'.
+server/services/audit.service.ts(3,38): error TS7006: Parameter 'log' implicitly has an 'any' type.
+server/services/audit.service.ts(13,18): error TS2304: Cannot find name 'generateHash'.
+server/services/blockchain.service.ts(1,24): error TS2307: Cannot find module 'ethers' or its corresponding type declarations.
+server/services/bundle.service.ts(1,25): error TS7016: Could not find a declaration file for module 'pdfkit'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/pdfkit/js/pdfkit.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pdfkit` if it exists or add a new declaration (.d.ts) file containing `declare module 'pdfkit';`
+server/services/bundle.service.ts(3,20): error TS7016: Could not find a declaration file for module 'qrcode'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/qrcode/lib/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/qrcode` if it exists or add a new declaration (.d.ts) file containing `declare module 'qrcode';`
+server/services/bundle.service.ts(15,5): error TS2448: Block-scoped variable 'doc' used before its declaration.
+server/services/bundle.service.ts(24,5): error TS2304: Cannot find name 'drawCauseTitle'.
+server/services/bundle.service.ts(24,20): error TS2448: Block-scoped variable 'doc' used before its declaration.
+server/services/bundle.service.ts(24,25): error TS2304: Cannot find name 'cause'.
+server/services/bundle.service.ts(24,32): error TS2304: Cannot find name 'partyData'.
+server/services/bundle.service.ts(25,5): error TS2304: Cannot find name 'upper'.
+server/services/bundle.service.ts(26,5): error TS2304: Cannot find name 'upper'.
+server/services/bundle.service.ts(32,5): error TS2304: Cannot find name 'drawNumberedParagraphs'.
+server/services/bundle.service.ts(32,28): error TS2448: Block-scoped variable 'doc' used before its declaration.
+server/services/bundle.service.ts(38,17): error TS2304: Cannot find name 'index'.
+server/services/bundle.service.ts(38,31): error TS2304: Cannot find name 'para'.
+server/services/bundle.service.ts(46,26): error TS2448: Block-scoped variable 'indexPageNumber' used before its declaration.
+server/services/bundle.service.ts(145,28): error TS7006: Parameter 'a' implicitly has an 'any' type.
+server/services/bundle.service.ts(145,31): error TS7006: Parameter 'i' implicitly has an 'any' type.
+server/services/bundle.service.ts(166,34): error TS2304: Cannot find name 'a'.
+server/services/bundle.service.ts(166,47): error TS2304: Cannot find name 'a'.
+server/services/bundlePdf.service.ts(1,25): error TS7016: Could not find a declaration file for module 'pdfkit'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/pdfkit/js/pdfkit.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pdfkit` if it exists or add a new declaration (.d.ts) file containing `declare module 'pdfkit';`
+server/services/causeList.service.ts(2,26): error TS2307: Cannot find module 'cheerio' or its corresponding type declarations.
+server/services/causeList.service.ts(10,19): error TS2304: Cannot find name 'list'.
+server/services/causeList.service.ts(10,30): error TS7006: Parameter 'c' implicitly has an 'any' type.
+server/services/causeList.service.ts(11,48): error TS2304: Cannot find name 'caseNumber'.
+server/services/causeList.service.ts(18,25): error TS7006: Parameter '_' implicitly has an 'any' type.
+server/services/causeList.service.ts(18,28): error TS7006: Parameter 'el' implicitly has an 'any' type.
+server/services/certificate.service.ts(1,25): error TS7016: Could not find a declaration file for module 'pdfkit'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/pdfkit/js/pdfkit.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pdfkit` if it exists or add a new declaration (.d.ts) file containing `declare module 'pdfkit';`
+server/services/certificate.service.ts(2,20): error TS7016: Could not find a declaration file for module 'qrcode'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/qrcode/lib/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/qrcode` if it exists or add a new declaration (.d.ts) file containing `declare module 'qrcode';`
+server/services/cocounsel.service.ts(5,10): error TS2724: '"./objection.service"' has no exported member named 'generateObjection'. Did you mean 'generateObjections'?
+server/services/cocounsel.service.ts(9,10): error TS2305: Module '"./judgeMood.service"' has no exported member 'detectJudgeMood'.
+server/services/contradiction.service.ts(1,20): error TS2307: Cannot find module 'openai' or its corresponding type declarations.
+server/services/crossExam.service.ts(1,10): error TS2440: Import declaration conflicts with local declaration of 'openai'.
+server/services/crossExam.service.ts(3,20): error TS2304: Cannot find name 'OpenAI'.
+server/services/judgeSimulator.service.ts(60,4): error TS2304: Cannot find name 's'.
+server/services/limitationAI.service.ts(64,5): error TS1184: Modifiers cannot appear here.
+server/services/limitationAI.service.ts(82,5): error TS1232: An import declaration can only be used at the top level of a namespace or module.
+server/services/limitationAI.service.ts(84,5): error TS1184: Modifiers cannot appear here.
+server/services/multiDocReasoning.service.ts(17,14): error TS7006: Parameter 'c' implicitly has an 'any' type.
+server/services/objection.service.ts(1,20): error TS2307: Cannot find module 'openai' or its corresponding type declarations.
+server/services/pdf.service.ts(4,20): error TS7016: Could not find a declaration file for module 'qrcode'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/qrcode/lib/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/qrcode` if it exists or add a new declaration (.d.ts) file containing `declare module 'qrcode';`
+server/services/pdf.service.ts(127,26): error TS7006: Parameter 'doc' implicitly has an 'any' type.
+server/services/pdf.service.ts(127,31): error TS7006: Parameter 'document' implicitly has an 'any' type.
+server/services/pdf.service.ts(326,23): error TS7006: Parameter 't' implicitly has an 'any' type.
+server/services/pdf.service.ts(326,26): error TS7006: Parameter 'i' implicitly has an 'any' type.
+server/services/pdf.service.ts(338,19): error TS7006: Parameter 'a' implicitly has an 'any' type.
+server/services/pdf.service.ts(338,22): error TS7006: Parameter 'i' implicitly has an 'any' type.
+server/services/pdf.service.ts(679,24): error TS7006: Parameter 'pdfDoc' implicitly has an 'any' type.
+server/services/pdf.service.ts(679,32): error TS7006: Parameter 'annexures' implicitly has an 'any' type.
+server/services/pdf.service.ts(684,28): error TS7006: Parameter 'a' implicitly has an 'any' type.
+server/services/pdf.service.ts(684,31): error TS7006: Parameter 'i' implicitly has an 'any' type.
+server/services/pdf.service.ts(692,27): error TS7006: Parameter 'pdfDoc' implicitly has an 'any' type.
+server/services/pdf.service.ts(692,35): error TS7006: Parameter 'doc' implicitly has an 'any' type.
+server/services/pdf.service.ts(692,40): error TS7006: Parameter 'index' implicitly has an 'any' type.
+server/services/pdf.service.ts(815,18): error TS1378: Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', 'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.
+server/services/pdf.service.ts(815,24): error TS2304: Cannot find name 'pdfDoc'.
+server/services/pdf.service.ts(818,19): error TS1378: Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', 'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.
+server/services/pdf.service.ts(818,25): error TS2552: Cannot find name 'signPdf'. Did you mean 'signedPdf'?
+server/services/pdf.service.ts(819,18): error TS1378: Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', 'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.
+server/services/pdf.service.ts(819,24): error TS2552: Cannot find name 'attach65BCertificate'. Did you mean 'RTCCertificate'?
+server/services/pdf.service.ts(821,1): error TS1108: A 'return' statement can only be used within a function body.
+server/services/push.service.ts(1,21): error TS7016: Could not find a declaration file for module 'web-push'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/web-push/src/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/web-push` if it exists or add a new declaration (.d.ts) file containing `declare module 'web-push';`
+server/services/signing.service.ts(13,33): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(34,40): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(46,9): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Buffer<ArrayBufferLike>'.
+server/services/signing.service.ts(56,19): error TS2451: Cannot redeclare block-scoped variable 'remaining'.
+server/services/signing.service.ts(56,39): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(66,41): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(72,22): error TS2339: Property 'status' does not exist on type 'Document'.
+server/services/signing.service.ts(82,55): error TS2339: Property 'final_hash' does not exist on type 'Document'.
+server/services/signing.service.ts(95,30): error TS2448: Block-scoped variable 'docData' used before its declaration.
+server/services/signing.service.ts(104,15): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(113,15): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(126,19): error TS2451: Cannot redeclare block-scoped variable 'remaining'.
+server/services/signing.service.ts(126,39): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(138,11): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(144,43): error TS18004: No value exists in scope for the shorthand property 'signers'. Either declare one or provide an initializer.
+server/services/signing.service.ts(147,37): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(167,11): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(176,11): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/signing.service.ts(182,11): error TS2304: Cannot find name 'supabaseAdmin'.
+server/services/speaker.service.ts(1,20): error TS2307: Cannot find module 'openai' or its corresponding type declarations.
+server/services/submissionPdf.service.ts(1,25): error TS7016: Could not find a declaration file for module 'pdfkit'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/pdfkit/js/pdfkit.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pdfkit` if it exists or add a new declaration (.d.ts) file containing `declare module 'pdfkit';`
+server/services/voiceNotes.service.ts(2,20): error TS2307: Cannot find module 'openai' or its corresponding type declarations.
+server/services/voiceNotes.service.ts(22,30): error TS2304: Cannot find name 'openai'.
+server/services/voiceNotes.service.ts(73,17): error TS1117: An object literal cannot have multiple properties with the same name.
+server/utils/certificate.util.ts(1,19): error TS7016: Could not find a declaration file for module 'node-forge'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/node-forge/lib/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/node-forge` if it exists or add a new declaration (.d.ts) file containing `declare module 'node-forge';`
+server/utils/generateAuditPdf.ts(1,25): error TS7016: Could not find a declaration file for module 'pdfkit'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/pdfkit/js/pdfkit.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pdfkit` if it exists or add a new declaration (.d.ts) file containing `declare module 'pdfkit';`
+server/utils/generateAuditPdf.ts(4,20): error TS7016: Could not find a declaration file for module 'qrcode'. 'C:/Users/vkskt/Desktop/suitcase/node_modules/qrcode/lib/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/qrcode` if it exists or add a new declaration (.d.ts) file containing `declare module 'qrcode';`
+server/utils/pdfWatermark.ts(16,23): error TS2322: Type '"degrees"' is not assignable to type 'RotationTypes'.
+server/utils/retry.util.ts(1,14): error TS7023: 'retry' implicitly has return type 'any' because it does not have a return type annotation and is referenced directly or indirectly in one of its return expressions.

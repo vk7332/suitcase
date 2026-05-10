@@ -4,12 +4,7 @@ import { logAudit } from "../services/audit.service";
 
 // 🧾 CREATE CREDIT NOTE
 export const createCreditNote = async (req: Request, res: Response) => {
-    const meta: {
-        invoiceId,
-        amount,
-        email: user.email,
-        phone: user.phone,
-    } = req.body;
+    const { invoiceId, amount, reason } = req.body;
     const user = req.user;
 
     const status = user.role === "admin" ? "approved" : "pending";

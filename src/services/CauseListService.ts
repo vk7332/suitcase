@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getCauseList() {
     const { data } = await supabase
@@ -16,5 +16,6 @@ export async function addCauseEntry(entry: any) {
 export async function deleteCauseEntry(id: string) {
     await supabase.from("cause_list").delete().eq("id", id);
 }
+
 
 

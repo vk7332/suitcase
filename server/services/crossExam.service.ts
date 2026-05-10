@@ -1,9 +1,5 @@
 import { openai } from "../config/openai";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY!,
-});
-
 export const generateCrossExam = async (
     opponentLines: string[]
 ) => {

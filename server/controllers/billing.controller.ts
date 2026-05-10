@@ -21,3 +21,7 @@ export const createSubscription = async (req: Request, res: Response) => {
 
     res.json(subscription);
 };
+
+export const razorpayWebhook = async (_req: Request, res: Response) => {
+    res.status(200).json({ received: true });
+};

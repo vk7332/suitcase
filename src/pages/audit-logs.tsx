@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function AuditLogs() {
     const [logs, setLogs] = useState<any[]>([]);

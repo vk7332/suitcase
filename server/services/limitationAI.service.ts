@@ -1,5 +1,13 @@
 import { openai } from "../config/openai";
 
+type LimitationAIResult = {
+    cause_date?: string;
+    case_type?: string;
+    limitation_days?: number;
+    confidence?: number;
+    notes?: string;
+};
+
 export const detectLimitationFromFacts = async (facts: string) => {
     const prompt = `
 You are a legal assistant trained in Indian law.
@@ -61,28 +69,32 @@ Return a list of findings in JSON:
         temperature: 0.2,
     });
 
-    export const calculateFromAI = (aiData: any) => {
-        if (!aiData.cause_date || !aiData.limitation_days) {
-            return null;
-        }
+    try {
+        return JSON.parse(res.choices[0].message.content || "[]");
+    } catch {
+        return [];
+    }
+};
 
-        const base = new Date(aiData.cause_date);
-        const deadline = new Date(
-            base.getTime() + aiData.limitation_days * 86400000
-        );
+export const calculateFromAI = (aiData: LimitationAIResult) => {
+    if (!aiData.cause_date || !aiData.limitation_days) {
+        return null;
+    }
 
-        return {
-            deadline,
-            daysLeft: Math.ceil(
-                (deadline.getTime() - Date.now()) / 86400000
-            ),
-        };
+    const base = new Date(aiData.cause_date);
+    const deadline = new Date(base.getTime() + aiData.limitation_days * 86400000);
+
+    return {
+        deadline,
+        daysLeft: Math.ceil((deadline.getTime() - Date.now()) / 86400000),
+        case_type: aiData.case_type,
+        confidence: aiData.confidence,
+        notes: aiData.notes,
     };
+};
 
-    import { openai } from "../config/openai";
-
-    export const detectMultipleTriggers = async (facts: string) => {
-        const prompt = `
+export const detectMultipleTriggers = async (facts: string) => {
+    const prompt = `
 Extract ALL possible limitation trigger dates from facts.
 
 Facts:
@@ -103,31 +115,20 @@ Return JSON:
 }
 `;
 
-        const res = await openai.chat.completions.create({
-            model: "gpt-5-mini",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0.2,
-        });
-
-        return JSON.parse(res.choices[0].message.content || "{}");
-    };
+    const res = await openai.chat.completions.create({
+        model: "gpt-5-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.2,
+    });
 
     try {
-
-        // logic
-
+        return JSON.parse(res.choices[0].message.content || "{}");
+    } catch {
         return {
-            success: true
+            triggers: [],
+            suggested_primary: null,
+            case_type: null,
+            limitation_days: 0,
         };
-
-    } catch (err) {
-
-        console.error(err);
-
-        return {
-            success: false
-        };
-
     }
-
 };

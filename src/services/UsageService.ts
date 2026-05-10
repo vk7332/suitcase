@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const getDailyUsage = async (
     userId: string,
@@ -15,7 +15,7 @@ export const getDailyUsage = async (
 
     if (error || !data) return 0;
 
-    return data.reduce((sum, row) => sum + row.count, 0);
+    return data.reduce((sum: number, row: any) => sum + row.count, 0);
 };
 
 export const incrementUsage = async (
@@ -31,5 +31,6 @@ export const incrementUsage = async (
         },
     ]);
 };
+
 
 

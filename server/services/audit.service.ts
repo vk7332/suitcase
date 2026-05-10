@@ -1,6 +1,7 @@
-import { supabase } from "../config/supabase";
+import { supabase, supabaseAdmin } from "../config/supabase";
+import { generateHash } from "../utils/hash.util";
 
-export const createAuditLog = async (log) => {
+export const createAuditLog = async (log: Record<string, unknown>) => {
     const { data: lastLog } = await supabaseAdmin
         .from("audit_logs")
         .select("hash")
@@ -10,7 +11,7 @@ export const createAuditLog = async (log) => {
 
     const prevHash = lastLog?.hash || "GENESIS";
 
-    const hash = generateHash(log, prevHash);
+    const hash = generateHash(Buffer.from(`${JSON.stringify(log)}|${prevHash}`));
 
     await supabaseAdmin.from("audit_logs").insert({
         ...log,
@@ -26,7 +27,14 @@ export const logAudit = async ({
     entity,
     entity_id,
     meta = {},
-}: any) => {
+}: {
+    user_id: string;
+    chamber_id?: string;
+    action: string;
+    entity: string;
+    entity_id: string;
+    meta?: Record<string, unknown>;
+}) => {
     await supabase.from("audit_logs").insert([
         {
             user_id,
@@ -38,8 +46,6 @@ export const logAudit = async ({
         },
     ]);
 };
-
-import { supabaseAdmin } from "../config/supabase";
 
 export const getAuditLogs = async (chamber_id: string) => {
     const { data, error } = await supabaseAdmin
@@ -117,4 +123,4 @@ export const getAuditLogsByMeta = async (
         throw new Error(error.message);
     }
     return data;
-}
+};

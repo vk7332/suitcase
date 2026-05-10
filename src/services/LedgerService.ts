@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getLedger(clientId: string) {
     const { data } = await supabase
@@ -29,5 +29,6 @@ export const recordPayment = async (
 
     if (error) throw error;
 };
+
 
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { useAffiliateAnalytics } from "@/hooks/useAffiliateAnalytics";
 import AnalyticsOverviewCards from "@/components/affiliate/AnalyticsOverviewCards";
 import ReferralTrendChart from "@/components/affiliate/ReferralTrendChart";

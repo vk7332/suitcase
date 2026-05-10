@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 declare global {
     interface Window {

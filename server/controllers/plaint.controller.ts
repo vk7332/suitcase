@@ -1,5 +1,6 @@
-import { generatePlaintTemplate } from "../services/plaint.service";
+import { generatePlaintTemplate } from "../services/vplaint.service";
 import { Request, Response } from 'express';
+import { supabaseAdmin } from "../config/supabase";
 import { generatePdf } from "../services/pdf.service";
 
 export const generatePlaint = async (req: Request, res: Response) => {
@@ -13,11 +14,8 @@ export const generatePlaint = async (req: Request, res: Response) => {
 
     const plaint = generatePlaintTemplate({ caseData });
 
-    const pdfBuffer = await generatePdf({
-        sections: plaint.sections,
-        cause: plaint.causeTitle,
-        document: caseData,
-    });
+    const paragraphs = plaint.sections.flatMap((section: any) => section.content || []);
+    const pdfBuffer = await generatePdf({ paragraphs, document: caseData });
 
     res.setHeader("Content-Type", "application/pdf");
     res.send(pdfBuffer);

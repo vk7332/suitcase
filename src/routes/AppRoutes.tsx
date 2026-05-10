@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Dashboard from "../pages/dashboard";
+import Dashboard from "../pages/Dashboard";
 import Login from "../pages/login";
 import Signup from "../pages/signup";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 import UploadDocument from "../pages/upload-document";
 import Documents from "../pages/documents";
 import VerifyPage from "../pages/verify";

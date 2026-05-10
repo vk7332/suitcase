@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const uploadCaseDocument = async ({
     file,

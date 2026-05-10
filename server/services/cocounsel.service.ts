@@ -2,11 +2,11 @@ import { detectContradiction } from "./contradiction.service";
 import { scoreWeakness } from "./weakness.service";
 import { decideStrategy } from "./strategy.service";
 import { decideTiming } from "./timing.service";
-import { generateObjection } from "./objection.service";
+import { generateObjections } from "./objection.service";
 import { generateFollowUp } from "./followup.service";
 import { generateCrossExamChain } from "./crossExam.service";
 import { calculateWinProbability } from "./winProbability.service";
-import { detectJudgeMood } from "./judgeMood.service";
+import { aiJudgeMood } from "./judgeMood.service";
 import { calculateConfidence } from "./confidence.service";
 import { applySafety } from "./safety.service";
 import { checkCooldown } from "./cooldown.service";
@@ -30,7 +30,7 @@ export const runCoCounsel = async ({
     const weakness = scoreWeakness(text);
 
     const judgeMood =
-        role === "judge" ? detectJudgeMood(text) : null;
+        role === "judge" ? (await aiJudgeMood(text)).mood : null;
 
     // ⚖ STRATEGY
     const strategy = decideStrategy({
@@ -53,11 +53,8 @@ export const runCoCounsel = async ({
     let crossExam = null;
 
     if (strategy.action === "OBJECT" && timing.decision === "INTERRUPT_NOW") {
-        objection = await generateObjection(
-            text,
-            memory.facts,
-            contradiction
-        );
+        const objectionResult = await generateObjections([text]);
+        objection = objectionResult.objections?.[0]?.objection || null;
     }
 
     if (strategy.action === "CROSS") {

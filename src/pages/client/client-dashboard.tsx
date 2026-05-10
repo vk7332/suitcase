@@ -3,10 +3,17 @@ import { getClientCases } from "@/engines/client/client.engine";
 import ClientCaseList from "@/components/client/clientCaseList";
 import { useClientAuth } from "@/hooks/useClientAuth";
 import { useRealtimeCases } from "@/hooks/useRealtimeCases";
-import NotificationCenter from "@/components/ui/notification";
+import NotificationCenter from "@/components/Ui/notification";
 
 export default function ClientDashboard() {
     const { user, loading } = useClientAuth();
+
+    useRealtimeCases(user?.id, (updatedCase: any) => {
+        console.log("case updated:", updatedCase);
+
+        // 🔔 notification
+        alert(`Case status updated: ${updatedCase.status}`);
+    });
 
     if (loading) return <p>Loading...</p>;
 
@@ -18,11 +25,4 @@ export default function ClientDashboard() {
         </div>
     );
 }
-
-useRealtimeCases(user.id, (updatedCase: any) => {
-    console.log("case updated:", updatedCase);
-
-    // 🔔 notification
-    alert(`Case status updated: ${updatedCase.status}`);
-});
 

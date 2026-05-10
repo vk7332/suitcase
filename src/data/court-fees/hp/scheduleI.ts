@@ -1,7 +1,7 @@
 // src/data/courtFees/hp/scheduleI.ts
 
 export const scheduleI_HP = {
-    type: "progressive",
+    calculationType: "progressive",
 
     slabs: [
         { upto: 5000, rate: 0.05 },        // 5%

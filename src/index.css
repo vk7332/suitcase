@@ -11,16 +11,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    font-family: 'Roboto', sans-serif;
-    @apply transition-colors duration-300;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-  }
+body {
+    margin: 0;
+    background-color: #f8fafc;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .toolbox {

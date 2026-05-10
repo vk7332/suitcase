@@ -1,10 +1,10 @@
-import { generateCrossQuestions } from "../services/crossExam.service";
+import { generateCrossExam } from "../services/crossExam.service";
 import { Request, Response } from 'express';
 
-export const getCrossExam = (req: Request, res: Response) => {
+export const getCrossExam = async (req: Request, res: Response) => {
     const { sections } = req.body;
-
-    const questions = generateCrossQuestions(sections);
+    const lines = Array.isArray(sections) ? sections : [sections];
+    const questions = await generateCrossExam(lines.filter(Boolean));
 
     res.json({ questions });
 };

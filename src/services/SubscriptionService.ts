@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { Subscription } from "../types/subscription";
 
 export const getUserSubscription = async (
@@ -20,5 +20,6 @@ export const getUserSubscription = async (
 
     return data;
 };
+
 
 

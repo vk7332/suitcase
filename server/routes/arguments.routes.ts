@@ -1,5 +1,5 @@
 import express from "express";
-import { createArguments } from "../controllers/arguments.controller";
+import { createArguments } from "../controllers/argument.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = express.Router();

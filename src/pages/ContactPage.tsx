@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle, HelpCircle, User, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, CheckCircle, ShieldCheck } from 'lucide-react';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -9,7 +9,7 @@ export default function ContactPage() {
         subject: 'General Inquiry',
         message: '',
         isPractitioner: 'No',
-        interest: 'Income Tax'
+        interest: 'Legal Case Manager'
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -31,10 +31,10 @@ export default function ContactPage() {
                     <MessageSquare size={14} /> Direct Assistance Hub
                 </div>
                 <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tighter">
-                    Get in Touch with <span className="text-blue-600">VK Specialists</span>
+                    Get in Touch with <span className="text-blue-600">SUITCASE Specialists</span>
                 </h1>
                 <p className="text-lg text-slate-500 dark:text-slate-400 font-bold max-w-2xl mx-auto leading-relaxed">
-                    Have a complex tax query or need technical support? Our elite team is ready to assist you with precision and speed.
+                    Have a legal query or need technical support with your chamber management? Our elite team is ready to assist you with precision and speed.
                 </p>
             </div>
 
@@ -53,7 +53,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Email Us</p>
-                                    <p className="text-sm font-black text-slate-900 dark:text-white">support@vkcalc.in</p>
+                                    <p className="text-sm font-black text-slate-900 dark:text-white">support@suitcase.law</p>
                                     <p className="text-xs text-slate-500 font-bold mt-1">Avg response: 2 hours</p>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Call Priority Line</p>
-                                    <p className="text-sm font-black text-slate-900 dark:text-white">+91 98765 43210</p>
+                                    <p className="text-sm font-black text-slate-900 dark:text-white">+91 70180 64385</p>
                                     <p className="text-xs text-slate-500 font-bold mt-1">Mon-Sat, 9am - 7pm</p>
                                 </div>
                             </div>
@@ -74,8 +74,8 @@ export default function ContactPage() {
                                     <MapPin size={20} />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Corporate HQ</p>
-                                    <p className="text-sm font-black text-slate-900 dark:text-white">Financial District, New Delhi, India</p>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Headquarters</p>
+                                    <p className="text-sm font-black text-slate-900 dark:text-white">New Delhi, India</p>
                                     <p className="text-xs text-slate-500 font-bold mt-1">Appointment only</p>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@ export default function ContactPage() {
                                     <span className="text-xs font-black uppercase tracking-widest">Data Privacy Locked</span>
                                 </div>
                                 <p className="text-[10px] text-slate-400 font-medium leading-relaxed">
-                                    All inquiries are handled with strict CA-standard confidentiality. Your financial data is encrypted and never shared.
+                                    All inquiries are handled with strict legal confidentiality. Your case data is encrypted and never shared.
                                 </p>
                             </div>
                         </div>
@@ -99,110 +99,78 @@ export default function ContactPage() {
                 <div className="lg:col-span-8">
                     <div className="bg-white dark:bg-slate-800/50 p-10 md:p-12 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl relative">
                         {isSubmitted ? (
-                            <div className="py-20 text-center space-y-6 animate-in zoom-in duration-500">
-                                <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
-                                    <CheckCircle size={40} />
+                            <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
+                                <div className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center animate-bounce">
+                                    <CheckCircle size={48} />
                                 </div>
-                                <h3 className="text-3xl font-black text-slate-900 dark:text-white">Inquiry Received!</h3>
-                                <p className="text-slate-500 dark:text-slate-400 font-bold max-w-sm mx-auto">
-                                    Our specialists have been notified. You will receive a response at <span className="text-blue-600">{formData.email}</span> shortly.
-                                </p>
-                                <button 
-                                    onClick={() => setIsSubmitted(false)}
-                                    className="px-8 py-3 bg-slate-900 dark:bg-white dark:text-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105"
-                                >
-                                    Send Another Message
-                                </button>
+                                <h2 className="text-3xl font-black text-slate-900 dark:text-white">Inquiry Received</h2>
+                                <p className="text-slate-500 dark:text-slate-400 font-bold">Your specialist will be in touch shortly.</p>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="space-y-2 group">
-                                        <label className={labelClasses}><User size={12} className="inline mr-1" /> Full Name</label>
+                                    <div>
+                                        <label className={labelClasses}>Full Name</label>
                                         <input 
-                                            required
                                             type="text" 
-                                            className={inputClasses} 
-                                            placeholder="Your name..."
-                                            value={formData.name}
-                                            onChange={e => setFormData({...formData, name: e.target.value})}
-                                        />
-                                    </div>
-                                    <div className="space-y-2 group">
-                                        <label className={labelClasses}><Mail size={12} className="inline mr-1" /> Email Address</label>
-                                        <input 
+                                            className={inputClasses}
+                                            placeholder="Advocate Name"
                                             required
-                                            type="email" 
-                                            className={inputClasses} 
-                                            placeholder="you@example.com..."
-                                            value={formData.email}
-                                            onChange={e => setFormData({...formData, email: e.target.value})}
+                                            onChange={(e) => setFormData({...formData, name: e.target.value})}
                                         />
                                     </div>
-                                    <div className="space-y-2 group">
-                                        <label className={labelClasses}><Phone size={12} className="inline mr-1" /> Phone Number</label>
+                                    <div>
+                                        <label className={labelClasses}>Work Email</label>
+                                        <input 
+                                            type="email" 
+                                            className={inputClasses}
+                                            placeholder="advocate@chamber.law"
+                                            required
+                                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <label className={labelClasses}>Phone Number</label>
                                         <input 
                                             type="tel" 
-                                            className={inputClasses} 
-                                            placeholder="+91 00000 00000..."
-                                            value={formData.phone}
-                                            onChange={e => setFormData({...formData, phone: e.target.value})}
+                                            className={inputClasses}
+                                            placeholder="+91 00000 00000"
+                                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
                                         />
                                     </div>
-                                    <div className="space-y-2 group">
-                                        <label className={labelClasses}><HelpCircle size={12} className="inline mr-1" /> Area of Interest</label>
+                                    <div>
+                                        <label className={labelClasses}>Inquiry Interest</label>
                                         <select 
                                             className={inputClasses}
-                                            value={formData.interest}
-                                            onChange={e => setFormData({...formData, interest: e.target.value})}
+                                            onChange={(e) => setFormData({...formData, interest: e.target.value})}
                                         >
-                                            <option>Income Tax Planning</option>
-                                            <option>Capital Gains Audit</option>
-                                            <option>Business Compliance</option>
+                                            <option>Legal Case Manager</option>
+                                            <option>Court Fee Calculator</option>
+                                            <option>Chamber Management</option>
+                                            <option>Enterprise Law Firm</option>
                                             <option>Technical Support</option>
-                                            <option>Other Services</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div className="space-y-6 pt-4">
-                                    <div className="flex flex-col md:flex-row gap-6 items-center justify-between p-6 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800">
-                                        <div>
-                                            <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest mb-1">Are you a Tax Professional/CA?</p>
-                                            <p className="text-[10px] text-slate-500 font-bold">Specialized APIs and tools available for practitioners.</p>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            {['Yes', 'No'].map(opt => (
-                                                <button 
-                                                    key={opt}
-                                                    type="button"
-                                                    onClick={() => setFormData({...formData, isPractitioner: opt})}
-                                                    className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${formData.isPractitioner === opt ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'bg-white dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700'}`}
-                                                >
-                                                    {opt}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2 group">
-                                        <label className={labelClasses}><Send size={12} className="inline mr-1" /> Your Message / Query</label>
-                                        <textarea 
-                                            required
-                                            rows={5}
-                                            className={`${inputClasses} resize-none`}
-                                            placeholder="Describe your situation or query in detail..."
-                                            value={formData.message}
-                                            onChange={e => setFormData({...formData, message: e.target.value})}
-                                        ></textarea>
-                                    </div>
+                                <div>
+                                    <label className={labelClasses}>Your Message</label>
+                                    <textarea 
+                                        className={inputClasses + " min-h-[200px] resize-none"}
+                                        placeholder="Tell us about your chamber requirements..."
+                                        required
+                                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                                    ></textarea>
                                 </div>
 
                                 <button 
                                     type="submit"
-                                    className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3 active:scale-[0.98]"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-6 rounded-2xl flex items-center justify-center gap-3 shadow-[0_20px_40px_-15px_rgba(37,99,235,0.4)] hover:shadow-none hover:translate-y-1 transition-all group"
                                 >
-                                    <Send size={18} /> Submit Formal Inquiry
+                                    Transmit Inquiry <Send size={20} className="group-hover:translate-x-2 transition-transform" />
                                 </button>
                             </form>
                         )}
@@ -212,5 +180,3 @@ export default function ContactPage() {
         </div>
     );
 }
-
-

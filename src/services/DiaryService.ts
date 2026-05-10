@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getDiary(caseId: string) {
     const { data } = await supabase
@@ -20,5 +20,6 @@ export async function deleteDiary(id: string) {
         .delete()
         .eq("id", id);
 }
+
 
 

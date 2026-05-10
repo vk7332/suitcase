@@ -3,7 +3,7 @@ import { useHistory } from '@/context/HistoryContext';
 import { useSettings } from '@/context/SettingsContext';
 import {
     FileText, Trash2, Loader2, Copy, Share2, Download,
-    Calendar, User, CreditCard, ChevronRight, BarChart3,
+    Calendar, CreditCard, ChevronRight, BarChart3,
     ArrowRightLeft, X, CheckCircle2, History, Database
 } from 'lucide-react';
 import { exportTaxReport } from '@/utils/pdfExport';
@@ -36,20 +36,20 @@ export const ClientDatabase = () => {
     const handleExportPdf = async (client: ClientRecord) => {
         if (!client.auditReport) return;
         try {
-            await exportTaxReport(client.auditReport, client.name, settings);
+            await exportTaxReport(client.auditReport);
         } catch (error) {
             console.error('Export failed:', error);
         }
     };
 
     const handleCopyLink = (client: ClientRecord) => {
-        const text = `Tax Audit Report for ${client.name}/nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}/nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}/nGenerated via VKCalc.in`;
+        const text = `Tax Audit Report for ${client.name}\nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}\nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}\nGenerated via VKCalc.in`;
         navigator.clipboard.writeText(text);
         alert("Audit summary copied to clipboard!");
     };
 
     const handleWhatsAppShare = (client: ClientRecord) => {
-        const text = `*Tax Audit Report for ${client.name}*/nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}/nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}/n/nCheck your detailed audit at VKCalc.in`;
+        const text = `*Tax Audit Report for ${client.name}*\nTotal Income: ₹${client.totalIncome.toLocaleString('en-IN')}\nTax Liability: ₹${client.taxLiability.toLocaleString('en-IN')}\n\nCheck your detailed audit at VKCalc.in`;
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     };
 
@@ -65,7 +65,7 @@ export const ClientDatabase = () => {
             c.taxLiability
         ]);
 
-        const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "/n" + rows.map(e => e.join(",")).join("/n");
+        const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);

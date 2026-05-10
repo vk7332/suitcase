@@ -1,12 +1,11 @@
 import { supabase } from "../config/supabase";
-import { supabaseAdmin } from "../config/supabase";
 import { Request, Response, NextFunction } from "express";
 
 export const requireActiveSubscription = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = (req as any).user.id;
 
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await supabase
             .from("subscriptions")
             .select("status, current_period_end")
             .eq("user_id", userId)

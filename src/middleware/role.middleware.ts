@@ -1,11 +1,8 @@
-export const requireRole = (roles: string[]) => {
-    return async (req, res, next) => {
-        const user = req.user; // from auth middleware
-
-        if (!roles.includes(user.role)) {
-            return res.status(403).json({ error: "forbidden" });
+export const requireRole = (role: string) => {
+    return (req: any, res: any, next: any) => {
+        if (req.user?.role !== role) {
+            return res.status(403).json({ error: "Access denied" });
         }
-
         next();
     };
 };

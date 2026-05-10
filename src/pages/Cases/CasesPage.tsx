@@ -1,7 +1,7 @@
 import { useSubscription } from "../../hooks/useSubscription";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { useAuth } from "../../hooks/useAuth";
 import { useCourtMapping } from "../../hooks/useCourtMapping";
 
@@ -300,5 +300,6 @@ export default function CasesPage() {
         </div>
     );
 }
+
 
 

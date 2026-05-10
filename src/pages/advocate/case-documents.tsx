@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function CaseDocuments() {
     const [file, setFile] = useState<any>(null);

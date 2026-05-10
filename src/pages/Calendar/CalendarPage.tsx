@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function CalendarPage() {
@@ -48,5 +48,6 @@ export default function CalendarPage() {
         </div>
     );
 }
+
 
 

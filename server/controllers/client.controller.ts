@@ -1,6 +1,6 @@
 import { supabase } from "../config/supabase";
 import { Request, Response } from 'express';
-import { logDocumentAccess } from "../utils/auditLogger";
+import { createAuditLog } from "../utils/auditLogger";
 
 export const getSharedDocument = async (req: Request, res: Response) => {
     try {
@@ -12,17 +12,31 @@ export const getSharedDocument = async (req: Request, res: Response) => {
             .eq("token", token)
             .single();
 
-        await logDocumentAccess({
-            document_id: document.id,
-            user_id: null, // client (anonymous)
-            organization_id: document.organization_id,
-            access_type: "client_view",
-            req,
-        });
-
         if (!link) {
             return res.status(404).json({ error: "Invalid link" });
         }
+
+        const { data: document } = await supabase
+            .from("documents")
+            .select("*")
+            .eq("id", link.document_id)
+            .single();
+
+        if (!document) {
+            return res.status(404).json({ error: "Document not found" });
+        }
+
+        await createAuditLog({
+            action: "client_view",
+            user_id: "anonymous",
+            chamber_id: document.chamber_id || "public",
+            metadata: {
+                document_id: document.id,
+                organization_id: document.organization_id,
+                ip: req.ip,
+                token,
+            },
+        });
 
         // ⏳ check expiry
         if (new Date(link.expires_at) < new Date()) {
@@ -38,8 +52,6 @@ export const getSharedDocument = async (req: Request, res: Response) => {
         res.json({
             url: data.signedUrl,
         });
-
-        res.json(document);
     } catch (err: any) {
         res.status(500).json({ error: "failed to fetch document" });
     }

@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const getTeamMembers = async (organizationId: string) => {
     const { data, error } = await supabase
@@ -21,3 +21,7 @@ export const updateMemberRole = async (
         .eq("id", memberId)
         .select("id, name, email, role")
         .single();
+
+    if (error) throw error;
+    return data;
+};

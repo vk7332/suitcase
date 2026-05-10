@@ -811,11 +811,3 @@ const drawSignatureVersion = (doc: any, signer: any, index: number) => {
     }
 };
 
-// after building PDF
-const pdfBytes = await pdfDoc.save();
-
-// 🔐 SIGN + 65B
-const signedPdf = await signPdf(pdfBytes);
-const finalPdf = await attach65BCertificate(signedPdf);
-
-return finalPdf;

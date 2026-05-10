@@ -1,17 +1,11 @@
-import CourtFeeCalculator from "@/calculators/courtfee/courtfeecalculator";
-
-export default function CourtFeesPage() {
-    return <CourtFeeCalculator />;
-}
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { calculateCourtFee } from "@/engines/courtFee/courtFeeCalculatorEngine";
 import { COURT_FEE_STATES } from "@/utils/constants";
 import CourtFeeResult from "@/components/courtFee/courtFeeResult";
-import { generateCourtFeePDF } from "@/engines/pdf/courtFeePdf.engine";
-import { generateCourtFeePDFBlob } from "@/engines/pdf/courtFeePdf.engine";
+import { generateCourtFeePDF, generateCourtFeePDFBlob } from "@/engines/pdf/courtFeePdf.engine";
 import { uploadCaseDocument } from "@/engines/storage/upload.engine";
 import { saveCaseDocument } from "@/engines/case/caseDocument.engine";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 const SCHEDULE_TYPES = [
     { label: "Ad Valorem (Schedule I)", value: "scheduleI" },
@@ -26,11 +20,21 @@ const FIXED_TYPES = [
     "vakalatnama",
 ];
 
-export default async function CourtFeeCalculatorPage() {
+export default function CourtFeeCalculatorPage() {
     const [state, setState] = useState("hp");
     const [type, setType] = useState("scheduleI");
     const [amount, setAmount] = useState<number>(0);
     const [category, setCategory] = useState("plaint");
+    const [selectedCaseId, setSelectedCaseId] = useState("");
+    const [cases, setCases] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchCases = async () => {
+            const { data } = await supabase.from("cases").select("*");
+            setCases(data || []);
+        };
+        fetchCases();
+    }, []);
 
     const result = calculateCourtFee({
         state,
@@ -39,16 +43,8 @@ export default async function CourtFeeCalculatorPage() {
         category,
     });
 
-    if (type === "scheduleI" && amount <= 0) {
-        return "Enter valid amount";
-    }
-
-    const { data } = await supabase
-        .from("case_documents")
-        .select("*")
-        .eq("case_id", caseId);
-
     const handleSavePdf = async () => {
+        if (!selectedCaseId) return alert("Please select a case first");
         try {
             const blob = generateCourtFeePDFBlob({
                 state,
@@ -131,6 +127,20 @@ export default async function CourtFeeCalculatorPage() {
                 </select>
             )}
 
+            {/* CASE SELECTION FOR SAVING */}
+            <select
+                value={selectedCaseId}
+                onChange={(e) => setSelectedCaseId(e.target.value)}
+                className="w-full mb-3 p-2 border"
+            >
+                <option value="">Select a Case to save PDF</option>
+                {cases.map((c) => (
+                    <option key={c.id} value={c.id}>
+                        {c.case_title}
+                    </option>
+                ))}
+            </select>
+
             {/* RESULT */}
             <div className="mt-4 p-4 border rounded">
                 <h2 className="font-semibold mb-2">Result</h2>
@@ -152,39 +162,43 @@ export default async function CourtFeeCalculatorPage() {
                     </>
                 )}
             </div>
-            <button
-                onClick={() => window.print()}
-                className="mt-4 px-4 py-2 bg-black text-white"
-            >
-                Print / Save PDF
-            </button>
+            
+            <div className="flex gap-2">
+                <button
+                    onClick={() => window.print()}
+                    className="mt-4 px-4 py-2 bg-black text-white rounded"
+                >
+                    Print
+                </button>
+
+                <button
+                    onClick={handleSavePdf}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                    Save to Case File
+                </button>
+
+                <button
+                    onClick={() =>
+                        generateCourtFeePDF({
+                            state,
+                            type,
+                            amount,
+                            result,
+                        })
+                    }
+                    className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
+                >
+                    Download PDF
+                </button>
+            </div>
+
             <div className="mt-4 text-xs text-gray-600">
                 <p>• Calculated as per applicable schedule.</p>
                 <p>• Subject to verification with local amendments.</p>
                 <p>• Generated for informational and professional assistance purposes.</p>
             </div>
-
-            <button
-                onClick={handleSavePdf}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white"
-            >
-                Save to Case File
-            </button>
-
-            <button
-                onClick={() =>
-                    generateCourtFeePDF({
-                        state,
-                        type,
-                        amount,
-                        result,
-                    })
-                }
-                className="mt-4 px-4 py-2 bg-green-600 text-white"
-            >
-                Download PDF
-            </button>
-
         </div>
     );
 }
+

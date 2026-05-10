@@ -16,10 +16,8 @@ const Sidebar = () => {
                     Dashboard
                 </NavLink>
                 <Link to="/portal">Portal Login</Link>
-                <NavLink to="/clients/Litigents/Public" className={linkClass}>
-                    <Clients />
-                    <Litigents />
-                    <Public>Public Login</Public>
+                <NavLink to="/clients" className={linkClass}>
+                    Clients
                 </NavLink>
                 <NavLink to="/invoices" className={linkClass}>
                     Invoices

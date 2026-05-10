@@ -28,7 +28,7 @@ export const generateLegalPDF = (title: string, content: string) => {
     });
 
     // Save File
-    doc.save(`${title.replace(//s+/g, "_")}.pdf`);
+    doc.save(`${title.replace(/\s+/g, "_")}.pdf`);
 };
 
 

@@ -53,22 +53,26 @@ export const approveAction = async (req: Request, res: Response) => {
         })
         .eq("id", id);
 
+    await sendNotification({
+        user_id: data.user_id,
+        email: data.meta?.email || null,
+        phone: data.meta?.phone || null,
+        message: "Your request has been approved",
+    });
+
     res.json({ success: true });
 };
-
-// 🔔 AFTER audit update
-
-await sendNotification({
-    user_id: data.user_id,
-    email: data.meta?.email || null,
-    phone: data.meta?.phone || null,
-    message: "Your request has been approved",
-});
 
 // ❌ reject
 export const rejectAction = async (req: Request, res: Response) => {
     const { id, comment } = req.body;
     const admin = req.user;
+
+    const { data } = await supabase
+        .from("audit_logs")
+        .select("*")
+        .eq("id", id)
+        .single();
 
     await supabase
         .from("audit_logs")
@@ -80,12 +84,12 @@ export const rejectAction = async (req: Request, res: Response) => {
         })
         .eq("id", id);
 
+    await sendNotification({
+        user_id: data?.user_id,
+        email: data?.meta?.email || null,
+        phone: data?.meta?.phone || null,
+        message: "Your request has been rejected",
+    });
+
     res.json({ success: true });
 };
-
-await sendNotification({
-    user_id: data.user_id,
-    email: data.meta?.email || null,
-    phone: data.meta?.phone || null,
-    message: "Your request has been rejected",
-});

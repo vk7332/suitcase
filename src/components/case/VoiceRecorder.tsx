@@ -1,47 +1,54 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-const VoiceRecorder = ({ caseId }) => {
+const VoiceRecorder = ({ caseId }: { caseId: string }) => {
     const [listening, setListening] = useState(false);
     const [text, setText] = useState("");
 
-    const recognition =
-        new (window as any).webkitSpeechRecognition();
+    const [recognition] = useState(() => {
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        const rec = new SpeechRecognition();
+        rec.continuous = true;
+        rec.interimResults = true;
+        return rec;
+    });
 
-    recognition.continuous = true;
-    recognition.interimResults = true;
-
-    recognition.onresult = (event: any) => {
-        let transcript = "";
-        for (let i = 0; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-        }
-        setText(transcript);
-    };
+    useEffect(() => {
+        (recognition as any).onresult = (event: any) => {
+            const transcript = Array.from(event.results as any)
+                .map((result: any) => result[0].transcript)
+                .join("");
+            setText(transcript);
+        };
+    }, [recognition]);
 
     const start = () => {
+        (recognition as any).start();
         setListening(true);
-        recognition.start();
     };
 
     const stop = async () => {
-        recognition.stop();
+        (recognition as any).stop();
         setListening(false);
 
-        // 🔥 send to backend
-        await axios.post("/api/voice/hearing-notes", {
-            transcript: text,
-            caseId,
-        });
-
-        alert("Notes saved to timeline");
+        try {
+            // 🔥 send to backend
+            await axios.post("/api/voice/hearing-notes", {
+                transcript: text,
+                caseId,
+            });
+            alert("Notes saved to timeline");
+        } catch (e) {
+            console.error("Failed to save hearing notes", e);
+            alert("Failed to save notes");
+        }
     };
 
     return (
         <div>
             <h3>🎤 Live Hearing Recorder</h3>
 
-            <button onClick={start}>Start</button>
+            <button onClick={start}>{listening ? "🔴 Listening..." : "🎙 Start Recording"}</button>
             <button onClick={stop}>Stop</button>
 
             <p>{text}</p>

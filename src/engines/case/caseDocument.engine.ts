@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 // 🔹 fetch documents
 export const getCaseDocuments = async (caseId: string) => {

@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 // 📥 Get timeline
 export async function getTimeline(caseId: string) {
@@ -23,5 +23,6 @@ export async function deleteTimeline(id: string) {
         .delete()
         .eq("id", id);
 }
+
 
 

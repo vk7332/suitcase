@@ -30,6 +30,8 @@ export const authMiddleware = (
     }
 };
 
+export const requireAuth = authMiddleware;
+
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.headers.authorization?.replace("Bearer ", "");

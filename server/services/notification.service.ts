@@ -1,6 +1,6 @@
 import { supabase } from "../config/supabase";
 import { sendInvoiceEmail } from "./email.service";
-import { sendSMS } from "./sms.service";
+import { sendSMS as sendSMSClient } from "./sms.service";
 import twilio from "twilio";
 
 const client = twilio(
@@ -10,15 +10,11 @@ const client = twilio(
 
 export const sendSMS = async (to: string, message: string) => {
     try {
-        await client.messages.create({
-            body: message,
-            from: process.env.TWILIO_PHONE,
-            to,
-        });
-
+        await sendSMSClient(to, message);
         console.log("📩 SMS sent:", to);
     } catch (err) {
-        console.log("❌ SMS failed:", err.message);
+        const messageText = err instanceof Error ? err.message : String(err);
+        console.log("❌ SMS failed:", messageText);
     }
 };
 
@@ -35,7 +31,8 @@ export const sendWhatsApp = async (
 
         console.log("💬 WhatsApp sent:", to);
     } catch (err) {
-        console.log("❌ WhatsApp failed:", err.message);
+        const messageText = err instanceof Error ? err.message : String(err);
+        console.log("❌ WhatsApp failed:", messageText);
     }
 };
 
@@ -134,6 +131,15 @@ export const sendNotification = async ({
     } catch (err) {
         console.error("unexpected error in sendNotification:", err);
     }
+};
+
+type SignerInfo = {
+    user_id: string;
+};
+
+const getNextSigner = async (document_id: string): Promise<SignerInfo | null> => {
+    // Placeholder until signer service is available
+    return null;
 };
 
 export const notifyNextSigner = async (document_id: string) => {

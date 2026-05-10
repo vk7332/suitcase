@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getDashboardStats() {
     const [clients, cases, payments] = await Promise.all([
@@ -32,5 +32,6 @@ export async function getDashboardStats() {
         completedCases,
     };
 }
+
 
 

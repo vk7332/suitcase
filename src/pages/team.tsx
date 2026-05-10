@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase/supabaseclient";
-import { useClientAuth } from "@/hooks/useClientAuth";
-import { useRoleGuard } from "@/hooks/useRoleGuard";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { getTeamMembers } from "@/engines/team/team.engine";
-import { useTeam } from "@/hooks/useTeam";
-import InviteForm from "@/components/team/invite-form";
-import MemberList from "@/components/team/member-list";
 
 interface Member {
     id: string;
@@ -16,6 +11,15 @@ interface Member {
 
 export default function TeamPage() {
     const [members, setMembers] = useState<Member[]>([]);
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+        fetchUser();
+    }, []);
 
     useEffect(() => {
         const fetchTeam = async () => {
@@ -30,7 +34,7 @@ export default function TeamPage() {
     }, []);
 
     useEffect(() => {
-        if (!user) return;
+        if (!user || !user.organization_id) return;
 
         const fetch = async () => {
             const data = await getTeamMembers(user.organization_id);

@@ -1,4 +1,5 @@
-export function openECourt(caseNumber: string) {
+export function openECourt() {
+    // caseNumber unused
     const url =
         "https://services.ecourts.gov.in/ecourtindia_v6/?p=casestatus";
 

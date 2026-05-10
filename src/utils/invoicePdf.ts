@@ -1,8 +1,8 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { Invoice } from "../types/invoice";
+import { InvoiceData } from "../types/invoice";
 
-export const exportInvoicePDF = (invoice: Invoice) => {
+export const exportInvoicePDF = (invoice: InvoiceData) => {
     const doc = new jsPDF();
 
     doc.setFontSize(16);
@@ -20,17 +20,17 @@ export const exportInvoicePDF = (invoice: Invoice) => {
         62
     );
 
-    doc.text(`Client: ${invoice.client_name}`, 14, 70);
-    if (invoice.client_gstin) {
-        doc.text(`GSTIN: ${invoice.client_gstin}`, 14, 77);
+    doc.text(`Client: ${invoice.client.name}`, 14, 70);
+    if (invoice.client.gstin) {
+        doc.text(`GSTIN: ${invoice.client.gstin}`, 14, 77);
     }
 
     autoTable(doc, {
         startY: 85,
         head: [["Description", "Amount (₹)"]],
         body: [
-            [`Subscription Plan (${invoice.plan})`, invoice.amount.toFixed(2)],
-            [`GST (${invoice.gst_rate}%)`, invoice.gst_amount.toFixed(2)],
+            [`Subscription Plan`, invoice.total_amount.toFixed(2)],
+            [`GST (${invoice.gst_amount}%)`, invoice.gst_amount.toFixed(2)],
             ["Total", invoice.total_amount.toFixed(2)],
         ],
     });

@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export const handleReferral = async (userId: string) => {
     const { data } = await supabase

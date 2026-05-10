@@ -10,9 +10,9 @@ export type Role = typeof ROLES[keyof typeof ROLES];
 
 // ✅ helper (optional but useful)
 export const isInternalUser = (role: Role) => {
-    return [ROLES.ADMIN, ROLES.ADVOCATE].includes(role);
+    return role === ROLES.ADMIN || role === ROLES.ADVOCATE;
 };
 
 export const isClientSide = (role: Role) => {
-    return [ROLES.CLIENT, ROLES.LITIGENT].includes(role);
+    return role === ROLES.CLIENT || role === ROLES.LITIGENT;
 };

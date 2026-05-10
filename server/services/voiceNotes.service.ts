@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "../config/supabase";
-import OpenAI from "openai";
+import { openai } from "../config/openai";
 import { detectSpeakers } from "./speaker.service";
 import { logEvent } from "./log.service";
 import { detectContradictions } from "./contradiction.service";
@@ -64,7 +64,7 @@ ${JSON.stringify(speakers)}
                 case_id: caseId,
                 tenant_id: tenantId,
                 title: "Hearing Notes (Auto)",
-                description: formatted,
+                summary: formatted,
                 type: "HEARING",
                 event_date: new Date(),
                 contradictions: JSON.stringify(contradictions),

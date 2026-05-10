@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function SubscriptionGuard({ children }) {
     const [loading, setLoading] = useState(true);
@@ -7,33 +8,49 @@ export default function SubscriptionGuard({ children }) {
 
     useEffect(() => {
         const check = async () => {
-            const res = await fetch("/api/subscription/me", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
 
-            if (!res.ok) {
-                navigate("/pricing");
-                return;
+                if (!user) {
+                    navigate("/login");
+                    return;
+                }
+
+                const { data: profile, error } = await supabase
+                    .from("profiles")
+                    .select("subscription_plan, trial_used")
+                    .eq("id", user.id)
+                    .single();
+
+                if (error || !profile) {
+                    // If no profile, redirect to onboarding
+                    navigate("/onboarding");
+                    return;
+                }
+
+                // If user has a plan or has used a trial, let them in
+                // Otherwise redirect to pricing or onboarding
+                if (!profile.subscription_plan && !profile.trial_used) {
+                    navigate("/onboarding");
+                    return;
+                }
+
+                setLoading(false);
+            } catch (err) {
+                console.error("Subscription check failed:", err);
+                navigate("/login");
             }
-
-            const data = await res.json();
-
-            if (
-                data.plan !== "free" &&
-                data.status !== "active"
-            ) {
-                navigate("/pricing");
-            }
-
-            setLoading(false);
         };
 
         check();
-    }, []);
+    }, [navigate]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#089CCE] mb-4"></div>
+            <p className="text-gray-600 font-medium">Checking subscription...</p>
+        </div>
+    );
 
     return children;
 }

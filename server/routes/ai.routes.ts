@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { askAI } from "../controllers/aiLegal.controller";
 import { generateDraft } from "../controllers/aiDraft.controller";
 import { aiLimiter } from "../middleware/rateLimit";
@@ -27,7 +27,7 @@ import { lifecycle } from "../controllers/lifecycle.controller";
 import {
     createEvent,
     listEvents,
-} from "../controllers/calendar.controller";
+} from "../controllers/caseExtra.controller";
 import { detectLimitation } from "../controllers/limitation.controller";
 import { getCauseList } from "../controllers/causeList.controller";
 import { syncNextHearing } from "../controllers/calendar.controller";
@@ -67,7 +67,7 @@ router.post("/cause-list", getCauseList);
 router.post("/sync-hearing", syncNextHearing);
 router.post("/push/subscribe", saveSubscription);
 router.post("/hearing-assist", hearingAssist);
-router.post("/start-hearing", async (req, res, next) => {
+router.post("/start-hearing", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { sessionId, facts } = req.body;
         const result = await startHearing(sessionId, facts);

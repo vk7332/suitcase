@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function ProtectedRoute({
     children,
     role,
+    allowedRoles,
 }: {
     children: any;
-    role: string;
+    role?: string;
+    allowedRoles?: string[];
 }) {
     const [loading, setLoading] = useState(true);
     const [allowed, setAllowed] = useState(false);
@@ -28,7 +30,13 @@ export default function ProtectedRoute({
                 .eq("id", user.id)
                 .single();
 
-            if (data?.role === role) {
+            const userRole = data?.role;
+
+            if (role && userRole === role) {
+                setAllowed(true);
+            } else if (allowedRoles && allowedRoles.includes(userRole)) {
+                setAllowed(true);
+            } else if (!role && !allowedRoles) {
                 setAllowed(true);
             } else {
                 setAllowed(false);
@@ -38,7 +46,7 @@ export default function ProtectedRoute({
         };
 
         checkAccess();
-    }, [role]);
+    }, [role, allowedRoles]);
 
     if (loading) return <div>Loading...</div>;
 

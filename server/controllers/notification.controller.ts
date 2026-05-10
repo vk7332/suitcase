@@ -6,7 +6,7 @@ import { getPreferences, updatePreferences } from "../services/notificationPrefe
 export const fetchPreferences = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
-    const data = await getPreferences(userId);
+    const data = await getPreferences(String(userId));
 
     res.json(data);
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LimitationCalculatorEngine } from "../../engines/court-fee/court-feeSlabEngine";
+import { LimitationCalculatorEngine } from "../../engines/limitation-calculator-engine";
 
 export default function LimitationCalculator() {
     const [date, setDate] = useState("");

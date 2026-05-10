@@ -117,17 +117,17 @@ const HearingSimulator = () => {
                             <p>🔍 <strong>Opponent Argument:</strong> {assist.opponent_argument}</p>
                         </div>
                     )}
-                    {/* 📄 FINAL DRAFT */
-                        { assist && assist.final_draft && (
-                            <div style={{
-                                marginTop: 15,
-                                background: "#444",
-                                color: "#fff",
-                                padding: 10
-                            }}>
-                                <p>📄 <strong>Final Draft:</strong> {assist.final_draft}</p>
-                            </div>
-                        )}
+                    {/* 📄 FINAL DRAFT */}
+                    {assist && assist.final_draft && (
+                        <div style={{
+                            marginTop: 15,
+                            background: "#444",
+                            color: "#fff",
+                            padding: 10
+                        }}>
+                            <p>📄 <strong>Final Draft:</strong> {assist.final_draft}</p>
+                        </div>
+                    )}
                     {/* 🧑‍⚖️ JUDGE DECISION */}
                     {assist && assist.judge_decision && (
                         <div style={{
@@ -140,8 +140,6 @@ const HearingSimulator = () => {
                         </div>
                     )}
                     {/* 🏆 OUTCOME */}
-                
-            }
                     {assist && assist.outcome && (
                         <div style={{
                             marginTop: 15,
@@ -163,7 +161,6 @@ const HearingSimulator = () => {
                             <p>📊 <strong>Analytics:</strong> {assist.analytics}</p>
                         </div>
                     )}
-          )}
                 </>
             )}
         </div>

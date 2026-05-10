@@ -1,5 +1,5 @@
 import { courtFeeStates } from "@/data/court-fees";
-import { calculateProgressiveFee } from "./courtFeeSlabEngine";
+import { calculateProgressiveFee, calculateFlatFee, calculatePerUnitFee } from "./courtFeeSlabEngine";
 
 export const calculateCourtFee = ({
     state,
@@ -13,7 +13,17 @@ export const calculateCourtFee = ({
 
     // 🧾 Schedule I
     if (type === "scheduleI") {
-        return calculateProgressiveFee(stateData.scheduleI, amount);
+        const config = stateData.scheduleI;
+        switch (config.calculationType) {
+            case "progressive":
+                return calculateProgressiveFee(config, amount);
+            case "flat":
+                return calculateFlatFee(config.slabs, amount);
+            case "per_unit":
+                return calculatePerUnitFee(config, amount);
+            default:
+                throw new Error("invalid calculation type");
+        }
     }
 
     // 📄 Schedule II

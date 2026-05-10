@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabaseclient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 // 🔹 get client cases
 export const getClientCases = async () => {

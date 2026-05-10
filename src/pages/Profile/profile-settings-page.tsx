@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { useProfile } from "../../hooks/useProfile";
 
 const ProfileSettingsPage: React.FC = () => {
@@ -134,5 +134,6 @@ const ProfileSettingsPage: React.FC = () => {
 };
 
 export default ProfileSettingsPage;
+
 
 

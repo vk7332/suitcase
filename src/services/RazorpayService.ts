@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 declare global {
     interface Window {
@@ -33,8 +33,24 @@ export const initiateRazorpayPayment = async (
         return;
     }
 
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
+    // 🧪 DUMMY MODE FOR TESTING (If no key found)
+    if (!razorpayKey || razorpayKey === "your_razorpay_key_id") {
+        console.warn("Razorpay Key missing - Using Dummy Payment Mode");
+        const confirmPayment = window.confirm(
+            `[TEST MODE] Simulate successful payment for ${plan} (₹${amount})?`
+        );
+
+        if (confirmPayment) {
+            alert("Subscription activated successfully (Dummy Mode)!");
+            window.location.href = "/dashboard";
+        }
+        return;
+    }
+
     const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: razorpayKey,
         amount: amount * 100, // Convert to paise
         currency: "INR",
         name: "SUITCASE",
@@ -83,5 +99,6 @@ export const initiateRazorpayPayment = async (
     const razorpay = new window.Razorpay(options);
     razorpay.open();
 };
+
 
 

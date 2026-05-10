@@ -1,41 +1,33 @@
 {
     "compilerOptions": {
-        "baseUrl": "src",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ES2020"
+        ],
+        "allowJs": false,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "ignoreDeprecations": "5.0",
         "paths": {
             "@/*": [
-                "*"
+                "src/*"
             ]
         }
-    }
-}
-{
-    "lib": [
-        "DOM",
-        "DOM.Iterable",
-        "ES2020"
-    ],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
-    "paths": {
-        "@/*": [
-            "src/*"
-        ]
     },
     "include": [
+        "src",
         "server/**/*.ts",
-        "server/types/**/*.d.ts",
-        "src"
+        "server/types/**/*.d.ts"
     ]
 }

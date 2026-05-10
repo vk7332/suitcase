@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { FilingCostEngine } from "../../engines/court-fee/court-feeSlabEngine";
+import { FilingCostEngine } from "../../engines/filing-cost-engine";
 
 const FilingCostCalculator = () => {
     const [input, setInput] = useState({
-        court- fee: 0,
+        courtFee: 0,
         defendants: 1,
         applications: 0,
         affidavits: 0,
@@ -11,14 +11,14 @@ const FilingCostCalculator = () => {
         vakalatnama: true,
     });
 
-const [result, setResult] = useState<any>();
+    const [result, setResult] = useState<any>();
 
-return (
-    <div>
-        <h2>Filing Cost Calculator</h2>
+    return (
+        <div>
+            <h2>Filing Cost Calculator</h2>
 
-        <input placeholder="Court Fee" onChange={(e) =>
-            setInput({ ...input, court- fee: +e.target.value })
+            <input placeholder="Court Fee" onChange={(e) =>
+                setInput({ ...input, courtFee: +e.target.value })
             } />
 
         <button onClick={() =>

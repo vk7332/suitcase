@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./useAuth";
-import { Link } from "react-router-dom";
 import { useSubscription } from "./useSubscription";
 import { PLAN_LIMITS } from "../config/planLimits";
 import { getDailyUsage, incrementUsage } from "../services/UsageService";
@@ -8,7 +7,7 @@ import { getDailyUsage, incrementUsage } from "../services/UsageService";
 
 export const useUsageLimits = () => {
     const { user } = useAuth();
-    const { plan } = useSubscription();
+    const subscription = useSubscription();
     const [aiDraftsUsed, setAiDraftsUsed] = useState(0);
 
     useEffect(() => {
@@ -23,9 +22,11 @@ export const useUsageLimits = () => {
         setAiDraftsUsed(used);
     };
 
+    const limits = PLAN_LIMITS[subscription.plan] || PLAN_LIMITS.FREE;
+
     const canUseAIDraft =
-        aiDraftsUsed < PLAN_LIMITS[plan].aiDraftsPerDay ||
-        plan === "PREMIUM";
+        aiDraftsUsed < limits.aiDraftsPerDay ||
+        subscription.plan === "PREMIUM";
 
     const recordAIDraftUsage = async () => {
         if (!user) return;
@@ -35,10 +36,10 @@ export const useUsageLimits = () => {
 
     return {
         aiDraftsUsed,
-        aiDraftsLimit: PLAN_LIMITS[plan].aiDraftsPerDay,
+        aiDraftsLimit: limits.aiDraftsPerDay,
         canUseAIDraft,
         recordAIDraftUsage,
-        plan,
+        plan: subscription.plan,
     };
 };
 

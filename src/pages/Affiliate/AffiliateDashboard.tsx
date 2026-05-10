@@ -17,8 +17,8 @@ const AffiliateDashboard = () => {
 
     if (!affiliate) {
         return (
-            <div className="p-6">
-                <h1 className="text-2xl font-bold">Affiliate Program</h1>
+            <div className="max-w-7xl mx-auto p-6">
+                <h1 className="text-2xl font-bold">Affiliate Dashboard</h1>
                 <p className="mt-2 text-gray-600">
                     You are not enrolled in the affiliate program yet.
                 </p>
@@ -27,7 +27,7 @@ const AffiliateDashboard = () => {
     }
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="max-w-7xl mx-auto p-6 space-y-6">
             <h1 className="text-3xl font-bold">Affiliate Dashboard</h1>
 
             {/* Summary Cards */}
@@ -37,10 +37,16 @@ const AffiliateDashboard = () => {
             </div>
 
             {/* Referrals Table */}
-            <ReferralsTable referrals={referrals} />
+            <div className="space-y-4">
+                <h2 className="text-xl font-semibold">Recent Referrals</h2>
+                <ReferralsTable referrals={referrals} />
+            </div>
 
             {/* Payout Request Form */}
-            <PayoutRequestForm affiliateId={affiliate.id} />
+            <div className="space-y-4">
+                <h2 className="text-xl font-semibold">Payout Request</h2>
+                <PayoutRequestForm affiliateId={affiliate.id} />
+            </div>
         </div>
     );
 };

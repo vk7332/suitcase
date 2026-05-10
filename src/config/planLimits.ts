@@ -16,6 +16,11 @@ export const PLAN_LIMITS: Record<PlanType, UsageLimits> = {
         documents: -1, // Unlimited
         juniors: 5,
     },
+    CHAMBER: {
+        aiDraftsPerDay: -1,
+        documents: -1,
+        juniors: 20,
+    },
 };
 
 

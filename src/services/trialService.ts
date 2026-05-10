@@ -5,16 +5,23 @@ export const activateTrial = async (
     enrollmentNumber: string,
     plan: "pro" | "premium"
 ) => {
-    // Check if enrollment number has already used a trial
+    // Check if enrollment number has already been used by ANY user
     const { data: existing, error: fetchError } = await supabase
         .from("profiles")
-        .select("trial_used")
+        .select("id, trial_used")
         .eq("advocate_enrollment_number", enrollmentNumber)
         .maybeSingle();
 
     if (fetchError) throw fetchError;
 
-    if (existing?.trial_used) {
+    // If enrollment number exists and belongs to another user
+    if (existing && existing.id !== userId) {
+        const error = new Error("You already have an account");
+        (error as any).redirect = true; // Flag for UI to handle redirect
+        throw error;
+    }
+
+    if (existing?.trial_used && existing.id === userId) {
         throw new Error(
             "A free trial has already been used with this Advocate Enrollment Number."
         );

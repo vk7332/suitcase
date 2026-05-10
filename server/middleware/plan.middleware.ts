@@ -1,8 +1,9 @@
 import { supabase } from "../config/supabase";
 import { PLAN_LIMITS } from "../config/planLimits";
+import { Request, Response, NextFunction } from 'express';
 
 export const enforcePlan = (feature: "cases" | "members") => {
-    return async (req, res, next) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
         const user = req.user;
 
         const { data: chamber } = await supabase
@@ -11,7 +12,7 @@ export const enforcePlan = (feature: "cases" | "members") => {
             .eq("id", user.chamber_id)
             .single();
 
-        const limits = PLAN_LIMITS[chamber.plan];
+        const limits = PLAN_LIMITS[chamber.plan as keyof typeof PLAN_LIMITS];
 
         if (feature === "members") {
             const { count } = await supabase
@@ -19,7 +20,7 @@ export const enforcePlan = (feature: "cases" | "members") => {
                 .select("*", { count: "exact", head: true })
                 .eq("chamber_id", chamber.id);
 
-            if (count >= limits.members) {
+            if (count && count >= limits.members) {
                 return res.status(403).json({
                     error: "member limit reached, upgrade plan",
                 });
@@ -32,7 +33,7 @@ export const enforcePlan = (feature: "cases" | "members") => {
                 .select("*", { count: "exact", head: true })
                 .eq("chamber_id", chamber.id);
 
-            if (count >= limits.cases) {
+            if (count && count >= limits.cases) {
                 return res.status(403).json({
                     error: "case limit reached, upgrade plan",
                 });

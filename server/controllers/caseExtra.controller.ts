@@ -1,7 +1,7 @@
 import { addEvent, getTimeline } from "../services/timeline.service";
 import { Request, Response } from 'express';
 import { addHearing, getHearings } from "../services/hearing.service";
-import { addDocument, getDocuments } from "../services/document.service";
+import { addDocument, getDocuments } from "../services/dashboard.service";
 
 export const createEvent = async (req: Request, res: Response) => {
     try {
@@ -13,9 +13,12 @@ export const createEvent = async (req: Request, res: Response) => {
 };
 
 export const fetchTimeline = async (req: Request, res: Response) => {
-    const data = await getTimeline(req.params.caseId);
+    const caseId = Array.isArray(req.params.caseId) ? req.params.caseId[0] : req.params.caseId;
+    const data = await getTimeline(caseId);
     res.json(data);
 };
+
+export const listEvents = fetchTimeline;
 
 export const createHearing = async (req: Request, res: Response) => {
     const data = await addHearing(req.body);
@@ -23,7 +26,8 @@ export const createHearing = async (req: Request, res: Response) => {
 };
 
 export const fetchHearings = async (req: Request, res: Response) => {
-    const data = await getHearings(req.params.caseId);
+    const caseId = Array.isArray(req.params.caseId) ? req.params.caseId[0] : req.params.caseId;
+    const data = await getHearings(caseId);
     res.json(data);
 };
 
@@ -34,6 +38,7 @@ export const uploadDocument = async (req: Request, res: Response) => {
 
 export const fetchDocuments = async (req: Request, res: Response) => {
     const role = req.user.role;
-    const data = await getDocuments(req.params.caseId, role);
+    const caseId = Array.isArray(req.params.caseId) ? req.params.caseId[0] : req.params.caseId;
+    const data = await getDocuments(caseId, role);
     res.json(data);
 };

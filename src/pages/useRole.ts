@@ -1,4 +1,4 @@
-import { useRoleContext } from "@/context/rolecontext";
+import { useRoleContext } from "@/context/role-context";
 import { ROLES, UserRole } from "@/types/roles";
 
 export const useRole = () => {

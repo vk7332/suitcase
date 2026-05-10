@@ -32,3 +32,42 @@ export const createShareLink = async (req: Request, res: Response) => {
         res.status(500).json({ error: "failed to create share link" });
     }
 };
+
+export const accessSharedDocument = async (req: Request, res: Response) => {
+    try {
+        const { token } = req.params;
+
+        const { data, error } = await supabase
+            .from("shared_links")
+            .select("document_id, expires_at")
+            .eq("token", token)
+            .single();
+
+        if (error || !data) {
+            return res.status(404).json({ error: "Shared link not found" });
+        }
+
+        const now = new Date();
+        const expiresAt = new Date(data.expires_at);
+
+        if (now > expiresAt) {
+            return res.status(410).json({ error: "Shared link has expired" });
+        }
+
+        // Get the document details
+        const { data: document, error: docError } = await supabase
+            .from("documents")
+            .select("*")
+            .eq("id", data.document_id)
+            .single();
+
+        if (docError || !document) {
+            return res.status(404).json({ error: "Document not found" });
+        }
+
+        res.json({ document });
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to access shared document" });
+    }
+};

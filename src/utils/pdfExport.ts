@@ -18,8 +18,8 @@ export interface TaxReportData {
     footerNote?: string;
 }
 
-export interface court-feeBreakdown {
-    court-fee: number;
+export interface CourtFeeBreakdown {
+    courtFee: number;
     filingFee: number;
     processFee: number;
     applicationFee: number;
@@ -100,15 +100,15 @@ export const exportTaxReport = (data: TaxReportData): void => {
     }
 
     // Save PDF
-    doc.save(`${data.title.replace(//s+/g, "_")}.pdf`);
+    doc.save(`${data.title.replace(/\s+/g, "_")}.pdf`);
 };
 
 /* ================================
    EXPORT COURT FEE REPORT
 ================================ */
 
-export const exportcourt-feeReport = (
-    breakdown: court-feeBreakdown,
+export const exportCourtFeeReport = (
+    breakdown: CourtFeeBreakdown,
     caseDetails: {
         caseType: string;
         courtName: string;
@@ -166,7 +166,7 @@ export const exportcourt-feeReport = (
         startY: 85,
         head: [["Particulars", "Amount (₹)"]],
         body: [
-            ["Court Fee", formatCurrency(breakdown.court-fee)],
+            ["Court Fee", formatCurrency(breakdown.courtFee)],
             ["Filing Fee", formatCurrency(breakdown.filingFee)],
             ["Process Fee", formatCurrency(breakdown.processFee)],
             ["Application Fee", formatCurrency(breakdown.applicationFee)],

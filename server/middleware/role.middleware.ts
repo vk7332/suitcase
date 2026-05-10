@@ -2,7 +2,6 @@ import express from "express";
 import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "./auth.middleware";
 import { authMiddleware } from "./auth.middleware";
-import { requireRole } from "./role.middleware";
 
 /**
  * Middleware to restrict access based on user role

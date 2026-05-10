@@ -13,11 +13,11 @@ const FeatureGate: React.FC<Props> = ({
     children,
     featureName = "this feature",
 }) => {
-    const { plan, loading } = useSubscription();
+    const subscription = useSubscription();
 
-    if (loading) return <p>Checking access...</p>;
+    if (subscription.loading) return <p>Checking access...</p>;
 
-    const allowed = hasFeatureAccess(plan, requiredPlan);
+    const allowed = hasFeatureAccess(subscription.plan, requiredPlan);
 
     if (!allowed) {
         return (

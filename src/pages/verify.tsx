@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../lib/api";
 
-const handleUpload = async (e: any) => {
-    const file = e.target.files[0];
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const res = await api.post("/verify/upload", formData);
-
-    setData(res.data);
-};
-
 const VerifyPage = () => {
     const [params] = useSearchParams();
     const [data, setData] = useState<any>(null);
+
+    const handleUpload = async (e: any) => {
+        const file = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await api.post("/verify/upload", formData);
+
+        setData(res.data);
+    };
 
     useEffect(() => {
         const hash = params.get("hash");
@@ -30,6 +30,7 @@ const VerifyPage = () => {
     return (
         <div>
             <h2>Document Verification</h2>
+            <input type="file" onChange={handleUpload} />
 
             <p>Status: {data.status}</p>
             <p>Signed By: {data.signedBy}</p>

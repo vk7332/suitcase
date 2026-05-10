@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { InterestCalculatorEngine } from "../../engines/court-fee/court-feeSlabEngine";
+import { InterestCalculatorEngine } from "../../engines/interest-calculator-engine";
 
 export default function InterestCalculator() {
     const [p, setP] = useState(0);

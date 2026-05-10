@@ -1,19 +1,17 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 
 export async function getCases(userId: string) {
-    return supabase
+    const { data, error } = await supabase
         .from("cases")
         .select("*")
-        .eq("user_id", userId);
-}
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
-const { data, error } = await supabase
-    .from("cases")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-if (error) console.log(error);
-return data;
+    if (error) {
+        console.error(error);
+        return [];
+    }
+    return data;
 }
 
 export async function addCase(caseData: any) {

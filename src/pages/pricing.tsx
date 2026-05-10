@@ -1,7 +1,25 @@
-import { startSubscription } from "@/engines/billing/billing.engine";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Pricing() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const plan = localStorage.getItem("selectedPlan");
+
+        if (plan) {
+            // optional auto-highlight or auto-trigger
+            console.log("Retry plan:", plan);
+            localStorage.removeItem("selectedPlan");
+            handleSubscribe(plan);
+        }
+
+        if (!localStorage.getItem("onboardingComplete")) {
+            navigate("/onboarding");
+        }
+
+    }, [navigate]);
+
     const plans = [
         {
             name: "Free",
@@ -23,7 +41,7 @@ export default function Pricing() {
                 "Client portal",
                 "Email notifications",
             ],
-            action: () => startSubscription("plan_pro_id"),
+            action: () => handleSubscribe("plan_pro_id"),
         },
         {
             name: "Premium",
@@ -35,7 +53,7 @@ export default function Pricing() {
                 "Analytics",
                 "Automation",
             ],
-            action: () => startSubscription("plan_premium_id"),
+            action: () => handleSubscribe("plan_premium_id"),
         },
     ];
 
@@ -74,23 +92,6 @@ export default function Pricing() {
     };
 
     const handleUpgrade = async (plan: string) => {
-        // ✅ store selected plan (for retry)
-        useEffect(() => {
-            const plan = localStorage.getItem("selectedPlan");
-
-            if (plan) {
-                // optional auto-highlight or auto-trigger
-                console.log("Retry plan:", plan);
-                localStorage.removeItem("selectedPlan");
-                handleSubscribe(plan);
-            }
-
-            if (!localStorage.getItem("onboardingComplete")) {
-                navigate("/onboarding");
-            }
-
-        }, []);
-
         const res = await fetch("/api/subscription/create", {
             method: "POST",
             headers: {

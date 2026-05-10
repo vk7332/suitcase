@@ -1,13 +1,12 @@
 // server/routes/case.routes.ts
 
 import express from "express";
-import { createCase } from "../controllers/case.controller";
+import { createCase, updateCaseStatus, allowCaseAccess, generatePdfController, getCaseDetails, publicCaseView } from "../controllers/case.controller";
 import { enforcePlan } from "../middleware/plan.middleware";
-import { updateCaseStatus } from "../controllers/case.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 import { createOrganization } from "../controllers/organization.controller";
-import { inviteMember } from "../controllers/invite.controller";
-import { enforceSubscription } from "../middleware/subscription.middleware";
+import { createInvite as inviteMember } from "../controllers/invite.controller";
+import { requireActiveSubscription as enforceSubscription } from "../middleware/subscription.middleware";
 import { allowRoles } from "../middleware/role.middleware";
 import { enforceTenant } from "../middleware/tenant.middleware";
 

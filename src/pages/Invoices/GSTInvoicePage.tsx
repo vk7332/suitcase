@@ -12,33 +12,41 @@ const GSTInvoicePage: React.FC = () => {
             return;
         }
 
+        const mockInvoiceData = {
+            invoice_number: "INV-001",
+            invoice_date: new Date().toISOString().split("T")[0],
+            place_of_supply: "Himachal Pradesh",
+            client: {
+                name: "ABC Client",
+                address: "New Delhi, India",
+                gstin: "07ABCDE1234F1Z5",
+            },
+            items: [
+                {
+                    description: "Professional Legal Fees",
+                    quantity: 1,
+                    rate: 5000,
+                },
+            ],
+            subtotal: 5000,
+            gst_amount: 900,
+            total_amount: 5900,
+            invoice_type: "RECEIPT" as any,
+        };
+
         await generateGSTInvoicePDF(
             {
-                name: profile.full_name,
+                name: profile.full_name || "",
                 chamberName: profile.chamber_name,
                 address: profile.address,
                 phone: profile.phone,
                 email: profile.email,
                 website: profile.website,
-                gstin: profile.gstin,
+                gstin: (profile as any).gstin,
                 logoUrl: profile.logo_url,
                 signatureUrl: profile.signature_url,
             },
-            {
-                invoiceNumber: "INV-001",
-                invoiceDate: new Date().toLocaleDateString(),
-                placeOfSupply: "Himachal Pradesh",
-                clientName: "ABC Client",
-                clientAddress: "New Delhi, India",
-                items: [
-                    {
-                        description: "Professional Legal Fees",
-                        quantity: 1,
-                        rate: 5000,
-                    },
-                ],
-                gstRate: 18,
-            }
+            mockInvoiceData as any
         );
     };
 
