@@ -22,6 +22,15 @@ export default function StepProfile({ next }: any) {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error("No user found");
 
+            // Update profile with name and phone
+            await supabase
+                .from("profiles")
+                .update({ 
+                    full_name: name, 
+                    phone: phone 
+                })
+                .eq("id", user.id);
+
             // Activate trial and check for existing enrollment
             await activateTrial(user.id, enrollment, "pro");
 

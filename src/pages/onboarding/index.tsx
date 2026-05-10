@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StepRole from "./step-role";
 import StepProfile from "./step-profile";
 import StepPlan from "./step-plan";
 import StepFirstCase from "./step-first-case";
 import StepSuccess from "./step-success";
 import ProgressBar from "./progressBar";
+import { useNavigate } from "react-router-dom";
 
 export default function Onboarding() {
     const [step, setStep] = useState(1);
     const [data, setData] = useState<any>({});
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (localStorage.getItem("onboardingComplete") === "true") {
+            navigate("/dashboard");
+        }
+    }, [navigate]);
 
     const next = (newData?: any) => {
         setData({ ...data, ...newData });

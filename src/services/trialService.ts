@@ -9,7 +9,7 @@ export const activateTrial = async (
     const { data: existing, error: fetchError } = await supabase
         .from("profiles")
         .select("id, trial_used")
-        .eq("advocate_enrollment_number", enrollmentNumber)
+        .eq("enrollment_number", enrollmentNumber)
         .maybeSingle();
 
     if (fetchError) throw fetchError;
@@ -34,7 +34,7 @@ export const activateTrial = async (
     const { error } = await supabase
         .from("profiles")
         .update({
-            advocate_enrollment_number: enrollmentNumber,
+            enrollment_number: enrollmentNumber,
             subscription_plan: plan,
             trial_start_date: startDate.toISOString(),
             trial_end_date: endDate.toISOString(),

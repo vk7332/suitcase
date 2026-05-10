@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 // import '@/styles/global.css';
 // 🔐 Auth
 import LoginPage from "@/pages/auth/login-page";
+import SignupPage from "@/pages/auth/signup-page";
 
 // 📊 Dashboard (adjust if needed)
 import LegalDashboard from "@/pages/Dashboard/LegalDashboard";
@@ -54,6 +55,7 @@ export default function AppRoutes() {
             {/* PUBLIC */}
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/subscription" element={<SubscriptionPage />} />
             <Route path="/onboarding" element={<Onboarding />} />
