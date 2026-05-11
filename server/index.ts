@@ -5,7 +5,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { supabase } from "./config/supabase";
 import cors from "cors";
 
-import webhookRoutes from "./routes/webhook.routes";
+import webhookRoutes from './routes/webhook.routes.js';
 import shareRoutes from "./routes/share.routes";
 import caseRoutes from "./routes/case.routes";
 import notificationRoutes from "./routes/notification.routes";
