@@ -1,5 +1,11 @@
 // server/index.ts
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+dotenv.config();
+
+if (!process.env.OPENAI_API_KEY) {
+  console.warn("OpenAI disabled");
+}
+
 import 'dotenv/config'; // This must be line 1
 import express, { Request, Response, NextFunction } from 'express';
 import { supabase } from "./config/supabase";
@@ -27,9 +33,21 @@ import "./jobs/reminder.job";
 
 dotenv.config({ path: '../.env' }); // Tells Node to look one folder up for the .env
 
-const app = express(); void 0;
+const app = express();
+
+const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
+
+// 🔹 SERVER START
+
+app.get("/", (req, res) => {
+  res.send("SUITCASE Backend Running");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 app.use(
     rateLimit({
@@ -47,10 +65,6 @@ app.use(express.json());
 
 app.use(morgan("combined"));
 
-// 🔹 HEALTH CHECK
-app.get("/", (req, res) => {
-    res.send("SUITCASE Backend Running 🚀");
-});
 
 // 🔴 MUST COME FIRST (before json)
 app.use("/api/webhook/razorpay", express.raw({ type: "*/*" }));
@@ -62,6 +76,11 @@ app.use(express.json());
 app.use("/api/webhook/razorpay", webhookRoutes);
 
 app.use(errorHandler);
+// 🔹 GLOBAL ERROR HANDLER (basic)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    console.error(err);
+    res.status(500).json({ error: "internal server error" });
+});
 
 // 🔹 ROUTES
 app.use("/api", organizationRoutes);
@@ -80,16 +99,3 @@ app.use("/api", clientRoutes);
 app.use("/api", documentRoutes);
 app.use("/documents", documentRoutes);
 app.use("/api", aiRoutes);
-
-// 🔹 GLOBAL ERROR HANDLER (basic)
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    console.error(err);
-    res.status(500).json({ error: "internal server error" });
-});
-
-// 🔹 SERVER START
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
