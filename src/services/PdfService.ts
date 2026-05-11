@@ -18,4 +18,16 @@ export function exportFeeReport(data: any) {
     doc.save("court-feeReport.pdf");
 }
 
+export const PdfService = {
+    exportFeeReport,
+    generateInvoicePDF: (invoice: any) => {
+        const doc = new jsPDF();
+        doc.text(`Invoice: ${invoice.invoice_number}`, 20, 20);
+        doc.text(`Client: ${invoice.client?.name || "N/A"}`, 20, 30);
+        doc.text(`Date: ${invoice.invoice_date}`, 20, 40);
+        doc.text(`Total Amount: ₹${invoice.total_amount}`, 20, 50);
+        doc.save(`Invoice_${invoice.invoice_number}.pdf`);
+    }
+};
+
 

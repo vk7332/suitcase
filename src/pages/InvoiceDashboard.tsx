@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
     fetchInvoices,
+    deleteInvoice,
 } from "../services/InvoiceService";
 import InvoiceForm from "../components/InvoiceForm";
 import { initiateRazorpayPayment } from "../services/RazorpayService";
@@ -25,7 +26,7 @@ const InvoiceDashboard = () => {
 
     const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this invoice?")) {
-            // await deleteInvoice(id);
+            await deleteInvoice(id);
             loadInvoices();
         }
     };
@@ -52,7 +53,7 @@ const InvoiceDashboard = () => {
     };
 
     const handleDownloadPDF = (invoice: InvoiceData) => {
-        // generateInvoicePDF(invoice);
+        PdfService.generateInvoicePDF(invoice);
     };
 
     const handleSendEmail = async (invoice: InvoiceData) => {
@@ -61,7 +62,7 @@ const InvoiceDashboard = () => {
     };
 
     const handleSendWhatsApp = (invoice: InvoiceData) => {
-        // WhatsAppService.sendWhatsAppInvoice(invoice);
+        WhatsAppService.sendWhatsAppInvoice(invoice);
     };
 
     return (

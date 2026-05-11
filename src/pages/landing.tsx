@@ -131,9 +131,9 @@ export default function Landing() {
                         <span className="font-bold text-gray-900 tracking-tight">SUITCASE</span>
                     </div>
                     <div className="flex gap-8 text-sm text-gray-500">
-                        <a href="/privacy" className="hover:text-[#089CCE]">Privacy Policy</a>
-                        <a href="/terms" className="hover:text-[#089CCE]">Terms of Service</a>
-                        <a href="/contact" className="hover:text-[#089CCE]">Contact Us</a>
+                        <button onClick={() => navigate("/privacy")} className="hover:text-[#089CCE]">Privacy Policy</button>
+                        <button onClick={() => navigate("/terms")} className="hover:text-[#089CCE]">Terms of Service</button>
+                        <button onClick={() => navigate("/contact")} className="hover:text-[#089CCE]">Contact Us</button>
                     </div>
                     <p className="text-sm text-gray-400">© 2026 SUITCASE LegalTech Platform. All rights reserved.</p>
                 </div>

@@ -25,4 +25,12 @@ export async function sendWhatsAppAPI({
     }
 }
 
+export const WhatsAppService = {
+    sendWhatsAppAPI,
+    sendWhatsAppInvoice: async (invoice: any) => {
+        const message = `Hello, your invoice ${invoice.invoice_number} for ₹${invoice.total_amount} is ready.`;
+        await sendWhatsAppAPI({ to: invoice.client?.phone || "", message });
+    }
+};
+
 

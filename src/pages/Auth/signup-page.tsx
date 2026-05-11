@@ -6,12 +6,40 @@ export default function SignupPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [enrollment, setEnrollment] = useState("");
     const [role, setRole] = useState("advocate");
     const [loading, setLoading] = useState(false);
 
     const handleSignup = async () => {
+        if (!email || !password || !confirmPassword || !enrollment) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
+
         setLoading(true);
         try {
+            // 🔐 1. Check if enrollment number already exists
+            const { data: existingProfile, error: checkError } = await supabase
+                .from("profiles")
+                .select("id, email")
+                .eq("enrollment_number", enrollment)
+                .maybeSingle();
+
+            if (checkError) throw checkError;
+
+            if (existingProfile) {
+                alert("You already have an account");
+                navigate("/login");
+                return;
+            }
+
+            // 🔐 2. Proceed with Supabase Auth Signup
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
@@ -21,11 +49,12 @@ export default function SignupPage() {
 
             const user = data.user;
 
-            // ✅ ROLE INSERT (IMPORTANT)
+            // 🔐 3. Create profile with enrollment number locked
             await supabase.from("profiles").insert({
                 id: user?.id,
                 email: email,
                 role: role,
+                enrollment_number: enrollment,
                 subscription_plan: "free",
                 trial_used: false,
             });
@@ -40,7 +69,7 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-[#089CCE]">
+        <div className="min-h-screen flex flex-col justify-center items-center bg-[#089CCE] py-12 px-4">
             <div className="mb-8 text-center">
                 <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
                     <span className="text-[#089CCE] font-black text-3xl">S</span>
@@ -71,19 +100,40 @@ export default function SignupPage() {
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
                         <input 
-                            placeholder="name@chamber.com" 
+                            type="email"
+                            placeholder="vkskt123@gmail.com" 
                             className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
                             onChange={(e) => setEmail(e.target.value)} 
                         />
                     </div>
 
                     <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Enrollment Number</label>
+                        <input 
+                            placeholder="Enrollment Number" 
+                            className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
+                            onChange={(e) => setEnrollment(e.target.value)} 
+                        />
+                        <p className="text-[10px] text-gray-400 mt-1 italic">Locked forever to your account.</p>
+                    </div>
+
+                    <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
                         <input 
-                            placeholder="••••••••" 
+                            placeholder="••••••••••••" 
                             type="password" 
                             className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
                             onChange={(e) => setPassword(e.target.value)} 
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Confirm Password</label>
+                        <input 
+                            placeholder="••••••••••••" 
+                            type="password" 
+                            className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
+                            onChange={(e) => setConfirmPassword(e.target.value)} 
                         />
                     </div>
 
@@ -107,12 +157,11 @@ export default function SignupPage() {
                 </button>
             </div>
 
-            <button 
-                onClick={() => navigate("/")}
-                className="mt-8 text-white/60 hover:text-white transition text-sm font-medium"
-            >
-                ← Back to Homepage
-            </button>
+            <div className="mt-8 flex gap-6 text-white/60 text-xs font-medium">
+                <button onClick={() => navigate("/privacy")} className="hover:text-white transition underline">Privacy Policy</button>
+                <button onClick={() => navigate("/terms")} className="hover:text-white transition underline">Terms of Service</button>
+                <button onClick={() => navigate("/contact")} className="hover:text-white transition underline">Contact Us</button>
+            </div>
         </div>
     );
 }

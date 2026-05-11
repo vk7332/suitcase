@@ -88,4 +88,31 @@ export const saveInvoice = async (invoice: InvoiceData) => {
     return data;
 };
 
+export const createInvoice = async (invoiceData: any) => {
+    const { data, error } = await supabase
+        .from("invoices")
+        .insert(invoiceData)
+        .select()
+        .single();
+    if (error) throw error;
+    return data;
+};
+
+export const updateInvoice = async (id: string, invoiceData: any) => {
+    const { data, error } = await supabase
+        .from("invoices")
+        .update(invoiceData)
+        .eq("id", id)
+        .select()
+        .single();
+    if (error) throw error;
+    return data;
+};
+
+export const deleteInvoice = async (id: string) => {
+    const { error } = await supabase.from("invoices").delete().eq("id", id);
+    if (error) throw error;
+    return true;
+};
+
 

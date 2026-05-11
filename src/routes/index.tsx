@@ -42,6 +42,9 @@ import NotificationPreferences from "@/pages/client/notification-preferences";
 import Dashboard from "@/pages/Dashboard";
 import Landing from "@/pages/landing";
 import Pricing from "@/pages/pricing";
+import ContactUs from "@/pages/contact-us";
+import PrivacyPolicy from "@/pages/privacy-policy";
+import TermsOfService from "@/pages/terms-of-service";
 import Onboarding from "@/pages/onboarding";
 import PaymentSuccess from "@/pages/payment-success";
 import PaymentFailed from "@/pages/payment-failed";
@@ -57,6 +60,9 @@ export default function AppRoutes() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
             <Route path="/subscription" element={<SubscriptionPage />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
