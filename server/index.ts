@@ -5,6 +5,8 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import fs from 'node:fs';
+import path from 'node:path';
 
 // Routes
 import webhookRoutes from './routes/webhook.routes';
@@ -30,10 +32,8 @@ dotenv.config();
 console.log("-----------------------------------------");
 console.log("🚀 SUITCASE BACKEND STARTING...");
 console.log("📅 Build Time:", new Date().toISOString());
-console.log("📦 Version: 1.0.2-final-fix");
+console.log("📦 Version: 1.0.3-esm-fix");
 try {
-    const fs = await import('fs');
-    const path = await import('path');
     const distPath = path.join(process.cwd(), 'dist');
     if (fs.existsSync(distPath)) {
         console.log("📂 Files in dist:", fs.readdirSync(distPath));
