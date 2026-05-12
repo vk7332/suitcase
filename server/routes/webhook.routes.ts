@@ -1,13 +1,35 @@
 import express from "express";
 import { supabase } from "../config/supabase";
+import crypto from "crypto";
 
 const router = express.Router();
 
 router.post("/razorpay", async (req, res) => {
     try {
-        const event = req.body;
+        let event;
+        
+        // Handle raw body if it's a Buffer (from express.raw)
+        if (Buffer.isBuffer(req.body)) {
+            const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+            const signature = req.headers["x-razorpay-signature"] as string;
 
-        // 🧪 DEBUG LOG (ADD HERE — TOP OF HANDLER)
+            if (secret && signature) {
+                const expectedSignature = crypto
+                    .createHmac("sha256", secret)
+                    .update(req.body)
+                    .digest("hex");
+
+                if (expectedSignature !== signature) {
+                    console.error("❌ Invalid Razorpay signature");
+                    return res.status(400).json({ error: "invalid signature" });
+                }
+            }
+            event = JSON.parse(req.body.toString());
+        } else {
+            event = req.body;
+        }
+
+        // 🧪 DEBUG LOG
         console.log("WEBHOOK EVENT:", event.event);
 
         // =========================

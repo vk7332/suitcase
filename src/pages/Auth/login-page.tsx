@@ -1,24 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/utils/supabase/supabaseClient";
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const { signIn } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setRole] = useState("advocate");
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
+        if (!email || !password) {
+            alert("Please enter email and password");
+            return;
+        }
         setLoading(true);
         try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-            if (error) throw error;
-            navigate("/dashboard");
+            await signIn(email, password);
+            
+            // Check profile for role-based redirect
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data: profile } = await supabase
+                    .from("profiles")
+                    .select("role")
+                    .eq("id", user.id)
+                    .single();
+                
+                if (profile?.role === "client") {
+                    navigate("/client");
+                } else if (profile?.role === "admin") {
+                    navigate("/admin");
+                } else {
+                    navigate("/dashboard");
+                }
+            }
         } catch (err: any) {
-            alert(err.message);
+            alert(err.message || "Login failed");
         } finally {
             setLoading(false);
         }
@@ -40,6 +60,8 @@ export default function LoginPage() {
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1">Login as</label>
                         <select
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
                             className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition bg-gray-50"
                         >
                             <option value="advocate">Advocate</option>

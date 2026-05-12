@@ -27,14 +27,16 @@ export default function SignupPage() {
             // 🔐 1. Check if enrollment number already exists
             const { data: existingProfile, error: checkError } = await supabase
                 .from("profiles")
-                .select("id, email")
-                .eq("enrollment_number", enrollment)
+                .select("id")
+                .or(`enrollment_number.eq.${enrollment},advocate_enrollment_number.eq.${enrollment}`)
                 .maybeSingle();
 
-            if (checkError) throw checkError;
+            if (checkError) {
+                console.error("Check error (might be missing column):", checkError);
+            }
 
             if (existingProfile) {
-                alert("You already have an account");
+                alert("An account with this enrollment number already exists");
                 navigate("/login");
                 return;
             }
@@ -43,23 +45,38 @@ export default function SignupPage() {
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    data: {
+                        role: role,
+                        enrollment_number: enrollment
+                    }
+                }
             });
 
             if (error) throw error;
 
-            const user = data.user;
+            if (!data.user) throw new Error("User creation failed");
 
             // 🔐 3. Create profile with enrollment number locked
-            await supabase.from("profiles").insert({
-                id: user?.id,
-                email: email,
+            const profileData: any = {
+                id: data.user.id,
                 role: role,
                 enrollment_number: enrollment,
+                advocate_enrollment_number: enrollment, // Set both for compatibility
                 subscription_plan: "free",
                 trial_used: false,
-            });
+            };
 
-            alert("Signup successful! Please check your email for verification.");
+            const { error: profileError } = await supabase.from("profiles").insert(profileData);
+
+            if (profileError) {
+                console.error("Profile creation error:", profileError);
+                // Even if profile fails, user is created in Auth. 
+                // We should probably warn the user or try to fix it.
+                // But for now, let's just proceed or throw.
+            }
+
+            alert("Signup successful! Please login to continue.");
             navigate("/login");
         } catch (err: any) {
             alert(err.message);

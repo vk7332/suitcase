@@ -28,9 +28,12 @@ export default function SubscriptionGuard({ children }) {
                     return;
                 }
 
-                // If user has a plan or has used a trial, let them in
-                // Otherwise redirect to pricing or onboarding
-                if (!profile.subscription_plan && !profile.trial_used) {
+                // If user has a plan (including free) or has used a trial, let them in
+                // Otherwise redirect to onboarding
+                const hasPlan = profile.subscription_plan && profile.subscription_plan !== "";
+                
+                if (!hasPlan && !profile.trial_used) {
+                    console.log("No plan found, redirecting to onboarding");
                     navigate("/onboarding");
                     return;
                 }

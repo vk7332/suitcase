@@ -52,7 +52,10 @@ export default function Landing() {
                         >
                             Start Your Free Trial
                         </button>
-                        <button className="bg-transparent border-2 border-white/30 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-white/10 transition">
+                        <button 
+                            onClick={() => navigate("/signup")}
+                            className="bg-transparent border-2 border-white/30 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-white/10 transition"
+                        >
                             Watch Demo
                         </button>
                     </div>
@@ -84,6 +87,35 @@ export default function Landing() {
                                 <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
                                 <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FREE CALCULATORS SECTION */}
+            <section className="py-24 px-6 bg-white">
+                <div className="max-w-6xl mx-auto text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Free Legal Calculators</h2>
+                    <p className="text-gray-600 mb-12">Access our professional legal tools for free, no account required.</p>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {[
+                            { title: "Court Fee", path: "/calculator/court-fee" },
+                            { title: "Limitation", path: "/calculator/limitation" },
+                            { title: "Stamp Duty", path: "/calculator/stamp-duty" },
+                            { title: "Interest", path: "/calculator/interest" },
+                            { title: "Filing Cost", path: "/calculator/filing-cost" },
+                            { title: "Total Case Cost", path: "/calculator/total-case-cost" },
+                            { title: "Partition Suit", path: "/calculator/partition-suit" },
+                            { title: "Specific Performance", path: "/calculator/specific-performance" }
+                        ].map((calc, i) => (
+                            <button
+                                key={i}
+                                onClick={() => navigate(calc.path)}
+                                className="p-6 bg-gray-50 rounded-2xl border border-gray-100 hover:border-[#089CCE] hover:bg-blue-50/50 transition-all text-center group"
+                            >
+                                <div className="text-[#089CCE] font-bold group-hover:scale-105 transition transform">{calc.title}</div>
+                            </button>
                         ))}
                     </div>
                 </div>

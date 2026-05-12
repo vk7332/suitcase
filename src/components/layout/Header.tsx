@@ -22,7 +22,7 @@ export default function Header() {
 
         <nav className="hidden md:flex gap-4 text-sm">
           <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-          <button onClick={() => navigate("/cases")}>Cases</button>
+          <button onClick={() => navigate("/advocate/cases")}>Cases</button>
           <button onClick={() => navigate("/calculator/court-fee")}>
             Court Fee
           </button>

@@ -13,17 +13,20 @@ export default function ProtectedRoute({
 }) {
     const [loading, setLoading] = useState(true);
     const [allowed, setAllowed] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const checkAccess = async () => {
             const { data: { user } } = await supabase.auth.getUser();
 
             if (!user) {
+                setIsAuthenticated(false);
                 setAllowed(false);
                 setLoading(false);
                 return;
             }
 
+            setIsAuthenticated(true);
             const { data } = await supabase
                 .from("profiles")
                 .select("role")
@@ -50,6 +53,8 @@ export default function ProtectedRoute({
 
     if (loading) return <div>Loading...</div>;
 
+    if (!isAuthenticated) return <Navigate to="/login" />;
+    
     if (!allowed) return <Navigate to="/subscription" />;
 
     return children;

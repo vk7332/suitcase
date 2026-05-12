@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { supabase } from "@/utils/supabase/supabaseClient";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import ActivityLog from "@/components/case/activity-log";
 import CaseDocumentsList from "@/components/cases/caseDocumentsList";
 import LegalResearchBox from "@/components/case/LegalResearchBox";
@@ -18,51 +21,105 @@ import LifecycleTracker from "@/components/case/LifecycleTracker";
 import Timeline from "../../components/case/Timeline";
 
 export default function CaseDetails() {
-    const caseId = "123"; // This would come from route params in a real app    
-    const [events] = useState<any[]>([]);
-    const [caseData] = useState<any>({ id: caseId });
-    const [latestAnalysis] = useState<any>({});
+    const { id: caseId } = useParams();
+    const [caseData, setCaseData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCase = async () => {
+            const { data, error } = await supabase
+                .from("cases")
+                .select("*")
+                .eq("id", caseId)
+                .single();
+            
+            if (!error) {
+                setCaseData(data);
+            }
+            setLoading(false);
+        };
+        fetchCase();
+    }, [caseId]);
+
+    if (loading) return <DashboardLayout><div className="p-6">Loading...</div></DashboardLayout>;
+    if (!caseData) return <DashboardLayout><div className="p-6 text-red-600">Case not found</div></DashboardLayout>;
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Case Details</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <section>
-                    <ActivityLog caseId={caseId} />
-                    <CaseDocumentsList caseId={caseId} />
-                    <LegalResearchBox />
-                    <AIAssistant />
-                    <MultiDocAI />
-                    <CourtArgument />
-                    <LiveAssistant liveData={latestAnalysis} />
-                </section>
-                <section>
-                    <StrategyBox />
-                    <JudgeSimulator />
-                    <HearingSimulator />
-                    <LiveCourtMode />
-                    <HearingRecorder />
-                    <AnalyticsDashboard />
-                    <AutopilotBox />
-                    <LifecycleTracker />
-                    <LimitationBox caseId={caseData.id} />
-                </section>
-            </div>
+        <DashboardLayout>
+            <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 className="text-2xl font-bold">{caseData.case_title || caseData.title}</h1>
+                        <p className="text-gray-500">{caseData.case_number}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            caseData.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                        }`}>
+                            {caseData.status?.toUpperCase()}
+                        </span>
+                    </div>
+                </div>
 
-            <h2 className="text-xl font-bold mt-6">Timeline</h2>
-            <Timeline caseId={caseId} />
-            
-            <h2 className="text-xl font-bold mt-6">Objections</h2>
-            <div className="space-y-4">
-                {events.map((e: any) => {
-                    return (
-                        <div key={e.id} className="border p-3 rounded">
-                            <b>{e.event_date}</b> - {e.title}
-                            <p>{e.description}</p>
-                        </div>
-                    );
-                })}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="space-y-8">
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-bold mb-4">Case Overview & Activity</h2>
+                            <ActivityLog caseId={caseId!} />
+                        </section>
+
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-bold mb-4">Documents</h2>
+                            <CaseDocumentsList caseId={caseId!} />
+                        </section>
+
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-bold mb-4">AI Research & Assistance</h2>
+                            <div className="space-y-6">
+                                <LegalResearchBox />
+                                <AIAssistant />
+                                <MultiDocAI />
+                            </div>
+                        </section>
+
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-bold mb-4">Live Court Assistant</h2>
+                            <LiveAssistant liveData={{}} />
+                        </section>
+                    </div>
+
+                    <div className="space-y-8">
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-bold mb-4">Strategy & Analysis</h2>
+                            <div className="space-y-6">
+                                <StrategyBox />
+                                <JudgeSimulator />
+                                <HearingSimulator />
+                            </div>
+                        </section>
+
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-bold mb-4">Court Room Tools</h2>
+                            <div className="space-y-6">
+                                <LiveCourtMode />
+                                <HearingRecorder />
+                                <CourtArgument />
+                            </div>
+                        </section>
+
+                        <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-bold mb-4">Automation & Monitoring</h2>
+                            <div className="space-y-6">
+                                <AnalyticsDashboard />
+                                <AutopilotBox />
+                                <LimitationBox caseId={caseId!} />
+                                <LifecycleTracker />
+                                <Timeline />
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
-        </div>
+        </DashboardLayout>
     );
 }

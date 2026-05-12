@@ -30,10 +30,15 @@ export default function Dashboard() {
 
                 setUser(authUser);
 
-                const { data: caseData, error: caseError } = await supabase
-                    .from("cases")
-                    .select("*")
-                    .eq("organization_id", profile?.organization_id);
+                let query = supabase.from("cases").select("*");
+                
+                if (profile?.organization_id) {
+                    query = query.eq("organization_id", profile.organization_id);
+                } else {
+                    query = query.eq("user_id", authUser.id);
+                }
+
+                const { data: caseData, error: caseError } = await query;
 
                 if (caseError) {
                     setError(caseError.message);

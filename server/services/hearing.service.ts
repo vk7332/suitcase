@@ -77,7 +77,7 @@ Respond as JSON:
 `;
 
     const res = await openai.chat.completions.create({
-        model: "gpt-5-mini",
+        model: "gpt-4o-mini",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.4,
     });

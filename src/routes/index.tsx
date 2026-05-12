@@ -15,7 +15,8 @@ import InterestPage from "@/pages/calculators/interest-page";
 import LimitationPage from "@/pages/calculators/limitation-page";
 import StampDutyPage from "@/pages/calculators/stamp-duty-page";
 import TotalCaseCostPage from "@/pages/calculators/total-case-cost-page";
-// import PartitionSuitPage from "@/pages/calculators/partition-suit-page";
+import PartitionSuitPage from "@/pages/calculators/partition-suit-calculator";
+import SpecificPerformancePage from "@/pages/calculators/specific-performance-calculator";
 
 // 📦 Other Modules (adjust paths if needed)
 import ClientsPage from "@/pages/Clients/clients-page";
@@ -23,6 +24,13 @@ import InvoiceListPage from "@/pages/Invoices/invoice-list-page";
 import CreateInvoicePage from "@/pages/Invoices/create-invoice-page";
 import GSTInvoicePage from "@/pages/Invoices/GSTInvoicePage";
 import ClientLedgerPage from "@/pages/Ledger/client-ledger-page";
+import DraftLibraryPage from "@/pages/DraftLibrary/DraftLibraryPage";
+import AIDraftPage from "@/pages/AIDraft/AIDraftPage";
+import CauseListPage from "@/pages/CauseList/CauseListPage";
+import ReportsPage from "@/pages/Reports";
+import PublicLoginPage from "@/pages/Portal/public-login-page";
+import CalendarPage from "@/pages/Calendar/CalendarPage";
+import { SettingsPage } from "@/pages/SettingsPage";
 
 //  Admin Pages
 import SubscriptionPage from "@/pages/Subscription/subscription-page";
@@ -30,9 +38,10 @@ import AdminDashboard from "@/pages/Admin/admin-dashboard";
 import AdvocateDashboard from "@/pages/advocate/dashboard";
 
 //  Advocate Pages
-import Clients from "@/pages/advocate/clients";
-import Cases from "@/pages/advocate/cases";
-import Fees from "@/pages/advocate/fees";
+import Clients from "@/pages/Clients/clients-page";
+import Cases from "@/pages/Cases/CasesPage";
+import CaseDetails from "@/pages/Cases/case-details";
+import Fees from "@/pages/Invoices/invoice-list-page";
 
 
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -107,6 +116,15 @@ export default function AppRoutes() {
             />
 
             <Route
+                path="/advocate/cases/:id"
+                element={
+                    <ProtectedRoute role="advocate">
+                        <CaseDetails />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
                 path="/advocate/fees"
                 element={
                     <ProtectedRoute role="advocate">
@@ -169,7 +187,17 @@ export default function AppRoutes() {
             <Route path="/calculator/limitation" element={<LimitationPage />} />
             <Route path="/calculator/stamp-duty" element={<StampDutyPage />} />
             <Route path="/calculator/total-case-cost" element={<TotalCaseCostPage />} />
-            {/* <Route path="/calculator/partition-suit" element={<PartitionSuitPage />} /> */}
+            <Route path="/calculator/partition-suit" element={<PartitionSuitPage />} />
+            <Route path="/calculator/specific-performance" element={<SpecificPerformancePage />} />
+
+            {/* NEW ROUTES */}
+            <Route path="/drafts" element={<DraftLibraryPage />} />
+            <Route path="/ai-draft" element={<AIDraftPage />} />
+            <Route path="/cause-list" element={<CauseListPage />} />
+            <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/portal" element={<PublicLoginPage />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
 
             {/* ❌ FALLBACK */}
             <Route path="*" element={<NotFound />} />

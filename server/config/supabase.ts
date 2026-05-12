@@ -9,15 +9,13 @@ const supabaseKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl) {
-  throw new Error(
-    'SUPABASE_URL missing in .env'
-  );
+  console.error('❌ CRITICAL: SUPABASE_URL is missing. Make sure to set it in Railway Variables.');
+  throw new Error('SUPABASE_URL missing');
 }
 
 if (!supabaseKey) {
-  throw new Error(
-    'SUPABASE_SERVICE_ROLE_KEY missing in .env'
-  );
+  console.error('❌ CRITICAL: SUPABASE_SERVICE_ROLE_KEY is missing. Make sure to set it in Railway Variables.');
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY missing');
 }
 
 export const supabase = createClient(

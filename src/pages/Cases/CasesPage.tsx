@@ -1,24 +1,25 @@
 import { useSubscription } from "../../hooks/useSubscription";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/utils/supabase/supabaseClient";
 import { useAuth } from "../../hooks/useAuth";
 import { useCourtMapping } from "../../hooks/useCourtMapping";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 export default function CasesPage() {
-
+    const navigate = useNavigate();
     const { user, loading } = useAuth();
-
     const mapping = useCourtMapping();
 
     const [cases, setCases] = useState<any[]>([]);
     const [clients, setClients] = useState<any[]>([]);
+    const [showAddForm, setShowAddForm] = useState(false);
 
     const [form, setForm] = useState({
         title: "",
         case_number: "",
         client_id: "",
-        status: "Pending",
+        status: "active",
         next_date: "",
     });
 
@@ -48,7 +49,7 @@ export default function CasesPage() {
     const loadCases = async () => {
         const { data } = await supabase
             .from("cases")
-            .select("*, clients(name)")
+            .select("*, clients(client_name)")
             .eq("user_id", user.id)
             .order("created_at", { ascending: false });
 
@@ -65,239 +66,169 @@ export default function CasesPage() {
         setClients(data || []);
     };
 
-    // ➕ ADD CASE
-    const { subscription } = useSubscription();
-
     const handleAddCase = async () => {
         if (!form.title) return alert("Enter case title");
 
-        await supabase.from("cases").insert([
+        const { error } = await supabase.from("cases").insert([
             {
                 ...form,
                 user_id: user.id,
-                state: mapping.state,
-                district: mapping.district,
-                court: mapping.court,
             },
         ]);
 
-        setForm({
-            title: "",
-            case_number: "",
-            client_id: "",
-            status: "Pending",
-            next_date: "",
-        });
-
-        mapping.setState("");
-        mapping.setDistrict("");
-        mapping.setCourt("");
+        if (error) {
+            alert(error.message);
+        } else {
+            setShowAddForm(false);
+            setForm({
+                title: "",
+                case_number: "",
+                client_id: "",
+                status: "active",
+                next_date: "",
+            });
+            loadCases();
+        }
     };
 
-    // ❌ DELETE
     const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure?")) return;
         await supabase.from("cases").delete().eq("id", id);
+        loadCases();
     };
-
-    if (loading) return <div className="p-6">Loading...</div>;
-
-    if (!user) return <div className="p-6">Login required</div>;
 
     return (
-        <div className="p-6">
+        <DashboardLayout>
+            <div className="p-6">
+                <div className="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900">Case Management</h1>
+                        <p className="text-gray-500">Track and manage your legal cases</p>
+                    </div>
+                    <button
+                        onClick={() => setShowAddForm(!showAddForm)}
+                        className="bg-[#089CCE] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-[#078bb8] transition shadow-lg shadow-[#089CCE]/20"
+                    >
+                        {showAddForm ? "Cancel" : "Add New Case"}
+                    </button>
+                </div>
 
-            <h2 className="text-xl font-bold mb-4">
-                Case Management
-            </h2>
-
-            {/* ➕ FORM */}
-            <div className="border p-4 mb-6 space-y-3">
-
-                <input
-                    className="border p-2 w-full"
-                    placeholder="Case Title"
-                    value={form.title}
-                    onChange={(e) =>
-                        setForm({ ...form, title: e.target.value })
-                    }
-                />
-
-                <input
-                    className="border p-2 w-full"
-                    placeholder="Case Number"
-                    value={form.case_number}
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            case_number: e.target.value,
-                        })
-                    }
-                />
-
-                {/* 👤 CLIENT DROPDOWN */}
-                <select
-                    className="border p-2 w-full"
-                    value={form.client_id}
-                    onChange={(e) =>
-                        setForm({ ...form, client_id: e.target.value })
-                    }
-                >
-                    <option value="">Select Client</option>
-                    {clients.map((c) => (
-                        <option key={c.id} value={c.id}>
-                            {c.name}
-                        </option>
-                    ))}
-                </select>
-
-                <button
-                    onClick={() => sendWhatsAppReminder(caseData, client)}
-                    className="bg-green-600 text-white p-2 mt-2"
-                >
-                    📲 Send WhatsApp Reminder
-                </button>
-
-                {/* ⚖️ COURT MAPPING */}
-                <select
-                    className="border p-2 w-full"
-                    value={mapping.state}
-                    onChange={(e) => {
-                        mapping.setState(e.target.value);
-                        mapping.setDistrict("");
-                    }}
-                >
-                    <option value="">Select State</option>
-                    {mapping.states.map((s) => (
-                        <option key={s}>{s}</option>
-                    ))}
-                </select>
-
-                <select
-                    className="border p-2 w-full"
-                    value={mapping.district}
-                    onChange={(e) => {
-                        mapping.setDistrict(e.target.value);
-                    }}
-                >
-                    <option value="">Select District</option>
-                    {mapping.districts.map((d) => (
-                        <option key={d}>{d}</option>
-                    ))}
-                </select>
-
-                <select
-                    className="border p-2 w-full"
-                    value={mapping.court}
-                    onChange={(e) =>
-                        mapping.setCourt(e.target.value)
-                    }
-                >
-                    <option value="">Select Court</option>
-                    {mapping.courts.map((c: any) => (
-                        <option key={c.code} value={c.name}>
-                            {c.name}
-                        </option>
-                    ))}
-                </select>
-
-                {/* 📊 STATUS */}
-                <select
-                    className="border p-2 w-full"
-                    value={form.status}
-                    onChange={(e) =>
-                        setForm({ ...form, status: e.target.value })
-                    }
-                >
-                    <option>Pending</option>
-                    <option>Decided</option>
-                </select>
-
-                {/* 📅 NEXT DATE */}
-                <input
-                    type="date"
-                    className="border p-2 w-full"
-                    value={form.next_date}
-                    onChange={(e) =>
-                        setForm({ ...form, next_date: e.target.value })
-                    }
-                />
-
-                <button
-                    onClick={handleAddCase}
-                    className="bg-blue-600 text-white p-2 w-full"
-                >
-                    {subscription?.plan === "FREE" && (
-                        <span className="mr-1">🔓</span>
-                    )}
-                    Add Case
-                </button>
-            </div>
-
-            {/* 📋 TABLE */}
-            <table className="w-full border text-sm">
-                <thead className="bg-gray-100">
-                    <tr>
-                        <th>Title</th>
-                        <th>Client</th>
-                        <th>Status</th>
-                        <th>Next Date</th>
-                        <th>Court</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {cases.map((c) => (
-                        <tr key={c.id} className="border-t">
-
-                            <td>{c.title}</td>
-
-                            <td>{c.clients?.name}</td>
-
-                            <td>
-                                <span
-                                    className={
-                                        c.status === "Decided"
-                                            ? "text-green-600"
-                                            : "text-yellow-600"
-                                    }
+                {showAddForm && (
+                    <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-gray-100 mb-8 animate-in slide-in-from-top-4 duration-300">
+                        <h2 className="text-xl font-bold mb-6">New Case Details</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Case Title</label>
+                                <input
+                                    placeholder="e.g. State vs John Doe"
+                                    className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-[#089CCE] outline-none"
+                                    value={form.title}
+                                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Case Number</label>
+                                <input
+                                    placeholder="e.g. CRM-123-2026"
+                                    className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-[#089CCE] outline-none"
+                                    value={form.case_number}
+                                    onChange={(e) => setForm({ ...form, case_number: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Client</label>
+                                <select
+                                    className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-[#089CCE] outline-none bg-white"
+                                    value={form.client_id}
+                                    onChange={(e) => setForm({ ...form, client_id: e.target.value })}
                                 >
+                                    <option value="">Select Client</option>
+                                    {clients.map(c => (
+                                        <option key={c.id} value={c.id}>{c.client_name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Next Hearing Date</label>
+                                <input
+                                    type="date"
+                                    className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-[#089CCE] outline-none"
+                                    value={form.next_date}
+                                    onChange={(e) => setForm({ ...form, next_date: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleAddCase}
+                            className="mt-8 bg-gray-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-gray-800 transition"
+                        >
+                            Create Case
+                        </button>
+                    </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {cases.map((c) => (
+                        <div key={c.id} className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all group">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#089CCE] text-xl">
+                                    ⚖️
+                                </div>
+                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                    c.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                }`}>
                                     {c.status}
                                 </span>
-                            </td>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-[#089CCE] transition">{c.title}</h3>
+                            <p className="text-sm text-gray-500 mb-4">{c.case_number}</p>
+                            
+                            <div className="space-y-2 mb-6">
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-gray-400">Client:</span>
+                                    <span className="font-semibold">{c.clients?.client_name || 'N/A'}</span>
+                                </div>
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-gray-400">Next Date:</span>
+                                    <span className="font-semibold">{c.next_date ? new Date(c.next_date).toLocaleDateString() : 'Not Set'}</span>
+                                </div>
+                            </div>
 
-                            <td>
-                                {c.next_date
-                                    ? new Date(c.next_date).toLocaleDateString()
-                                    : "-"}
-                            </td>
-
-                            <td>{c.court}</td>
-
-                            <td className="space-x-2">
-
-                                <Link
-                                    to={`/case/${c.id}`}
-                                    className="text-blue-600"
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => navigate(`/advocate/cases/${c.id}`)}
+                                    className="flex-1 bg-gray-50 text-gray-700 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-100 transition"
                                 >
-                                    View
-                                </Link>
-
+                                    Open Case
+                                </button>
                                 <button
                                     onClick={() => handleDelete(c.id)}
-                                    className="text-red-600"
+                                    className="p-2.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition"
                                 >
-                                    Delete
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
                                 </button>
-
-                            </td>
-
-                        </tr>
+                            </div>
+                        </div>
                     ))}
-                </tbody>
-            </table>
+                </div>
 
-        </div>
+                {cases.length === 0 && !showAddForm && (
+                    <div className="text-center py-20 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-200">
+                        <div className="text-5xl mb-4">📂</div>
+                        <h3 className="text-xl font-bold text-gray-900">No cases found</h3>
+                        <p className="text-gray-500 mb-8">Get started by adding your first legal case.</p>
+                        <button
+                            onClick={() => setShowAddForm(true)}
+                            className="bg-[#089CCE] text-white px-8 py-3 rounded-xl font-bold"
+                        >
+                            Add Your First Case
+                        </button>
+                    </div>
+                )}
+            </div>
+        </DashboardLayout>
     );
 }
 

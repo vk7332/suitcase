@@ -36,7 +36,12 @@ export const useProfile = () => {
             .single();
 
         if (!error) {
-            setProfile(data);
+            // Normalize enrollment number
+            const normalizedData = {
+                ...data,
+                enrollment_number: data.enrollment_number || data.advocate_enrollment_number
+            };
+            setProfile(normalizedData);
         }
 
         setLoading(false);

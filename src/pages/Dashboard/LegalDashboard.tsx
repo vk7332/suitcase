@@ -46,35 +46,39 @@ export default function LegalDashboard() {
 
             <div className="grid grid-cols-2 gap-4">
 
-                <Link to="/court-fee" className="border p-4">
+                <Link to="/calculator/court-fee" className="border p-4 hover:bg-gray-50 transition">
                     Court Fee Calculator
                 </Link>
 
-                <Link to="/cases" className="border p-4">
+                <Link to="/advocate/cases" className="border p-4 hover:bg-gray-50 transition">
                     Cases
                 </Link>
 
-                <Link to="/clients" className="border p-4">
+                <Link to="/advocate/clients" className="border p-4 hover:bg-gray-50 transition">
                     Clients
                 </Link>
 
-                <Link to="/limitation" className="border p-4">
+                <Link to="/calculator/limitation" className="border p-4 hover:bg-gray-50 transition">
                     Limitation Alerts
                 </Link>
 
-                <Link to="/drafts" className="border p-4">
+                <Link to="/drafts" className="border p-4 hover:bg-gray-50 transition">
                     Draft Library
                 </Link>
 
-                <Link to="/ai-draft" className="border p-4">
+                <Link to="/ai-draft" className="border p-4 hover:bg-gray-50 transition">
                     AI Draft Generator
                 </Link>
 
-                <Link to="/cause-list" className="border p-4">
+                <Link to="/cause-list" className="border p-4 hover:bg-gray-50 transition">
                     Cause List
                 </Link>
 
-                <Link to="/admin" className="border p-4">
+                <Link to="/calendar" className="border p-4 hover:bg-gray-50 transition">
+                    Calendar
+                </Link>
+
+                <Link to="/admin" className="border p-4 hover:bg-gray-50 transition">
                     Admin Panel
                 </Link>
 
