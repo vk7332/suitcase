@@ -1,15 +1,8 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: {
-    server: 'server/index.ts',
-  },
+  entry: ['server/index.ts'],
   format: ['esm'],
-  outExtension() {
-    return {
-      js: '.mjs',
-    }
-  },
   bundle: true,
   splitting: false,
   clean: true,
@@ -17,9 +10,6 @@ export default defineConfig({
   minify: false,
   target: 'node20',
   shims: true,
-  noExternal: [/(.*)/], 
-  external: [
-    'canvas',
-    'fsevents',
-  ],
+  noExternal: [/(.*)/],
+  skipNodeModulesBundle: false,
 });

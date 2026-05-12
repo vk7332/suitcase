@@ -30,7 +30,19 @@ dotenv.config();
 console.log("-----------------------------------------");
 console.log("🚀 SUITCASE BACKEND STARTING...");
 console.log("📅 Build Time:", new Date().toISOString());
-console.log("📦 Version: 1.0.1-bundle-fix");
+console.log("📦 Version: 1.0.2-final-fix");
+try {
+    const fs = await import('fs');
+    const path = await import('path');
+    const distPath = path.join(process.cwd(), 'dist');
+    if (fs.existsSync(distPath)) {
+        console.log("📂 Files in dist:", fs.readdirSync(distPath));
+    } else {
+        console.log("📂 dist folder not found at:", distPath);
+    }
+} catch (e) {
+    console.log("📂 Could not list dist files");
+}
 console.log("-----------------------------------------");
 
 const app = express();

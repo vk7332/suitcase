@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "tsx server/index.ts",
     "frontend": "vite",
-    "build": "tsup",
-    "start": "node dist/server.mjs"
+    "build": "tsup && ls -R dist",
+    "start": "node dist/index.js"
   },
   "engines": {
     "node": ">=20.0.0"
