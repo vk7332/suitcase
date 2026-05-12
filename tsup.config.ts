@@ -6,22 +6,14 @@ export default defineConfig({
   bundle: true,
   splitting: false,
   clean: true,
-  sourcemap: true,
-  minify: process.env.NODE_ENV === 'production',
+  sourcemap: false, // Disable sourcemaps to keep it simple for now
+  minify: false, // Disable minify to see the code clearly
   outDir: 'dist',
   target: 'node20',
   shims: true,
-  // Ensure all local files are bundled and not treated as external
-  noExternal: [
-    /^\./, 
-    /^[a-zA-Z]/ 
-  ],
-  // Only keep real node built-ins as external if needed, 
-  // but tsup usually handles them.
+  noExternal: [/(.*)/], // Force EVERYTHING into the bundle
   external: [
+    'canvas',
     'fsevents',
-    'aws-sdk',
-    'mock-aws-s3',
-    'nock'
   ],
 });
