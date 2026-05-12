@@ -27,6 +27,12 @@ import "./jobs/reminder.job";
 
 dotenv.config();
 
+console.log("-----------------------------------------");
+console.log("🚀 SUITCASE BACKEND STARTING...");
+console.log("📅 Build Time:", new Date().toISOString());
+console.log("📦 Version: 1.0.1-bundle-fix");
+console.log("-----------------------------------------");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 

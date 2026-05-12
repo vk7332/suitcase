@@ -1,17 +1,23 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['server/index.ts'],
+  entry: {
+    server: 'server/index.ts',
+  },
   format: ['esm'],
+  outExtension() {
+    return {
+      js: '.mjs',
+    }
+  },
   bundle: true,
   splitting: false,
   clean: true,
-  sourcemap: false, // Disable sourcemaps to keep it simple for now
-  minify: false, // Disable minify to see the code clearly
-  outDir: 'dist',
+  sourcemap: false,
+  minify: false,
   target: 'node20',
   shims: true,
-  noExternal: [/(.*)/], // Force EVERYTHING into the bundle
+  noExternal: [/(.*)/], 
   external: [
     'canvas',
     'fsevents',
