@@ -46,7 +46,7 @@ try {
 console.log("-----------------------------------------");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 // 🔹 MIDDLEWARE
 app.use(helmet());
@@ -71,11 +71,6 @@ app.use("/api/webhook/razorpay", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 🔹 HEALTH CHECK
-app.get("/", (req, res) => {
-  res.send("SUITCASE Backend Running 🚀");
-});
-
 // 🔹 ROUTES
 app.use("/api/webhook", webhookRoutes);
 app.use("/api", organizationRoutes);
@@ -90,6 +85,15 @@ app.use("/api", approvalRoutes);
 app.use("/api", clientRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api", aiRoutes);
+
+// 🔹 HEALTH CHECK (Moved up for Railway)
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+app.get("/", (req, res) => {
+  res.send("SUITCASE Backend Running 🚀");
+});
 
 // 🔹 SERVER START
 const server = app.listen(PORT, '0.0.0.0', () => {

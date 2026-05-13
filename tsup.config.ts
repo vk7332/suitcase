@@ -13,7 +13,9 @@ export default defineConfig({
   noExternal: [/(.*)/],
   external: [
     'canvas',
-    'fsevents'
+    'fsevents',
+    'fs',
+    'path'
   ],
   outDir: 'dist',
 });

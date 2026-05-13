@@ -3640,6 +3640,14 @@ END $$;
 
 COMMIT;
 
+-- This grants all permissions to the 'authenticated' role for the public schema
+GRANT ALL ON SCHEMA public TO authenticated;
+GRANT ALL ON SCHEMA public TO service_role;
+
+-- Specifically allow the authenticated role (your app) to use the views
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+
 
 -- =====================================================
 -- MIGRATION COMPLETE - VERIFICATION SUMMARY
