@@ -2,29 +2,19 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: ['server/index.ts'],
-  format: ['esm'],
+  format: ['cjs'],
   bundle: true,
   splitting: false,
   clean: true,
   sourcemap: false,
   minify: false,
   target: 'node20',
-  shims: true,
-  // We MUST keep node built-ins external in ESM to avoid "Dynamic require of fs" errors
+  platform: 'node',
+  noExternal: [/(.*)/],
   external: [
-    'fs',
-    'path',
-    'os',
-    'crypto',
-    'stream',
-    'events',
-    'http',
-    'https',
-    'net',
-    'tls',
-    'zlib',
     'canvas',
     'fsevents'
   ],
-  noExternal: [/(.*)/], // Bundle all npm packages EXCEPT the ones in 'external'
+  outDir: 'dist',
+  onSuccess: 'node dist/index.cjs --help || true'
 });

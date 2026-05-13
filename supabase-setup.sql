@@ -1815,6 +1815,12 @@ add column if not exists plan text default 'starter',
 add column if not exists status text default 'active',
 add column if not exists grace_until timestamptz;
 
+DROP VIEW IF EXISTS profiles_view;
+
+CREATE VIEW profiles_view 
+WITH (security_invoker = true) 
+AS SELECT * FROM profiles;
+
 create table if not exists ai_usage_logs (
   id uuid primary key default gen_random_uuid(),
   user_id uuid,
