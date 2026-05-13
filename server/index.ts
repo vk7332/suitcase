@@ -92,27 +92,24 @@ app.get("/health", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("SUITCASE Backend Running 🚀");
+  res.status(200).send("SUITCASE Backend Running");
 });
 
 // 🔹 SERVER START
-const server = app.listen(PORT, '0.0.0.0', () => {
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Health check available at http://0.0.0.0:${PORT}/`);
 });
 
 // 🔹 ERROR HANDLING
 app.use(errorHandler);
 
 // Global Unhandled Rejection/Exception Handlers
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
 });
 
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception thrown:', err);
-    // Give the server a second to log the error before exiting
-    setTimeout(() => {
-        process.exit(1);
-    }, 1000);
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
 });
