@@ -16,5 +16,4 @@ export default defineConfig({
     'fsevents'
   ],
   outDir: 'dist',
-  onSuccess: 'node dist/index.cjs --help || true'
 });
