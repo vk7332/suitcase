@@ -15,6 +15,5 @@ export default defineConfig({
     'canvas',
     'fsevents'
   ],
-  outDir: 'dist',
-  onSuccess: 'node dist/index.cjs --help || true'
+  outDir: 'dist'
 });
