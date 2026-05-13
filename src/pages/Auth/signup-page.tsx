@@ -11,9 +11,17 @@ export default function SignupPage() {
     const [role, setRole] = useState("advocate");
     const [loading, setLoading] = useState(false);
 
+    const rolesRequiringEnrollment = ["advocate", "junior advocates"];
+    const isEnrollmentRequired = rolesRequiringEnrollment.includes(role);
+
     const handleSignup = async () => {
-        if (!email || !password || !confirmPassword || !enrollment) {
+        if (!email || !password || !confirmPassword) {
             alert("Please fill in all fields.");
+            return;
+        }
+
+        if (isEnrollmentRequired && !enrollment) {
+            alert("Enrollment Number is required for this role.");
             return;
         }
 
@@ -24,21 +32,23 @@ export default function SignupPage() {
 
         setLoading(true);
         try {
-            // 🔐 1. Check if enrollment number already exists
-            const { data: existingProfile, error: checkError } = await supabase
-                .from("profiles")
-                .select("id")
-                .or(`enrollment_number.eq.${enrollment},advocate_enrollment_number.eq.${enrollment}`)
-                .maybeSingle();
+            // 🔐 1. Check if enrollment number already exists (only if provided)
+            if (enrollment) {
+                const { data: existingProfile, error: checkError } = await supabase
+                    .from("profiles")
+                    .select("id")
+                    .or(`enrollment_number.eq.${enrollment},advocate_enrollment_number.eq.${enrollment}`)
+                    .maybeSingle();
 
-            if (checkError) {
-                console.error("Check error (might be missing column):", checkError);
-            }
+                if (checkError) {
+                    console.warn("Check error (might be missing column, proceeding anyway):", checkError);
+                }
 
-            if (existingProfile) {
-                alert("An account with this enrollment number already exists");
-                navigate("/login");
-                return;
+                if (existingProfile) {
+                    alert("An account with this enrollment number already exists");
+                    navigate("/login");
+                    return;
+                }
             }
 
             // 🔐 2. Proceed with Supabase Auth Signup
@@ -48,7 +58,7 @@ export default function SignupPage() {
                 options: {
                     data: {
                         role: role,
-                        enrollment_number: enrollment
+                        enrollment_number: enrollment || null
                     }
                 }
             });
@@ -57,12 +67,12 @@ export default function SignupPage() {
 
             if (!data.user) throw new Error("User creation failed");
 
-            // 🔐 3. Create profile with enrollment number locked
+            // 🔐 3. Create profile
             const profileData: any = {
                 id: data.user.id,
                 role: role,
-                enrollment_number: enrollment,
-                advocate_enrollment_number: enrollment, // Set both for compatibility
+                enrollment_number: enrollment || null,
+                advocate_enrollment_number: enrollment || null, // Set both for compatibility
                 subscription_plan: "free",
                 trial_used: false,
             };
@@ -71,15 +81,14 @@ export default function SignupPage() {
 
             if (profileError) {
                 console.error("Profile creation error:", profileError);
-                // Even if profile fails, user is created in Auth. 
-                // We should probably warn the user or try to fix it.
-                // But for now, let's just proceed or throw.
+                // Even if profile fails, user is created in Auth.
             }
 
-            alert("Signup successful! Please login to continue.");
+            alert("Signup successful! Please check your email for confirmation (if enabled) and then login.");
             navigate("/login");
         } catch (err: any) {
-            alert(err.message);
+            console.error("Signup failed:", err);
+            alert(err.message || "Signup failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -124,15 +133,17 @@ export default function SignupPage() {
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Enrollment Number</label>
-                        <input 
-                            placeholder="Enrollment Number" 
-                            className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
-                            onChange={(e) => setEnrollment(e.target.value)} 
-                        />
-                        <p className="text-[10px] text-gray-400 mt-1 italic">Locked forever to your account.</p>
-                    </div>
+                    {isEnrollmentRequired && (
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Enrollment Number</label>
+                            <input 
+                                placeholder="Enrollment Number" 
+                                className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
+                                onChange={(e) => setEnrollment(e.target.value)} 
+                            />
+                            <p className="text-[10px] text-gray-400 mt-1 italic">Locked forever to your account.</p>
+                        </div>
+                    )}
 
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>

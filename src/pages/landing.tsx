@@ -53,10 +53,10 @@ export default function Landing() {
                             Start Your Free Trial
                         </button>
                         <button 
-                            onClick={() => navigate("/signup")}
+                            onClick={() => navigate("/login")}
                             className="bg-transparent border-2 border-white/30 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-white/10 transition"
                         >
-                            Watch Demo
+                            Live Demo
                         </button>
                     </div>
                 </div>

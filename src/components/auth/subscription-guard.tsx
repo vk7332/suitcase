@@ -16,6 +16,12 @@ export default function SubscriptionGuard({ children }) {
                     return;
                 }
 
+                // 🚀 BYPASS FOR DEMO USER
+                if (user.email === "demo@suitcase.com") {
+                    setLoading(false);
+                    return;
+                }
+
                 const { data: profile, error } = await supabase
                     .from("profiles")
                     .select("subscription_plan, trial_used")
