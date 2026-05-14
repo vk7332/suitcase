@@ -35,10 +35,14 @@ export default function SignupPage() {
 
         setLoading(true);
         try {
-            // 🔍 Debug check for Supabase URL
+            // 🔍 Debug check for Supabase environment variables
             const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-            if (!supabaseUrl || supabaseUrl.includes("placeholder")) {
-                throw new Error("Supabase URL is not configured correctly. Please check your .env file.");
+            const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+            if (!supabaseUrl || supabaseUrl.includes("placeholder") || !supabaseAnonKey || supabaseAnonKey.includes("placeholder")) {
+                throw new Error(
+                    "Supabase environment variables are not configured correctly. " +
+                    "Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in your .env file and restart the dev server."
+                );
             }
 
             // 🔐 1. Check if enrollment number already exists (only if provided)
