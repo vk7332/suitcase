@@ -24,8 +24,8 @@ export default function Signup() {
         }
 
         if (error) {
-            alert(error.message);
-            return;
+            console.error(error);
+            alert(JSON.stringify(error));
         }
 
         // 🔁 after signup → onboarding
