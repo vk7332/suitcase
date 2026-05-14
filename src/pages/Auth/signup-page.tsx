@@ -1,6 +1,7 @@
 import { supabase } from "@/utils/supabase/supabaseClient";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
     const navigate = useNavigate();
@@ -10,6 +11,8 @@ export default function SignupPage() {
     const [enrollment, setEnrollment] = useState("");
     const [role, setRole] = useState("advocate");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const rolesRequiringEnrollment = ["advocate", "junior advocates"];
     const isEnrollmentRequired = rolesRequiringEnrollment.includes(role);
@@ -32,6 +35,12 @@ export default function SignupPage() {
 
         setLoading(true);
         try {
+            // 🔍 Debug check for Supabase URL
+            const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+            if (!supabaseUrl || supabaseUrl.includes("placeholder")) {
+                throw new Error("Supabase URL is not configured correctly. Please check your .env file.");
+            }
+
             // 🔐 1. Check if enrollment number already exists (only if provided)
             if (enrollment) {
                 const { data: existingProfile, error: checkError } = await supabase
@@ -88,7 +97,12 @@ export default function SignupPage() {
             navigate("/login");
         } catch (err: any) {
             console.error("Signup failed:", err);
-            alert(err.message || "Signup failed. Please try again.");
+            // More descriptive error handling
+            let errorMessage = err.message || "Signup failed. Please try again.";
+            if (errorMessage.toLowerCase().includes("fetch")) {
+                errorMessage = "Network Error: Failed to reach the server. Please check your internet connection and Supabase configuration in .env";
+            }
+            alert(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -147,22 +161,40 @@ export default function SignupPage() {
 
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-                        <input 
-                            placeholder="••••••••••••" 
-                            type="password" 
-                            className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
-                            onChange={(e) => setPassword(e.target.value)} 
-                        />
+                        <div className="relative">
+                            <input 
+                                placeholder="••••••••••••" 
+                                type={showPassword ? "text" : "password"} 
+                                className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
+                                onChange={(e) => setPassword(e.target.value)} 
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
 
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1">Confirm Password</label>
-                        <input 
-                            placeholder="••••••••••••" 
-                            type="password" 
-                            className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
-                            onChange={(e) => setConfirmPassword(e.target.value)} 
-                        />
+                        <div className="relative">
+                            <input 
+                                placeholder="••••••••••••" 
+                                type={showConfirmPassword ? "text" : "password"} 
+                                className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition"
+                                onChange={(e) => setConfirmPassword(e.target.value)} 
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                            >
+                                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
 
                     <button 

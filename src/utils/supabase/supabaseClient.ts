@@ -1,12 +1,19 @@
 import { createClient } from "@supabase/supabase-js";
 
-console.log("Initializing Supabase Client...");
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "placeholder-key";
+if (!supabaseUrl || supabaseUrl.includes("placeholder")) {
+    console.error("VITE_SUPABASE_URL is missing or placeholder");
+}
 
-console.log("Supabase URL:", supabaseUrl);
+if (!supabaseAnonKey || supabaseAnonKey.includes("placeholder")) {
+    console.error("VITE_SUPABASE_ANON_KEY is missing or placeholder");
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+    supabaseUrl || "https://placeholder.supabase.co",
+    supabaseAnonKey || "placeholder-key"
+);
 
 export default supabase;

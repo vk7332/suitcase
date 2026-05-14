@@ -101,33 +101,6 @@ export default function LoginPage() {
                     >
                         {loading ? "Logging in..." : "Login"}
                     </button>
-
-                    <div className="relative my-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-gray-100"></span>
-                        </div>
-                        <div className="relative flex justify-center text-sm uppercase">
-                            <span className="bg-white px-4 text-gray-400 font-medium">Or</span>
-                        </div>
-                    </div>
-
-                    <button
-                        onClick={async () => {
-                            setLoading(true);
-                            try {
-                                await signIn("demo@suitcase.com", "demo123");
-                                navigate("/dashboard");
-                            } catch (err: any) {
-                                alert("Demo login currently unavailable. Please sign up for a free account.");
-                            } finally {
-                                setLoading(false);
-                            }
-                        }}
-                        disabled={loading}
-                        className="w-full py-4 rounded-xl font-bold text-lg border-2 border-[#089CCE] text-[#089CCE] hover:bg-blue-50 transition flex items-center justify-center gap-2"
-                    >
-                        <span>🚀</span> {loading ? "Starting Demo..." : "Try Live Demo"}
-                    </button>
                 </div>
             </div>
 
