@@ -23,12 +23,12 @@ export default function DashboardLayout({ children }: any) {
             {/* Sidebar */}
             <div className="w-64 bg-white border-r border-gray-100 flex flex-col">
                 <div className="p-8">
-                    <div className="flex items-center gap-2 mb-8">
+                    <Link to="/" className="flex items-center gap-2 mb-8 hover:opacity-80 transition">
                         <div className="w-8 h-8 bg-[#089CCE] rounded-lg flex items-center justify-center text-white font-bold">
                             S
                         </div>
                         <span className="text-xl font-bold tracking-tight text-gray-900">SUITCASE</span>
-                    </div>
+                    </Link>
 
                     <nav className="flex flex-col gap-1">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-3">Main Menu</p>
@@ -75,8 +75,22 @@ export default function DashboardLayout({ children }: any) {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 bg-gray-50/50">
-                {children}
+            <div className="flex-1 bg-gray-50/50 flex flex-col h-screen overflow-hidden">
+                {/* Header with Back Button */}
+                <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center gap-4">
+                    <button 
+                        onClick={() => navigate(-1)}
+                        className="p-2 hover:bg-gray-50 rounded-full text-gray-500 transition-colors flex items-center gap-2 font-medium"
+                    >
+                        <span className="text-xl">←</span> Back
+                    </button>
+                    <div className="h-6 w-px bg-gray-200"></div>
+                    <p className="text-sm font-bold text-[#089CCE] uppercase tracking-widest">Legal Suite</p>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-8">
+                    {children}
+                </div>
             </div>
 
         </div>

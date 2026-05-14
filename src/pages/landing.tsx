@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Landing() {
     const navigate = useNavigate();
@@ -7,12 +7,12 @@ export default function Landing() {
         <div className="min-h-screen bg-white font-sans text-gray-900">
             {/* Header/Navbar */}
             <nav className="flex justify-between items-center px-8 py-6 bg-white shadow-sm sticky top-0 z-50">
-                <div className="flex items-center gap-2">
+                <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition">
                     <div className="w-10 h-10 bg-[#089CCE] rounded-lg flex items-center justify-center">
                         <span className="text-white font-bold text-xl">S</span>
                     </div>
                     <span className="text-2xl font-bold tracking-tight text-[#089CCE]">SUITCASE</span>
-                </div>
+                </Link>
                 <div className="hidden md:flex items-center gap-8 font-medium">
                     <a href="#features" className="hover:text-[#089CCE] transition">Features</a>
                     <a href="/pricing" className="hover:text-[#089CCE] transition">Pricing</a>
@@ -156,12 +156,12 @@ export default function Landing() {
             {/* FOOTER */}
             <footer className="py-12 px-6 border-t border-gray-100 bg-white">
                 <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex items-center gap-2">
+                    <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition">
                         <div className="w-8 h-8 bg-[#089CCE] rounded flex items-center justify-center">
                             <span className="text-white font-bold text-sm">S</span>
                         </div>
                         <span className="font-bold text-gray-900 tracking-tight">SUITCASE</span>
-                    </div>
+                    </Link>
                     <div className="flex gap-8 text-sm text-gray-500">
                         <button onClick={() => navigate("/privacy")} className="hover:text-[#089CCE]">Privacy Policy</button>
                         <button onClick={() => navigate("/terms")} className="hover:text-[#089CCE]">Terms of Service</button>

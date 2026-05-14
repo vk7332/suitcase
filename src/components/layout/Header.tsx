@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useClientAuth } from "@/hooks/useClientAuth";
 import NotificationCenter from "@/components/Ui/notification";
 
@@ -13,12 +13,21 @@ export default function Header() {
 
       {/* 🔷 LEFT */}
       <div className="flex items-center gap-6">
-        <h1
-          className="text-lg font-bold cursor-pointer"
-          onClick={() => navigate("/")}
+        <button 
+          onClick={() => navigate(-1)}
+          className="p-2 hover:bg-gray-50 rounded-full text-gray-500 transition-colors flex items-center gap-1 font-medium text-sm"
+        >
+          <span>←</span> Back
+        </button>
+
+        <div className="h-6 w-px bg-gray-200"></div>
+
+        <Link
+          to="/"
+          className="text-lg font-bold cursor-pointer hover:text-[#089CCE] transition"
         >
           SUITCASE®
-        </h1>
+        </Link>
 
         <nav className="hidden md:flex gap-4 text-sm">
           <button onClick={() => navigate("/dashboard")}>Dashboard</button>

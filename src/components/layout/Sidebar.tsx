@@ -8,9 +8,9 @@ const Sidebar = () => {
 
     return (
         <aside className="w-64 bg-white shadow-md">
-            <div className="p-4 text-xl font-bold border-b">
+            <Link to="/" className="p-4 text-xl font-bold border-b block hover:text-[#089CCE] transition">
                 SUITCASE
-            </div>
+            </Link>
             <nav className="p-4 space-y-2">
                 <NavLink to="/dashboard" className={linkClass}>
                     Dashboard

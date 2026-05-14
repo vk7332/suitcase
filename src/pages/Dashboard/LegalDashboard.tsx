@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReminderAlert from "../../components/notifications/ReminderAlert";
 import { useAuth } from "../../hooks/useAuth";
 import { runAutoReminders } from "../../engines/auto-reminder-engine";
 import { useEffect } from "react";
 import { supabase } from "@/utils/supabase/supabaseClient";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 export default function LegalDashboard() {
     const { user, loading } = useAuth();
+    const navigate = useNavigate();
 
     if (loading) return <div className="p-6">Loading...</div>;
     useEffect(() => {
@@ -38,52 +40,54 @@ export default function LegalDashboard() {
     }
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">
-                ⚖️ Suitcase - Legal Dashboard
-                <ReminderAlert />
-            </h1>
+        <DashboardLayout>
+            <div className="p-6">
+                <h1 className="text-2xl font-bold mb-6">
+                    ⚖️ Suitcase - Legal Dashboard
+                    <ReminderAlert />
+                </h1>
 
-            <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                <Link to="/calculator/court-fee" className="border p-4 hover:bg-gray-50 transition">
-                    Court Fee Calculator
-                </Link>
+                    <Link to="/calculator/court-fee" className="border p-4 hover:bg-gray-50 transition">
+                        Court Fee Calculator
+                    </Link>
 
-                <Link to="/advocate/cases" className="border p-4 hover:bg-gray-50 transition">
-                    Cases
-                </Link>
+                    <Link to="/advocate/cases" className="border p-4 hover:bg-gray-50 transition">
+                        Cases
+                    </Link>
 
-                <Link to="/advocate/clients" className="border p-4 hover:bg-gray-50 transition">
-                    Clients
-                </Link>
+                    <Link to="/advocate/clients" className="border p-4 hover:bg-gray-50 transition">
+                        Clients
+                    </Link>
 
-                <Link to="/calculator/limitation" className="border p-4 hover:bg-gray-50 transition">
-                    Limitation Alerts
-                </Link>
+                    <Link to="/calculator/limitation" className="border p-4 hover:bg-gray-50 transition">
+                        Limitation Alerts
+                    </Link>
 
-                <Link to="/drafts" className="border p-4 hover:bg-gray-50 transition">
-                    Draft Library
-                </Link>
+                    <Link to="/drafts" className="border p-4 hover:bg-gray-50 transition">
+                        Draft Library
+                    </Link>
 
-                <Link to="/ai-draft" className="border p-4 hover:bg-gray-50 transition">
-                    AI Draft Generator
-                </Link>
+                    <Link to="/ai-draft" className="border p-4 hover:bg-gray-50 transition">
+                        AI Draft Generator
+                    </Link>
 
-                <Link to="/cause-list" className="border p-4 hover:bg-gray-50 transition">
-                    Cause List
-                </Link>
+                    <Link to="/cause-list" className="border p-4 hover:bg-gray-50 transition">
+                        Cause List
+                    </Link>
 
-                <Link to="/calendar" className="border p-4 hover:bg-gray-50 transition">
-                    Calendar
-                </Link>
+                    <Link to="/calendar" className="border p-4 hover:bg-gray-50 transition">
+                        Calendar
+                    </Link>
 
-                <Link to="/admin" className="border p-4 hover:bg-gray-50 transition">
-                    Admin Panel
-                </Link>
+                    <Link to="/admin" className="border p-4 hover:bg-gray-50 transition">
+                        Admin Panel
+                    </Link>
 
+                </div>
             </div>
-        </div>
+        </DashboardLayout>
     );
 }
 
