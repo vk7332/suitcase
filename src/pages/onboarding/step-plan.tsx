@@ -7,7 +7,7 @@ export default function StepPlan({ next }: any) {
     const plans = [
         { name: "Free", price: "₹0", features: ["Basic Case Tracking", "5 Documents", "Standard Support"] },
         { name: "Pro", price: "₹299", features: ["Unlimited Cases", "Advanced Billing", "Priority Support", "AI Assistant"], recommended: true },
-        { name: "Premium", price: "₹499", features: ["Full Office Suite", "Multi-user Access", "24/7 Support", "Advanced AI Drafts"] },
+        { name: "Premium", price: "₹699", features: ["Full Office Suite", "Multi-user Access", "24/7 Support", "Advanced AI Drafts"] },
     ];
 
     const handleSelectPlan = async (planName: string) => {

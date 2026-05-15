@@ -38,9 +38,10 @@ export const useClientAuth = () => {
 
             // 🔐 ROLE CHECK (CLIENT ONLY)
             if (profile.role !== "client") {
+                console.warn("User is not a client, redirecting to home");
                 navigate("/");
+                return;
             }
-            if (user.role !== "client") navigate("/");
 
             setLoading(false);
         };

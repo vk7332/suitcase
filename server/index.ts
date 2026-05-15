@@ -52,10 +52,6 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 // 🔹 MIDDLEWARE
 app.use(helmet());
 app.use(morgan("combined"));
