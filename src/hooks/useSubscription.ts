@@ -25,25 +25,43 @@ export const useSubscription = () => {
                     return;
                 }
 
-                const { data } = await supabase
-                    .from("subscriptions")
-                    .select("*")
-                    .eq("user_id", user.id)
+                // Fetch profile for subscription_plan field
+                const { data: profile, error: profileError } = await supabase
+                    .from("profiles")
+                    .select("subscription_plan, trial_used, trial_end_date")
+                    .eq("id", user.id)
                     .single();
 
-                if (data) {
+                if (profileError) {
+                    console.error("Profile fetch error:", profileError.message);
+                    // Default to FREE on error
+                    setSubscription({ status: "active", plan: "FREE", expired: false, loading: false });
+                    return;
+                }
+
+                if (profile?.subscription_plan) {
+                    const planMap: Record<string, PlanType> = {
+                        "free": "FREE",
+                        "pro": "PRO",
+                        "premium": "PREMIUM",
+                        "chamber": "CHAMBER",
+                        "starter": "FREE",
+                    };
+                    const normalizedPlan = (planMap[profile.subscription_plan.toLowerCase()] || "FREE") as PlanType;
+                    
                     setSubscription({
-                        status: data.status,
-                        plan: data.plan_type,
-                        expired: new Date(data.end_date) < new Date(),
+                        status: "active",
+                        plan: normalizedPlan,
+                        expired: profile.trial_end_date ? new Date(profile.trial_end_date) < new Date() : false,
                         loading: false,
                     });
                 } else {
-                    setSubscription(prev => ({ ...prev, loading: false }));
+                    setSubscription({ status: "active", plan: "FREE", expired: false, loading: false });
                 }
             } catch (e) {
-                console.error("Failed to fetch subscription", e);
-                setSubscription(prev => ({ ...prev, loading: false }));
+                console.error("Failed to fetch subscription:", e);
+                // Default to FREE on any error
+                setSubscription({ status: "active", plan: "FREE", expired: false, loading: false });
             }
         };
 

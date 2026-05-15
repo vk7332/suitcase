@@ -11,6 +11,13 @@ export default function Dashboard() {
     const [error, setError] = useState("");
 
     useEffect(() => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+            console.warn("Dashboard: Loading timeout, showing empty state");
+            controller.abort();
+            setLoading(false);
+        }, 8000);
+
         const init = async () => {
             try {
                 setLoading(true);
@@ -19,10 +26,11 @@ export default function Dashboard() {
 
                 if (!authUser) {
                     navigate("/login");
+                    clearTimeout(timeoutId);
                     return;
                 }
 
-                const { data: profile } = await supabase
+                const { data: profile, error: profileError } = await supabase
                     .from("profiles")
                     .select("*")
                     .eq("id", authUser.id)
@@ -30,31 +38,43 @@ export default function Dashboard() {
 
                 setUser(authUser);
 
-                let query = supabase.from("cases").select("*");
-                
-                if (profile?.organization_id) {
-                    query = query.eq("organization_id", profile.organization_id);
-                } else {
-                    query = query.eq("user_id", authUser.id);
-                }
+                try {
+                    let query = supabase.from("cases").select("*").limit(50);
+                    
+                    if (profile?.organization_id) {
+                        query = query.eq("organization_id", profile.organization_id);
+                    } else if (profile?.user_id || authUser.id) {
+                        query = query.eq("user_id", authUser.id);
+                    }
 
-                const { data: caseData, error: caseError } = await query;
+                    const { data: caseData, error: caseError } = await query;
 
-                if (caseError) {
-                    setError(caseError.message);
-                } else {
-                    setCases(caseData || []);
+                    if (caseError) {
+                        console.error("Cases fetch error:", caseError.message);
+                        setCases([]);
+                    } else {
+                        setCases(caseData || []);
+                    }
+                } catch (caseErr) {
+                    console.error("Cases query error:", caseErr);
+                    setCases([]);
                 }
 
             } catch (err) {
-                console.error(err);
+                console.error("Dashboard init error:", err);
                 setError("Failed to load dashboard");
             } finally {
                 setLoading(false);
+                clearTimeout(timeoutId);
             }
         };
 
         init();
+
+        return () => {
+            controller.abort();
+            clearTimeout(timeoutId);
+        };
     }, [navigate]);
 
     const handleLogout = async () => {
