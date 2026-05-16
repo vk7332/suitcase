@@ -22,7 +22,7 @@ export const PRICING_PLANS = [
     },
     {
         name: "PREMIUM",
-        price: 499,
+        price: 699,
         features: [
             "All PRO Features",
             "Unlimited AI Drafts",

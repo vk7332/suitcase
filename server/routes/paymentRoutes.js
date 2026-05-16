@@ -21,7 +21,7 @@ const razorpay = new Razorpay({
 router.post("/create-order", async (req, res) => {
     try {
         const options = {
-            amount: 49900, // ₹499
+            amount: 69900, // ₹699
             currency: "INR",
             receipt: "receipt_" + Date.now(),
         };

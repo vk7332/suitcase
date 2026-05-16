@@ -22,7 +22,20 @@ const PublicLoginPage = () => {
         if (error) {
             setError(error.message);
         } else {
-            navigate("/dashboard");
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data: profile } = await supabase
+                    .from("profiles")
+                    .select("role")
+                    .eq("id", user.id)
+                    .single();
+                
+                if (profile?.role === "client") {
+                    navigate("/client");
+                } else {
+                    navigate("/dashboard");
+                }
+            }
         }
 
         setLoading(false);

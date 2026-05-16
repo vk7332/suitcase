@@ -113,7 +113,17 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-[#089CCE] py-12 px-4">
+        <div className="min-h-screen flex flex-col justify-center items-center bg-[#089CCE] py-12 px-4 relative">
+            <div className="absolute top-8 left-8">
+                <button 
+                    onClick={() => navigate("/")}
+                    className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 hover:bg-gray-50 transition font-bold text-[#089CCE]"
+                >
+                    <div className="w-6 h-6 bg-[#089CCE] rounded flex items-center justify-center text-white text-xs">S</div>
+                    SUITCASE
+                </button>
+            </div>
+
             <div className="mb-8 text-center">
                 <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
                     <span className="text-[#089CCE] font-black text-3xl">S</span>

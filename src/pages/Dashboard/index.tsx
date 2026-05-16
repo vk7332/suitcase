@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -87,21 +88,7 @@ export default function Dashboard() {
     if (error) return <div className="flex items-center justify-center min-h-screen"><p className="text-red-600">{error}</p></div>;
 
     return (
-        <div className="p-6">
-            <div className="flex justify-between items-center mb-8">
-                <div>
-                    <h2 className="text-2xl font-bold">Dashboard</h2>
-                    <p className="text-gray-500">{user?.email}</p>
-                </div>
-
-                <button 
-                    onClick={handleLogout} 
-                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
-                >
-                    Logout
-                </button>
-            </div>
-
+        <DashboardLayout>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-xl shadow-sm border">
                     <h3 className="text-gray-500 text-sm mb-1">Total Cases</h3>
@@ -141,6 +128,6 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
-        </div>
+        </DashboardLayout>
     );
 }
