@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server/index.ts",
-    "frontend": "vite",
-    "build": "tsup",
-    "start": "node dist/index.cjs"
+    "dev:frontend": "vite",
+    "build:frontend": "vite build",
+    "build:server": "tsup",
+    "build": "npm run build:frontend",
+    "start": "node dist/index.cjs",
+    "preview": "vite preview"
   },
   "engines": {
     "node": ">=20.0.0"
