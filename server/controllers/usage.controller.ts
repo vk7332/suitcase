@@ -1,6 +1,9 @@
 import { supabase } from "../config/supabase";
 import { Request, Response } from 'express';
-import { PLAN_LIMITS } from "../config/planLimits";
+import { PLAN_LIMITS, PlanType } from "../config/planLimits";
+
+const isPlanType = (plan: unknown): plan is PlanType =>
+    plan === "free" || plan === "pro" || plan === "enterprise";
 
 export const getUsage = async (req: Request, res: Response) => {
     const user = req.user;
@@ -11,7 +14,8 @@ export const getUsage = async (req: Request, res: Response) => {
         .eq("id", user.chamber_id)
         .single();
 
-    const plan = chamber.plan;
+    const chamberPlan: unknown = chamber?.plan;
+    const plan: PlanType = isPlanType(chamberPlan) ? chamberPlan : "free";
     const limits = PLAN_LIMITS[plan];
 
     const { count: caseCount } = await supabase

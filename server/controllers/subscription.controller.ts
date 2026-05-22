@@ -2,6 +2,11 @@ import Razorpay from "razorpay";
 import { Request, Response } from 'express';
 import { supabase } from "../config/supabase";
 
+type PaidPlan = "pro" | "enterprise";
+
+const isPaidPlan = (plan: unknown): plan is PaidPlan =>
+    plan === "pro" || plan === "enterprise";
+
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID!,
     key_secret: process.env.RAZORPAY_KEY_SECRET!,
@@ -12,7 +17,11 @@ export const createSubscription = async (req: Request, res: Response) => {
 
     const plan = req.body.plan; // pro / enterprise
 
-    const planMap = {
+    if (!isPaidPlan(plan)) {
+        return res.status(400).json({ error: "invalid plan" });
+    }
+
+    const planMap: Record<PaidPlan, string | undefined> = {
         pro: process.env.RAZORPAY_PLAN_PRO,
         enterprise: process.env.RAZORPAY_PLAN_ENTERPRISE,
     };

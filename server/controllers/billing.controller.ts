@@ -9,8 +9,13 @@ export const createSubscription = async (req: Request, res: Response) => {
         enterprise: process.env.RAZORPAY_PLAN_ENTERPRISE,
     } as const;
 
+    const planId = planMap[plan];
+    if (!planId) {
+        return res.status(400).json({ error: "Invalid or unconfigured Razorpay plan" });
+    }
+
     const subscription = await razorpay.subscriptions.create({
-        plan_id: planMap[plan],
+        plan_id: planId,
         total_count: 12,
 
         // ✅ MUST ADD HERE

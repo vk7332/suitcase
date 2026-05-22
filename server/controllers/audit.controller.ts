@@ -78,8 +78,8 @@ export const exportDocumentAccessLogs = async (req: Request, res: Response) => {
 
         res.json({
             document_id,
-            total_events: data.length,
-            logs: data,
+            total_events: data?.length || 0,
+            logs: data || [],
         });
 
     } catch (err: any) {
@@ -103,7 +103,7 @@ export const coCounselAudit = async (req: Request, res: Response) => {
         return res.json({
             valid: true,
             document_id,
-            total_events: data.length,
+            total_events: data?.length || 0,
         });
 
     } catch (err: any) {
@@ -122,8 +122,12 @@ export const finalizeAudit = async (req: Request, res: Response) => {
             .eq("id", userId)
             .single();
 
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
         const certInfo = parseCertificate(certificate);
-        const chamber_id = user?.chamber_id;
+        const chamber_id = user.chamber_id;
 
         const pdf = await generateAuditPDF(user.chamber_id);
 
@@ -152,11 +156,19 @@ export const downloadAuditReport = async (req: Request, res: Response) => {
         const userId = req.user.id;
 
         // fetch user details
-        const { data: user } = await supabaseAdmin
-            .from("users")
-            .select("chamber_id, full_name")
-            .eq("id", userId)
-            .single();
+const { data: user, error: userError } = await supabase
+  .from("users")
+  .select("*")
+  .eq("id", userId)
+  .single();
+
+if (userError || !user) {
+  return res.status(404).json({
+    success: false,
+    error: "User not found",
+    details: userError?.message,
+  });
+}
 
         const pdfBuffer = await generateAuditPDF(user.chamber_id);
 

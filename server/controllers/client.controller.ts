@@ -43,16 +43,23 @@ export const getSharedDocument = async (req: Request, res: Response) => {
             return res.status(403).json({ error: "Link expired" });
         }
 
-        const filePath = document.file_url.split("/documents/")[1];
-
-        const { data } = await supabase.storage
+        const { data, error } = await supabase.storage
             .from("documents")
-            .createSignedUrl(filePath, 120); // 2 min
+            .createSignedUrl(document.file_path, 120); // 2 min
 
-        res.json({
-            url: data.signedUrl,
-        });
-    } catch (err: any) {
-        res.status(500).json({ error: "failed to fetch document" });
+if (error || !data) {
+  return res.status(500).json({
+    error: "Failed to generate signed URL",
+    details: error?.message,
+  });
+}
+
+res.json({
+  url: data.signedUrl,
+});
+    } catch (error) {
+        console.error("Error fetching shared document:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 };
+

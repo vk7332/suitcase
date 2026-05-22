@@ -13,7 +13,7 @@ export const generateCourtArgument = async (query: string) => {
 
     const context = cases
         .map(
-            (c) => `Case ${c.id}: ${c.title}\n${c.content}`
+            (c: { id: number; title: string; content: string }) => `Case ${c.id}: ${c.title}\n${c.content}`
         )
         .join("\n\n");
 

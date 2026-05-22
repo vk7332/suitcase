@@ -1,8 +1,8 @@
-export const retry = async (
-    fn: () => Promise<any>,
+export const retry = async <T>(
+    fn: () => Promise<T>,
     retries = 3,
     delay = 500
-) => {
+): Promise<T> => {
     try {
         return await fn();
     } catch (err) {

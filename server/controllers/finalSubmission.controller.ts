@@ -10,7 +10,7 @@ export const generateFinalBundle = async (req: Request, res: Response) => {
   const bundle = await generateFilingBundle({
     caseTitle,
     advocateName,
-    mainContent: submission,
+    mainContent: submission || "",
     annexures: [
       { title: "Hearing Transcript", content: transcript },
     ],

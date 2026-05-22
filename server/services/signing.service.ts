@@ -65,7 +65,9 @@ export const signDocumentService = async ({
         .order("signing_order", { ascending: true });
 
     // 5. Generate updated PDF
-    const pdfBuffer = await generatePdf({ signers });
+const pdfBuffer = await generatePdf({
+  signers: signers || [],
+});
 
     // 6. Get current version
     const currentVersion = document?.current_version || 0;

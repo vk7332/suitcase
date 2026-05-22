@@ -24,6 +24,7 @@ export const generateAuditPdf = async ({
     logs: any[];
 }) => {
     const pdfDoc = await PDFDocument.create();
+
     const page = pdfDoc.addPage([600, 800]);
 
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -124,7 +125,24 @@ class PageTracker {
     }
 }
 
-const addHeaderFooter = (doc, document) => {
+type PdfKitDocument = any;
+
+interface HeaderFooterDocument {
+    case_number?: string;
+    advocate_name?: string;
+}
+
+interface TimelineEntry {
+    date?: string;
+    event?: string;
+}
+
+interface AnnexureDocument {
+    title?: string;
+    content?: string;
+}
+
+const addHeaderFooter = (doc: PdfKitDocument, document: HeaderFooterDocument): void => {
     const page = doc.page;
 
     // HEADER
@@ -316,26 +334,26 @@ export const drawEvidenceAffidavit = (doc: any, affidavit: any) => {
     });
 };
 
-export const drawTimeline = (doc: any, timeline: any) => {
+export const drawTimeline = (doc: any, timeline: TimelineEntry[]) => {
     doc.addPage();
 
     doc.text("CASE TIMELINE", { align: "center" });
 
     doc.moveDown();
 
-    timeline.forEach((t, i) => {
+    timeline.forEach((t: TimelineEntry, i: number) => {
         doc.text(`${i + 1}. ${t.date} – ${t.event}`);
     });
 };
 
-export const drawArguments = (doc: any, args: any) => {
+export const drawArguments = (doc: any, args: string[]) => {
     doc.addPage();
 
     doc.text("ARGUMENT NOTES", { align: "center" });
 
     doc.moveDown();
 
-    args.forEach((a, i) => {
+    args.forEach((a: string, i: number) => {
         doc.text(`${i + 1}. ${a}`);
     });
 };
@@ -661,7 +679,7 @@ export const generateFullFilingBundle = async ({
     annexures = [],
 }: {
     argumentsText: any[];
-    annexures?: any[];
+    annexures?: AnnexureDocument[];
 }) => {
     const pdfDoc = await PDFDocument.create();
 
@@ -672,24 +690,26 @@ export const generateFullFilingBundle = async ({
     drawWrittenArguments(pdfDoc, argumentsText);
 
     // 4️⃣ ANNEXURES
-    annexures.forEach((doc, i) => {
+    drawIndex(pdfDoc, annexures);
+
+    annexures.forEach((doc: AnnexureDocument, i: number) => {
         drawAnnexure(pdfDoc, doc, i + 1);
     });
 
-    const drawIndex = (pdfDoc, annexures) => {
+    function drawIndex(pdfDoc: PDFDocument, annexures: AnnexureDocument[]): void {
         const page = pdfDoc.addPage();
 
         page.drawText("INDEX", { x: 50, y: 750, size: 14 });
 
-        annexures.forEach((a, i) => {
+        annexures.forEach((a: AnnexureDocument, i: number) => {
             page.drawText(
-                `${i + 1}. ${a.title} ........ Page ${i + 2}`,
+                `${i + 1}. ${a.title || `Annexure ${i + 1}`} ........ Page ${i + 2}`,
                 { x: 50, y: 720 - i * 20, size: 10 }
             );
         });
-    };
+    }
 
-    const drawAnnexure = (pdfDoc, doc, index) => {
+    function drawAnnexure(pdfDoc: PDFDocument, doc: AnnexureDocument, index: number): void {
         const page = pdfDoc.addPage();
 
         page.drawText(`ANNEXURE ${index}`, {
@@ -703,7 +723,7 @@ export const generateFullFilingBundle = async ({
             y: 720,
             size: 10,
         });
-    };
+    }
 
     return await pdfDoc.save();
 };

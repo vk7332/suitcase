@@ -1,108 +1,90 @@
-// server/index.ts
 import dotenv from "dotenv";
-import express, { Request, Response, NextFunction } from 'express';
+dotenv.config();
+
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
-import fs from 'fs';
-import path from 'path';
 
-// Routes
-import webhookRoutes from './routes/webhook.routes.js';
-import shareRoutes from "./routes/share.routes.js";
-import caseRoutes from "./routes/case.routes.js";
-import notificationRoutes from "./routes/notification.routes.js";
-import organizationRoutes from "./routes/organization.routes.js";
-import inviteRoutes from "./routes/invite.routes.js";
-import paymentRoutes from "./routes/payment.routes.js";
-import invoiceRoutes from "./routes/invoice.routes.js";
-import complianceRoutes from "./routes/compliance.routes.js";
-import approvalRoutes from "./routes/approval.routes.js";
-import clientRoutes from "./routes/client.routes.js";
-import documentRoutes from "./routes/document.routes.js";
-import aiRoutes from "./routes/ai.routes.js";
+import webhookRoutes from "./routes/webhook.routes";
+import shareRoutes from "./routes/share.routes";
+import caseRoutes from "./routes/case.routes";
+import notificationRoutes from "./routes/notification.routes";
+import organizationRoutes from "./routes/organization.routes";
+import inviteRoutes from "./routes/invite.routes";
+import paymentRoutes from "./routes/payment.routes";
+import invoiceRoutes from "./routes/invoice.routes";
+import complianceRoutes from "./routes/compliance.routes";
+import approvalRoutes from "./routes/approval.routes";
+import clientRoutes from "./routes/client.routes";
+import documentRoutes from "./routes/document.routes";
+import aiRoutes from "./routes/ai.routes";
 
-// Config & Middleware
-import { errorHandler } from "./middleware/errorHandler.js";
-import "./jobs/reminder.job.js";
-import app from "./app.js";
+import { errorHandler } from "./middleware/errorHandler";
+import "./jobs/reminder.job";
 
-dotenv.config();
+const app = express();
+const PORT = Number(process.env.PORT) || 8080;
+const NODE_ENV = process.env.NODE_ENV || "development";
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
-console.log("-----------------------------------------");
-console.log("🚀 SUITCASE BACKEND STARTING...");
-console.log("📅 Build Time:", new Date().toISOString());
-console.log("📦 Version: 1.0.4-cjs-stable");
-try {
-    const distPath = path.join(process.cwd(), 'dist');
-    if (fs.existsSync(distPath)) {
-        console.log("📂 Files in dist:", fs.readdirSync(distPath));
-    } else {
-        console.log("📂 dist folder not found at:", distPath);
-    }
-} catch (e) {
-    console.log("📂 Could not list dist files");
-}
-console.log("-----------------------------------------");
+const allowedOrigins = FRONTEND_URL
+    ? FRONTEND_URL.split(",").map((origin) => origin.trim()).filter(Boolean)
+    : [];
 
-app.get("/", (req, res) => {
-  res.status(200).send("SUITCASE Backend Running");
-});
+app.set("trust proxy", 1);
+app.disable("x-powered-by");
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
-
-// 🔹 MIDDLEWARE
-app.use(helmet());
-app.use(morgan("combined"));
-app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
-    credentials: true,
-}));
-
-// 🔹 RATE LIMITING
 app.use(
-    rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100, // Limit each IP to 100 requests per windowMs
+    helmet({
+        crossOriginResourcePolicy: { policy: "cross-origin" },
     })
 );
 
-// 🔴 WEBHOOK RAW BODY (MUST COME BEFORE express.json())
+app.use(
+    cors({
+        origin(origin, callback) {
+            if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+                callback(null, true);
+                return;
+            }
+
+            callback(new Error(`CORS blocked origin: ${origin}`));
+        },
+        credentials: true,
+    })
+);
+
+app.use(morgan(NODE_ENV === "production" ? "combined" : "dev"));
+
+app.use(
+    rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 100,
+        standardHeaders: true,
+        legacyHeaders: false,
+    })
+);
+
+// Razorpay signature verification needs the untouched request body.
 app.use("/api/webhook/razorpay", express.raw({ type: "application/json" }));
 
-// 🔹 STANDARD PARSING
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// 🔹 HEALTH CHECK (Moved up for Railway)
-app.get("/health", (req, res) => {
-  res.status(200).send("OK");
+app.get("/", (_req: Request, res: Response) => {
+    res.status(200).json({
+        name: "SUITCASE API",
+        status: "running",
+        environment: NODE_ENV,
+    });
 });
 
-app.get("/", (req, res) => {
-  res.status(200).send("SUITCASE Backend Running");
+app.get("/health", (_req: Request, res: Response) => {
+    res.status(200).json({ status: "ok" });
 });
 
-// 🔹 SERVER START
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ SUITCASE Backend is live on port ${PORT}`);
-  console.log(`📡 Health check available at: /health`);
-});
-
-// 🔹 ERROR HANDLING
-app.use(errorHandler);
-
-// Global Unhandled Rejection/Exception Handlers
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-});
-
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Rejection:", err);
-});
-
-// 🔹 ROUTES
 app.use("/api/webhook", webhookRoutes);
 app.use("/api", organizationRoutes);
 app.use("/api", inviteRoutes);
@@ -116,3 +98,25 @@ app.use("/api", approvalRoutes);
 app.use("/api", clientRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api", aiRoutes);
+
+app.use((_req: Request, res: Response) => {
+    res.status(404).json({ error: "Route not found" });
+});
+
+app.use(errorHandler);
+
+process.on("uncaughtException", (err) => {
+    console.error("Uncaught exception:", err);
+    process.exit(1);
+});
+
+process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled rejection:", reason);
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log("SUITCASE backend started");
+    console.log(`Environment: ${NODE_ENV}`);
+    console.log(`Port: ${PORT}`);
+    console.log("Health check: /health");
+});
