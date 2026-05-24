@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 // import '@/styles/global.css';
 // 🔐 Auth
-import LoginPage from "@/pages/auth/login-page";
-import SignupPage from "@/pages/auth/signup-page";
+import LoginPage from "@/pages/Auth/login-page";
+import SignupPage from "@/pages/Auth/signup-page";
 
 // 📊 Dashboard (adjust if needed)
 import LegalDashboard from "@/pages/Dashboard/LegalDashboard";
