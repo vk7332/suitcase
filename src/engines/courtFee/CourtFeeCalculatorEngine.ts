@@ -1,5 +1,5 @@
 import { courtFeeStates } from "@/data/court-fees";
-import { calculateProgressiveFee, calculateFlatFee, calculatePerUnitFee } from "./courtFeeSlabEngine";
+import { calculateProgressiveFee, calculateFlatFee, calculatePerUnitFee } from "./CourtFeeSlabEngine";
 
 export const calculateCourtFee = ({
     state,
