@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "@/utils/supabase/supabaseClient";
+import { supabase } from "@/utils/supabase/supabase-client";
 import { useEffect, useState } from "react";
 
 export default function DashboardLayout({ children }: any) {

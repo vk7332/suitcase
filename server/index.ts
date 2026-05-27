@@ -9,23 +9,23 @@ import fs from 'fs';
 import path from 'path';
 
 // Routes
-import webhookRoutes from './routes/webhook.routes.js';
-import shareRoutes from "./routes/share.routes.js";
-import caseRoutes from "./routes/case.routes.js";
-import notificationRoutes from "./routes/notification.routes.js";
-import organizationRoutes from "./routes/organization.routes.js";
-import inviteRoutes from "./routes/invite.routes.js";
-import paymentRoutes from "./routes/payment.routes.js";
-import invoiceRoutes from "./routes/invoice.routes.js";
-import complianceRoutes from "./routes/compliance.routes.js";
-import approvalRoutes from "./routes/approval.routes.js";
-import clientRoutes from "./routes/client.routes.js";
-import documentRoutes from "./routes/document.routes.js";
-import aiRoutes from "./routes/ai.routes.js";
+import webhookRoutes from "./routes/webhook-routes";
+import shareRoutes from "./routes/share-routes";
+import caseRoutes from "./routes/case-routes";
+import notificationRoutes from "./routes/notification-routes";
+import organizationRoutes from "./routes/organization-routes";
+import inviteRoutes from "./routes/invite-routes";
+import paymentRoutes from "./routes/payment-routes";
+import invoiceRoutes from "./routes/invoice-routes";
+import complianceRoutes from "./routes/compliance-routes";
+import approvalRoutes from "./routes/approval-routes";
+import clientRoutes from "./routes/client-routes";
+import documentRoutes from "./routes/document-routes";
+import aiRoutes from "./routes/ai-routes";
 
 // Config & Middleware
-import { errorHandler } from "./middleware/errorHandler.js";
-import "./jobs/reminder.job.js";
+import { errorHandler } from "./middleware/error-handler";
+import "./jobs/reminder-job";
 import app from "./app.js";
 
 dotenv.config();

@@ -1,5 +1,5 @@
 import React from "react";
-import { TopAffiliate } from "@/types/affiliateAnalytics";
+import { TopAffiliate } from "@/types/affiliate-analytics";
 
 interface Props {
     affiliates: TopAffiliate[];

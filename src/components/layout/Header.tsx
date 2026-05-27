@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useClientAuth } from "@/hooks/useClientAuth";
-import NotificationCenter from "@/components/Ui/notification";
+import { useClientAuth } from "@/hooks/use-client-auth";
+import NotificationCenter from "@/components/ui/Notification";
 
 export default function Header() {
   const { user, loading } = useClientAuth();

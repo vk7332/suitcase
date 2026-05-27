@@ -19,14 +19,14 @@ export const rolePermissions: Record<UserRole, string[]> = {
         "cases",
         "documents",
     ],
-    junior_advocate: [
+    "junior advocates": [
         "dashboard",
         "clients",
         "cases",
         "documents",
         "calendar",
     ],
-    staff: [
+    "staff(clerks)": [
         "dashboard",
         "clients",
         "invoices",
@@ -45,8 +45,14 @@ export const rolePermissions: Record<UserRole, string[]> = {
         "documents",
     ],
     public: [
+        "dashboard",
         "portal",
         "case-status",
+    ],
+    affiliate: [
+        "dashboard",
+        "referrals",
+        "payouts",
     ],
 };
 

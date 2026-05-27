@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { supabase } from "@/utils/supabase/supabaseClient";
+import { supabase } from "@/utils/supabase/supabase-client";
+import { getDashboardPathForRole, normalizeRole, rolesMatch } from "@/utils/role-routes";
 
 export default function ProtectedRoute({
     children,
@@ -14,6 +15,7 @@ export default function ProtectedRoute({
     const [loading, setLoading] = useState(true);
     const [allowed, setAllowed] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [dashboardPath, setDashboardPath] = useState("/dashboard");
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -44,10 +46,11 @@ export default function ProtectedRoute({
                 if (error) throw error;
 
                 const userRole = data?.role;
+                setDashboardPath(getDashboardPathForRole(userRole));
 
-                if (role && userRole === role) {
+                if (role && rolesMatch(userRole, role)) {
                     setAllowed(true);
-                } else if (allowedRoles && allowedRoles.includes(userRole)) {
+                } else if (allowedRoles && allowedRoles.some((allowedRole) => normalizeRole(allowedRole) === normalizeRole(userRole))) {
                     setAllowed(true);
                 } else if (!role && !allowedRoles) {
                     setAllowed(true);
@@ -77,8 +80,8 @@ export default function ProtectedRoute({
     if (!isAuthenticated) return <Navigate to="/login" />;
     
     if (!allowed) {
-        console.warn("Access denied for role, redirecting to dashboard");
-        return <Navigate to="/dashboard" />;
+        console.warn("Access denied for role, redirecting to user's dashboard");
+        return <Navigate to={dashboardPath} replace />;
     }
 
     return children;

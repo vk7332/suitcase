@@ -1,4 +1,4 @@
-import { sendWhatsAppAPI } from "../services/WhatsAppService";
+import { sendWhatsAppAPI } from "../services/whats-app-service";
 
 export async function runAutoReminders(cases: any[], clients: any[]) {
     const today = new Date();

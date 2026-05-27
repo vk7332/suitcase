@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCourtMapping } from "../../hooks/useCourtMapping";
+import { useCourtMapping } from "../../hooks/use-court-mapping";
 
 export default function CourtSelector() {
     const {

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import WhisperBox from "./WhisperBox";
-import { useLiveAssistant } from "./useLiveAssistant";
-import { useSpeech } from "./useSpeech";
-import { useNotes } from "./useNotes";
+import { useLiveAssistant } from "./use-live-assistant";
+import { useSpeech } from "./use-speech";
+import { useNotes } from "./use-notes";
 import NotesPanel from "./NotesPanel";
 import SuggestionList from "./SuggestionList";
-import { useClipboard } from "./useClipboard";
+import { useClipboard } from "./use-clipboard";
 
 const styles: { panel: React.CSSProperties; arguments: React.CSSProperties } = {
     panel: {

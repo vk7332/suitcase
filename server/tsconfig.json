@@ -3,7 +3,7 @@
         "target": "ES2022",
         "module": "es2022",
         "moduleResolution": "node16",
-        "rootDir": "./",
+        "rootDir": "./index",
         "outDir": "../dist",
         "strict": false,
         "esModuleInterop": true,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getLedger, addLedger } from "../../services/LedgerService";
+import { getLedger, addLedger } from "../../services/ledger-service";
 
 export default function ClientLedger({ clientId }: any) {
     const [entries, setEntries] = useState<any[]>([]);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase/supabaseClient";
-import { useAuth } from "../../hooks/useAuth";
+import { supabase } from "@/utils/supabase/supabase-client";
+import { useAuth } from "../../hooks/use-auth";
 import { getUpcomingHearings } from "../../engines/reminder-engine";
 
 export default function ReminderAlert() {

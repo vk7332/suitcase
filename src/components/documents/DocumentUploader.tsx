@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import {
     uploadDocument,
     getDocuments,
-} from "../../services/DocumentService";
+} from "../../services/document-service";
 
 export default function DocumentUploader({ caseId }: any) {
     const [file, setFile] = useState<any>(null);

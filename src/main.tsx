@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
-import { RoleProvider } from "./context/role-context";
+import { RoleProvider } from "./context/RoleContext";
 import { AuthProvider as TokenProvider } from "./providers/AuthProvider";
 
 const rootElement = document.getElementById("root");
@@ -12,7 +12,7 @@ if (!rootElement) throw new Error("Failed to find the root element");
 
 ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
             <AuthProvider>
                 <TokenProvider>
                     <RoleProvider>

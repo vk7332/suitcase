@@ -3,7 +3,7 @@ import {
     getTimeline,
     addTimeline,
     deleteTimeline,
-} from "../../services/CaseTimelineService";
+} from "../../services/case-timeline-service";
 
 export default function CaseTimeline({ caseId }: any) {
     const [timeline, setTimeline] = useState<any[]>([]);

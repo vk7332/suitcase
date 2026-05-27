@@ -4,7 +4,7 @@
 // =====================================================
 
 import React, { useState, useEffect } from "react";
-import { createInvoice, updateInvoice } from "../services/InvoiceService";
+import { createInvoice, updateInvoice } from "../services/invoice-service";
 
 const InvoiceForm = ({ existingInvoice = null, onSuccess }) => {
     const [formData, setFormData] = useState({

@@ -1,5 +1,5 @@
 import React from "react";
-import { sendInvoiceWhatsApp } from "../services/whatsappService";
+import { sendInvoiceWhatsApp } from "../services/whatsapp-service";
 
 const SendWhatsAppButton = ({ invoice }) => (
     <button

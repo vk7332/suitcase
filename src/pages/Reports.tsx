@@ -1,4 +1,4 @@
-import InvoiceReportsPage from "./Admin/invoice-reports-page";
+import InvoiceReportsPage from "./admin/InvoiceReportsPage";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
 const ReportsPage = () => {

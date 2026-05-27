@@ -1,5 +1,5 @@
 import React from "react";
-import { hasPremiumAccess } from "@/utils/subscriptionUtils";
+import { hasPremiumAccess } from "@/utils/subscription-utils";
 
 interface Props {
     plan: string;
