@@ -1,5 +1,5 @@
 import React from "react";
-import { AffiliateAnalytics } from "@/types/affiliateAnalytics";
+import { AffiliateAnalytics } from "@/types/affiliate-analytics";
 
 interface Props {
     analytics: AffiliateAnalytics;

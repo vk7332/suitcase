@@ -1,5 +1,5 @@
 import React from "react";
-import { generatePaymentLink } from "../services/razorpayService";
+import { generatePaymentLink } from "../services/razorpay-service";
 
 const GeneratePaymentLinkButton = ({ invoice, onSuccess }) => {
     const handleGenerateLink = async () => {

@@ -1,7 +1,6 @@
-import AppRoutes from "./routes";
+import AppRoutes from "./routes/index";
 
 function App() {
-    console.log("App component mounting...");
     return <AppRoutes />;
 }
 

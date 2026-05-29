@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { activateTrial } from "@/services/trialService";
+import { activateTrial } from "@/services/trial-service";
 
 interface Props {
     userId: string;

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import StepRole from "./step-role";
-import StepProfile from "./step-profile";
-import StepPlan from "./step-plan";
-import StepFirstCase from "./step-first-case";
-import StepSuccess from "./step-success";
-import ProgressBar from "./progressBar";
+import StepRole from "./StepRole";
+import StepProfile from "./StepProfile";
+import StepPlan from "./StepPlan";
+import StepFirstCase from "./StepFirstCase";
+import StepSuccess from "./StepSuccess";
+import ProgressBar from "./ProgressBar";
 import { useNavigate } from "react-router-dom";
 
 export default function Onboarding() {

@@ -3,7 +3,7 @@ import DashboardLayout from "../components/layout/DashboardLayout";
 import {
     getCalculations,
     deleteCalculation,
-} from "../services/CalculationHistoryService";
+} from "../services/calculation-history-service";
 
 export default function HistoryPage() {
     const [data, setData] = useState<any[]>([]);

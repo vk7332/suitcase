@@ -1,6 +1,6 @@
 import React from "react";
 import { Affiliate } from "@/types/affiliate";
-import { generateReferralLink } from "@/utils/referralUtils";
+import { generateReferralLink } from "@/utils/referral-utils";
 
 interface Props {
   affiliate: Affiliate;

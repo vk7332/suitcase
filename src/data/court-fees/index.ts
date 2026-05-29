@@ -6,15 +6,15 @@ const dummyScheduleI = {
     rounding: "none",
 };
 
-import { scheduleI_HP } from "./hp/scheduleI";
-import { scheduleII_HP, additionalCharges_HP } from "./hp/scheduleII";
+import { scheduleI_HP } from "./hp/schedule-i";
+import { scheduleII_HP, additionalCharges_HP } from "./hp/schedule-ii";
 
-import { scheduleII_PB } from "./punjab/scheduleII";
-import { scheduleII_HR } from "./haryana/scheduleII";
-import { scheduleI_DL } from "./delhi/scheduleI";
-import { scheduleII_DL } from "./delhi/scheduleII";
-import { scheduleII_UP } from "./up/scheduleII";
-import { scheduleII_RJ } from "./rajasthan/scheduleII";
+import { scheduleII_PB } from "./punjab/schedule-ii";
+import { scheduleII_HR } from "./haryana/schedule-ii";
+import { scheduleI_DL } from "./delhi/schedule-i";
+import { scheduleII_DL } from "./delhi/schedule-ii";
+import { scheduleII_UP } from "./up/schedule-ii";
+import { scheduleII_RJ } from "./rajasthan/schedule-ii";
 
 const scheduleI_PB = dummyScheduleI;
 const scheduleI_HR = dummyScheduleI;

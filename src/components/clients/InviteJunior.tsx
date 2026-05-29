@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { inviteJunior } from "../../services/InvitationService";
-import { useAuth } from "../../hooks/useAuth";
+import { inviteJunior } from "../../services/invitation-service";
+import { useAuth } from "../../hooks/use-auth";
 
 export default function InviteJunior() {
     const { user } = useAuth();

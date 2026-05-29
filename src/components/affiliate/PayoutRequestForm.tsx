@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { requestPayout } from "@/services/AffiliateService";
+import { requestPayout } from "@/services/affiliate-service";
 
 interface Props {
   affiliateId: string;

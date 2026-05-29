@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { calculateCourtFee } from "../../engines/courtFee/CourtFeeCalculatorEngine";
+import { calculateCourtFee } from "../../engines/courtfee/court-fee-calculator-engine";
 import FeeBreakdown from "./FeeBreakdown";
-import { generateCourtFeePDF } from "../../engines/pdf/courtFeePdf.engine";
-import { getProfile } from "../../services/ProfileService";
-import { useAuth } from "../../hooks/useAuth";
+import { generateCourtFeePDF } from "../../engines/pdf/court-fee-pdf-engine.ts";
+import { getProfile } from "../../services/profile-service";
+import { useAuth } from "../../hooks/use-auth";
 
 export default function CaseDetailsForm() {
     const [suitValue, setSuitValue] = useState(0);

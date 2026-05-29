@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getClientLedger } from "../services/ledgerService";
+import { getClientLedger } from "../services/ledger-service";
 import LedgerTable from "../components/LedgerTable";
 
 const ClientLedger = () => {

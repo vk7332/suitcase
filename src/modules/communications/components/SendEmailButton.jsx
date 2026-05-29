@@ -1,5 +1,5 @@
 import React from "react";
-import { sendInvoiceEmail } from "../services/emailService";
+import { sendInvoiceEmail } from "../services/email-service";
 
 const SendEmailButton = ({ invoice }) => {
     const handleSend = async () => {

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import ReportsFilter from "../components/ReportsFilter";
-import GSTReportTable from "../components/GSTReportTable";
+import GSTReportTable from "../components/GstReportTable";
 import IncomeReportTable from "../components/IncomeReportTable";
 import {
     fetchGSTReport,
     fetchIncomeReport,
-} from "../services/reportService";
-import { exportToExcel } from "../utils/exportToExcel";
+} from "../services/report-service";
+import { exportToExcel } from "../utils/export-to-excel";
 
 const ReportsDashboard = () => {
     const [gstData, setGstData] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useState, CSSProperties } from "react";
-import { useClipboard } from "./useClipboard";
+import { useClipboard } from "./use-clipboard";
 
 interface WhisperBoxProps {
     suggestion: string;

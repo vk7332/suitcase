@@ -1,4 +1,4 @@
-import { LawBook } from "../../data/lawBooks";
+import { LawBook } from "../../data/law-books";
 
 interface Props {
     book: LawBook;

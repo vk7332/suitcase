@@ -8,7 +8,7 @@ import {
     CartesianGrid,
     ResponsiveContainer,
 } from "recharts";
-import { ReferralTrend } from "@/types/affiliateAnalytics";
+import { ReferralTrend } from "@/types/affiliate-analytics";
 
 interface Props {
     data: ReferralTrend[];

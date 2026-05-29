@@ -1,5 +1,5 @@
-import { calculateCourtFee } from "./courtFee/CourtFeeCalculatorEngine";
-import { courtFeeStates } from "../data/court-fees";
+import { calculateCourtFee } from "./courtfee/court-fee-calculator-engine";
+import { courtFeeStates } from "../data/court-fees/index";
 
 export interface TotalCaseCostInput {
     state: string;

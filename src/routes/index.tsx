@@ -1,62 +1,67 @@
 import { Routes, Route } from "react-router-dom";
 // import '@/styles/global.css';
 // 🔐 Auth
-import LoginPage from "@/pages/Auth/login-page";
-import SignupPage from "@/pages/Auth/signup-page";
+import LoginPage from "@/pages/auth/LoginPage";
+import SignupPage from "@/pages/auth/SignupPage";
 
 // 📊 Dashboard (adjust if needed)
-import LegalDashboard from "@/pages/Dashboard/LegalDashboard";
-import SubscriptionGuard from "@/components/auth/subscription-guard";
+import LegalDashboard from "@/pages/dashboard/LegalDashboard";
+import SubscriptionGuard from "@/components/auth/SubscriptionGuard";
 
 // 🧮 Calculator Pages (WRAPPERS ONLY)
-import CourtFeesPage from "@/pages/calculators/court-fees-page";
-import FilingCostPage from "@/pages/calculators/filing-cost-page";
-import InterestPage from "@/pages/calculators/interest-page";
-import LimitationPage from "@/pages/calculators/limitation-page";
-import StampDutyPage from "@/pages/calculators/stamp-duty-page";
-import TotalCaseCostPage from "@/pages/calculators/total-case-cost-page";
-import PartitionSuitPage from "@/pages/calculators/partition-suit-calculator";
-import SpecificPerformancePage from "@/pages/calculators/specific-performance-calculator";
+import CourtFeesPage from "@/pages/calculators/CourtFeesPage";
+import FilingCostPage from "@/pages/calculators/FilingCostPage";
+import InterestPage from "@/pages/calculators/InterestPage";
+import LimitationPage from "@/pages/calculators/LimitationPage";
+import StampDutyPage from "@/pages/calculators/StampDutyPage";
+import TotalCaseCostPage from "@/pages/calculators/TotalCaseCostPage";
+import PartitionSuitPage from "@/pages/calculators/PartitionSuitCalculator";
+import SpecificPerformancePage from "@/pages/calculators/SpecificPerformanceCalculator";
 
 // 📦 Other Modules (adjust paths if needed)
-import ClientsPage from "@/pages/Clients/clients-page";
-import InvoiceListPage from "@/pages/Invoices/invoice-list-page";
-import CreateInvoicePage from "@/pages/Invoices/create-invoice-page";
-import GSTInvoicePage from "@/pages/Invoices/GSTInvoicePage";
-import ClientLedgerPage from "@/pages/Ledger/client-ledger-page";
-import DraftLibraryPage from "@/pages/DraftLibrary/DraftLibraryPage";
-import AIDraftPage from "@/pages/AIDraft/AIDraftPage";
-import CauseListPage from "@/pages/CauseList/CauseListPage";
+import ClientsPage from "@/pages/clients/ClientsPage";
+import InvoiceListPage from "@/pages/invoices/InvoiceListPage";
+import CreateInvoicePage from "@/pages/invoices/CreateInvoicePage";
+import GSTInvoicePage from "@/pages/invoices/GstInvoicePage";
+import ClientLedgerPage from "@/pages/ledger/ClientLedgerPage";
+import DraftLibraryPage from "@/pages/draftlibrary/DraftLibraryPage";
+import AIDraftPage from "@/pages/aidraft/AiDraftPage";
+import CauseListPage from "@/pages/causelist/CauseListPage";
 import ReportsPage from "@/pages/Reports";
-import PublicLoginPage from "@/pages/Portal/public-login-page";
-import CalendarPage from "@/pages/Calendar/CalendarPage";
+import PublicLoginPage from "@/pages/portal/PublicLoginPage";
+import CalendarPage from "@/pages/calendar/CalendarPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 
 //  Admin Pages
-import SubscriptionPage from "@/pages/Subscription/subscription-page";
-import AdminDashboard from "@/pages/Admin/admin-dashboard";
-import AdvocateDashboard from "@/pages/advocate/dashboard";
+import SubscriptionPage from "@/pages/subscription/SubscriptionPage";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdvocateDashboard from "@/pages/advocate/Dashboard";
+import JuniorAdvocateDashboard from "@/pages/junior-advocate/Dashboard";
+import StaffDashboard from "@/pages/staff/Dashboard";
+import LitigantDashboard from "@/pages/litigant/Dashboard";
+import PublicDashboard from "@/pages/public/Dashboard";
+import RoleDashboardRedirect from "@/pages/dashboard/RoleDashboardRedirect";
 
 //  Advocate Pages
-import Clients from "@/pages/Clients/clients-page";
-import Cases from "@/pages/Cases/CasesPage";
-import CaseDetails from "@/pages/Cases/case-details";
-import Fees from "@/pages/Invoices/invoice-list-page";
+import Clients from "@/pages/clients/ClientsPage";
+import Cases from "@/pages/cases/CasesPage";
+import CaseDetails from "@/pages/cases/CaseDetails";
+import Fees from "@/pages/invoices/InvoiceListPage";
 
 
 import ProtectedRoute from "@/components/ProtectedRoute";
-import ClientCaseDetails from "@/pages/client/client-case-details";
-import ClientDashboard from "@/pages/client/client-dashboard";
-import NotificationPreferences from "@/pages/client/notification-preferences";
-import Dashboard from "@/pages/Dashboard";
-import Landing from "@/pages/landing";
-import Pricing from "@/pages/pricing";
-import ContactUs from "@/pages/contact-us";
-import PrivacyPolicy from "@/pages/privacy-policy";
-import TermsOfService from "@/pages/terms-of-service";
-import Onboarding from "@/pages/onboarding";
-import PaymentSuccess from "@/pages/payment-success";
-import PaymentFailed from "@/pages/payment-failed";
+import ClientCaseDetails from "@/pages/client/ClientCaseDetails";
+import ClientDashboard from "@/pages/client/ClientDashboard";
+import NotificationPreferences from "@/pages/client/NotificationPreferences";
+import Landing from "@/pages/Landing";
+import Pricing from "@/pages/Pricing";
+import ContactUs from "@/pages/ContactUs";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsOfService from "@/pages/TermsOfService";
+import Onboarding from "@/pages/onboarding/index";
+import PaymentSuccess from "@/pages/PaymentSuccess";
+import PaymentFailed from "@/pages/PaymentFailed";
+import AffiliateDashboard from "@/pages/affiliate/AffiliateDashboard";
 
 // ❌ 404 Page (create if missing)
 const NotFound = () => <div>404 - Page Not Found</div>;
@@ -97,10 +102,30 @@ export default function AppRoutes() {
                 }
             />
 
+            {/* JUNIOR ADVOCATE */}
+            <Route
+                path="/junior-advocate"
+                element={
+                    <ProtectedRoute role="junior advocates">
+                        <JuniorAdvocateDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* STAFF / CLERK */}
+            <Route
+                path="/staff"
+                element={
+                    <ProtectedRoute role="staff(clerks)">
+                        <StaffDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
             <Route
                 path="/advocate/clients"
                 element={
-                    <ProtectedRoute role="advocate">
+                    <ProtectedRoute allowedRoles={["advocate", "junior advocates", "staff(clerks)"]}>
                         <Clients />
                     </ProtectedRoute>
                 }
@@ -109,7 +134,7 @@ export default function AppRoutes() {
             <Route
                 path="/advocate/cases"
                 element={
-                    <ProtectedRoute role="advocate">
+                    <ProtectedRoute allowedRoles={["advocate", "junior advocates", "staff(clerks)", "litigant"]}>
                         <Cases />
                     </ProtectedRoute>
                 }
@@ -118,7 +143,7 @@ export default function AppRoutes() {
             <Route
                 path="/advocate/cases/:id"
                 element={
-                    <ProtectedRoute role="advocate">
+                    <ProtectedRoute allowedRoles={["advocate", "junior advocates", "staff(clerks)", "litigant"]}>
                         <CaseDetails />
                     </ProtectedRoute>
                 }
@@ -127,7 +152,7 @@ export default function AppRoutes() {
             <Route
                 path="/advocate/fees"
                 element={
-                    <ProtectedRoute role="advocate">
+                    <ProtectedRoute allowedRoles={["advocate", "staff(clerks)"]}>
                         <Fees />
                     </ProtectedRoute>
                 }
@@ -155,12 +180,42 @@ export default function AppRoutes() {
                 element={<NotificationPreferences />}
             />
 
+            {/* LITIGANT */}
+            <Route
+                path="/litigant"
+                element={
+                    <ProtectedRoute role="litigant">
+                        <LitigantDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* PUBLIC ROLE */}
+            <Route
+                path="/public"
+                element={
+                    <ProtectedRoute role="public">
+                        <PublicDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* AFFILIATE */}
+            <Route
+                path="/affiliate"
+                element={
+                    <ProtectedRoute role="affiliate">
+                        <AffiliateDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
             {/* DASHBOARD & CORE */}
             <Route
                 path="/dashboard"
                 element={
                     <SubscriptionGuard>
-                        <Dashboard />
+                        <RoleDashboardRedirect />
                     </SubscriptionGuard>
                 }
             />
@@ -170,7 +225,7 @@ export default function AppRoutes() {
             <Route
                 path="/clients"
                 element={
-                    <ProtectedRoute allowedRoles={["advocate", "staff"]}>
+                    <ProtectedRoute allowedRoles={["advocate", "junior advocates", "staff(clerks)"]}>
                         <ClientsPage />
                     </ProtectedRoute>
                 }

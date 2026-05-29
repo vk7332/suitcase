@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/use-auth";
 import { attachToken } from "../lib/api";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {

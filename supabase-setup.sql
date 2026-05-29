@@ -507,6 +507,30 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT t
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS referral_code TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS referred_by TEXT;
 
+SELECT
+    enrollment_number,
+    COUNT(*)
+FROM profiles
+WHERE enrollment_number IS NOT NULL
+GROUP BY enrollment_number
+HAVING COUNT(*) > 1;
+
+SELECT
+    enrollment_number,
+    COUNT(*)
+FROM profiles
+WHERE enrollment_number IS NOT NULL
+GROUP BY enrollment_number
+HAVING COUNT(*) > 1;
+
+ALTER TABLE profiles
+ADD CONSTRAINT profiles_enrollment_unique
+UNIQUE (enrollment_number);
+
+ALTER TABLE profiles
+ADD CONSTRAINT profiles_advocate_enrollment_unique
+UNIQUE (advocate_enrollment_number);
+
 alter table profiles enable row level security;
 
 create policy "Users can view own profile"
@@ -3648,6 +3672,33 @@ GRANT ALL ON SCHEMA public TO service_role;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO authenticated;
 GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO authenticated;
 
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+
+  INSERT INTO public.profiles (
+    id,
+    email,
+    full_name,
+    role
+  )
+  VALUES (
+    new.id,
+    new.email,
+    COALESCE(new.raw_user_meta_data->>'full_name',''),
+    COALESCE(new.raw_user_meta_data->>'role','advocate')
+  )
+
+  ON CONFLICT (id)
+  DO NOTHING;
+
+  RETURN new;
+
+END;
+$$;
 
 -- =====================================================
 -- MIGRATION COMPLETE - VERIFICATION SUMMARY

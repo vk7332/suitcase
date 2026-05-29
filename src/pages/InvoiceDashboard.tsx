@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
     fetchInvoices,
     deleteInvoice,
-} from "../services/InvoiceService";
+} from "../services/invoice-service";
 import InvoiceForm from "../components/InvoiceForm";
-import { initiateRazorpayPayment } from "../services/RazorpayService";
-import { PdfService } from "../services/PdfService";
-import { sendInvoiceEmail } from "../services/EmailService";
-import { WhatsAppService } from "../services/WhatsAppService";
+import { initiateRazorpayPayment } from "../services/razorpay-service";
+import { PdfService } from "../services/pdf-service";
+import { sendInvoiceEmail } from "../services/email-service";
+import { WhatsAppService } from "../services/whats-app-service";
 import { InvoiceData } from "../types/invoice";
 
 const InvoiceDashboard = () => {

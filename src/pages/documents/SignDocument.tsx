@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "../../lib/api";
-import { signHashWithDSC } from "../../services/signerDigital";
+import { signHashWithDSC } from "../../services/signer-digital";
 
 const SignDocument = ({ documentId }: any) => {
     const [otp, setOtp] = useState("");

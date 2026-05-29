@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSubscription } from "../../hooks/useSubscription";
+import { useSubscription } from "../../hooks/use-subscription";
 
 const ECOURTS_BASE_URL =
     "https://services.ecourts.gov.in/ecourtindia_v6/";

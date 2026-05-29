@@ -1,0 +1,22 @@
+import { supabase } from "@/utils/supabase/supabase-client";
+
+export async function inviteJunior(email: string, userId: string) {
+    const { error } = await supabase
+        .from("invitations")
+        .insert([
+            {
+                email,
+                role: "JUNIOR",
+                invited_by: userId,
+            },
+        ]);
+
+    if (error) {
+        alert("Error sending invite");
+    } else {
+        alert("Invitation sent");
+    }
+}
+
+
+

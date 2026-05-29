@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabaseClient";
+import { supabase } from "@/utils/supabase/supabase-client";
 
 export const addCommission = async (userId: string) => {
     const { data } = await supabase

@@ -6,7 +6,7 @@ import {
     Calendar, CreditCard, ChevronRight, BarChart3,
     ArrowRightLeft, X, CheckCircle2, History, Database
 } from 'lucide-react';
-import { exportTaxReport } from '@/utils/pdfExport';
+import { exportTaxReport } from '@/utils/pdf-export';
 import { ClientRecord } from '@/types/client';
 
 export const ClientDatabase = () => {

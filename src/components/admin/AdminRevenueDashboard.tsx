@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import RevenueCard from "../../components/admin/RevenueCard";
-import RevenueChart from "../../components/admin/RevenueChart";
-import RecentTransactions from "../../components/admin/RecentTransactions";
-import { getAdminDashboardData } from "../../services/AdminService";
+import RevenueCard from "./RevenueCard";
+import RevenueChart from "./RevenueChart";
+import RecentTransactions from "./RecentTransactions";
+import { getAdminDashboardData } from "../../services/admin-service";
 
 export default function AdminRevenueDashboard() {
     const [data, setData] = useState<any>(null);

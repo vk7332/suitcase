@@ -5,7 +5,8 @@ export type UserRole =
     | "staff(clerks)"
     | "client"
     | "litigant"
-    | "public";
+    | "public"
+    | "affiliate";
 
 export const ROLES = {
     ADMIN: "admin" as UserRole,
@@ -15,6 +16,7 @@ export const ROLES = {
     CLIENT: "client" as UserRole,
     LITIGANT: "litigant" as UserRole,
     PUBLIC: "public" as UserRole,
+    AFFILIATE: "affiliate" as UserRole,
 };
 
 

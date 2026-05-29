@@ -1,6 +1,6 @@
 import React from "react";
-import { useSubscription } from "../../hooks/useSubscription";
-import { hasFeatureAccess } from "../../middleware/featureGuard";
+import { useSubscription } from "../../hooks/use-subscription";
+import { hasFeatureAccess } from "../../middleware/feature-guard";
 
 interface Props {
     requiredPlan: "FREE" | "PRO" | "PREMIUM";

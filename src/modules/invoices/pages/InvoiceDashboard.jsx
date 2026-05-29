@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getInvoices } from "../services/invoiceService";
+import { getInvoices } from "../services/invoice-service";
 import GeneratePaymentLinkButton from "../../payments/components/GeneratePaymentLinkButton";
 import SendEmailButton from "../../communications/components/SendEmailButton";
 import SendWhatsAppButton from "../../communications/components/SendWhatsAppButton";

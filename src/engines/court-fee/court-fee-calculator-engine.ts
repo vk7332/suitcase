@@ -1,4 +1,4 @@
-import { courtFeeStates } from "../../data/court-fees";
+import { courtFeeStates } from "../../data/court-fees/index";
 // Inline slab calculation helpers to avoid missing module import
 const calculateProgressiveFee = (config: any, amount: number) => {
     // expect config.slabs = [{ upto?: number, rate: number }] progressive tiers
