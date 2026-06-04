@@ -602,6 +602,18 @@ ADD COLUMN first_case_created BOOLEAN DEFAULT FALSE;
 ALTER TABLE profiles
 ADD COLUMN phone TEXT;
 
+ALTER TABLE profiles
+ADD COLUMN plan_selected BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE profiles
+ADD COLUMN avatar_url TEXT;
+
+ALTER TABLE profiles
+ADD COLUMN bio TEXT;
+
+ALTER TABLE profiles
+ADD COLUMN address TEXT;
+
 SELECT
     enrollment_number,
     COUNT(*)
