@@ -47,6 +47,11 @@ export default function ProtectedRoute({
 
                 const userRole = data?.role;
                 setDashboardPath(getDashboardPathForRole(userRole));
+console.log("PROTECTED ROUTE");
+console.log("USER ID:", user.id);
+console.log("USER ROLE:", userRole);
+console.log("EXPECTED ROLE:", role);
+console.log("ALLOWED ROLES:", allowedRoles);
 
                 if (role && rolesMatch(userRole, role)) {
                     setAllowed(true);

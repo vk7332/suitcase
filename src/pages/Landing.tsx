@@ -23,7 +23,7 @@ export default function Landing() {
                         Sign In
                     </button>
                     <button 
-                        onClick={() => navigate("/pricing")}
+                        onClick={() => navigate("/role-selection")}
                         className="bg-[#089CCE] text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-[#089CCE]/30 transition transform hover:-translate-y-0.5"
                     >
                         Get Started

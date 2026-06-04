@@ -12,12 +12,6 @@ export default function Onboarding() {
     const [data, setData] = useState<any>({});
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (localStorage.getItem("onboardingComplete") === "true") {
-            navigate("/dashboard");
-        }
-    }, [navigate]);
-
     const next = (newData?: any) => {
         setData({ ...data, ...newData });
         setStep((s) => s + 1);
@@ -37,11 +31,10 @@ export default function Onboarding() {
             </div>
 
             <div className="w-full flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-                {step === 1 && <StepRole next={next} />}
-                {step === 2 && <StepProfile next={next} />}
-                {step === 3 && <StepPlan next={next} />}
-                {step === 4 && <StepFirstCase next={next} />}
-                {step === 5 && <StepSuccess />}
+{step === 1 && <StepProfile next={next} />}
+{step === 2 && <StepPlan next={next} />}
+{step === 3 && <StepFirstCase next={next} />}
+{step === 4 && <StepSuccess />}
             </div>
         </div>
     );

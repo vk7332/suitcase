@@ -1,27 +1,42 @@
 import { useState } from "react";
+import { supabase } from "@/utils/supabase/supabase-client";
 
 export default function StepFirstCase({ next }: any) {
     const [title, setTitle] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const createCase = async () => {
-        if (!title) return;
-        setLoading(true);
-        try {
-            // 🔹 call your API here
-            await fetch("/api/case/create", {
-                method: "POST",
-                body: JSON.stringify({ title }),
-            });
-            next();
-        } catch (err) {
-            console.error(err);
-            next(); // Still move forward for demo purposes
-        } finally {
-            setLoading(false);
-        }
-    };
+const createCase = async () => {
+    if (!title) return;
 
+    setLoading(true);
+
+    try {
+        const {
+            data: { user }
+        } = await supabase.auth.getUser();
+
+        await fetch("/api/case/create", {
+            method: "POST",
+            body: JSON.stringify({ title }),
+        });
+
+        if (user) {
+            await supabase
+                .from("profiles")
+                .update({
+                    first_case_created: true
+                })
+                .eq("id", user.id);
+        }
+
+        next();
+    } catch (err) {
+        console.error(err);
+        next();
+    } finally {
+        setLoading(false);
+    }
+};
     return (
         <div className="w-full max-w-md bg-white p-10 rounded-[2.5rem] shadow-2xl border border-gray-100">
             <div className="text-center mb-8">

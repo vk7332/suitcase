@@ -5,13 +5,32 @@ import { useEffect, useState } from "react";
 export default function DashboardLayout({ children }: any) {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
+    const [profile, setProfile] = useState<any>(null);
 
-    useEffect(() => {
-        supabase.auth.getUser().then(({ data }) => {
-            setUser(data.user);
-        });
-    }, []);
+useEffect(() => {
+    const loadUser = async () => {
+        const { data } = await supabase.auth.getUser();
 
+        setUser(data.user);
+
+        if (data.user) {
+            const { data: profileData } = await supabase
+                .from("profiles")
+                .select("subscription_plan, role")
+                .eq("id", data.user.id)
+                .single();
+
+            setProfile(profileData);
+        }
+    };
+
+    loadUser();
+}, []);
+
+
+    const planLabel =
+    profile?.subscription_plan?.toUpperCase() || "FREE";
+    
     const handleLogout = async () => {
         await supabase.auth.signOut();
         navigate("/login");
@@ -58,7 +77,7 @@ export default function DashboardLayout({ children }: any) {
                         <div className="flex flex-col gap-3">
                             <div className="px-3">
                                 <p className="text-xs font-bold text-gray-900 truncate">{user.email}</p>
-                                <p className="text-[10px] text-gray-500">Premium Account</p>
+                                <p className="text-[10px] text-[#089CCE] font-bold">{planLabel}</p>
                             </div>
                             <button 
                                 onClick={handleLogout}
@@ -107,7 +126,7 @@ export default function DashboardLayout({ children }: any) {
                         {user && (
                             <div className="text-right mr-4 hidden md:block">
                                 <p className="text-xs font-bold text-gray-900">{user.email}</p>
-                                <p className="text-[10px] text-[#089CCE] font-bold">PREMIUM</p>
+                                <p className="text-[10px] text-[#089CCE] font-bold">{planLabel}</p>
                             </div>
                         )}
                         <button 
@@ -127,5 +146,3 @@ export default function DashboardLayout({ children }: any) {
         </div>
     );
 }
-
-

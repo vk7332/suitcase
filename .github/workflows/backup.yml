@@ -1,0 +1,32 @@
+name: SUITCASE Backup Checkpoint
+
+on:
+push:
+branches:
+- main
+- stable/**
+workflow_dispatch:
+
+jobs:
+backup:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - name: Checkout Repository
+    uses: actions/checkout@v4
+
+  - name: Create Backup Archive
+    run: |
+      zip -r suitcase-backup.zip . \
+      -x "node_modules/*" \
+      -x ".git/*" \
+      -x "dist/*"
+
+  - name: Upload Backup Artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: suitcase-backup
+      path: suitcase-backup.zip
+      retention-days: 30
+```

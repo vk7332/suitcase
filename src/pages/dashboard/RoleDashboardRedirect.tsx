@@ -3,6 +3,14 @@ import { Navigate } from "react-router-dom";
 import { supabase } from "@/utils/supabase/supabase-client";
 import { getDashboardPathForRole } from "@/utils/role-routes";
 
+type Profile = {
+    role: string;
+    onboarding_completed?: boolean;
+    profile_completed?: boolean;
+    plan_selected?: boolean;
+    first_case_created?: boolean;
+};
+
 export default function RoleDashboardRedirect() {
     const [loading, setLoading] = useState(true);
     const [targetPath, setTargetPath] = useState<string | null>(null);
@@ -11,7 +19,9 @@ export default function RoleDashboardRedirect() {
         let isMounted = true;
 
         const resolveDashboard = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
 
             if (!isMounted) return;
 
@@ -23,18 +33,32 @@ export default function RoleDashboardRedirect() {
 
             const { data: profile, error } = await supabase
                 .from("profiles")
-                .select("role")
+                .select("role, onboarding_completed, profile_completed, plan_selected, first_case_created")
                 .eq("id", user.id)
                 .single();
 
+            console.log("ROLE REDIRECT USER:", user.id);
+            console.log("ROLE REDIRECT PROFILE:", profile);
+            console.log("ROLE REDIRECT ERROR:", error);
+
             if (!isMounted) return;
 
-            if (error) {
+            if (error || !profile) {
                 console.error("RoleDashboardRedirect: profile fetch failed", error);
-                setTargetPath("/onboarding");
-            } else {
-                setTargetPath(getDashboardPathForRole(profile?.role));
+                setTargetPath("/login");
+                setLoading(false);
+                return;
             }
+
+            const profileData = profile as Profile;
+
+if (!profileData.onboarding_completed) {
+    setTargetPath("/onboarding");
+    setLoading(false);
+    return;
+}
+
+setTargetPath(getDashboardPathForRole(profileData.role));
 
             setLoading(false);
         };

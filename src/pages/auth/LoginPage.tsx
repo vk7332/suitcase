@@ -20,22 +20,47 @@ export default function LoginPage() {
             return;
         }
         setLoading(true);
+
         try {
+            // signIn may not return structured data; call it and then fetch the current user from Supabase
             await signIn(email, password);
-            
-            // Check profile for role-based redirect
+
             const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                const { data: profile } = await supabase
-                    .from("profiles")
-                    .select("role")
-                    .eq("id", user.id)
-                    .single();
-                
-                navigate(getDashboardPathForRole(profile?.role), { replace: true });
+
+            if (!user) {
+                alert("User not found.");
+                return;
             }
-        } catch (err: any) {
-            alert(err.message || "Login failed");
+
+            const { data: profile, error } = await supabase
+                .from("profiles")
+                .select(`
+                    role,
+                    onboarding_completed
+                `)
+                .eq("id", user.id)
+                .single();
+
+            if (error || !profile) {
+                alert("Profile not found.");
+                return;
+            }
+
+            if (!profile.onboarding_completed) {
+                navigate("/onboarding", {
+                    replace: true
+                });
+                return;
+            }
+            navigate(
+                getDashboardPathForRole(profile.role),
+                {
+                    replace: true
+                }
+            );
+        } catch (error) {
+            console.error(error);
+            alert("Login failed.");
         } finally {
             setLoading(false);
         }
@@ -70,9 +95,8 @@ export default function LoginPage() {
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                             className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition bg-gray-50"
-                        >
+                        >                                               
                             <option value="advocate">Advocate</option>
-                            <option value="admin">Admin</option>
                             <option value="junior advocates">Junior Advocate</option>
                             <option value="staff(clerks)">Staff / Clerk</option>
                             <option value="client">Client</option>
@@ -109,7 +133,15 @@ export default function LoginPage() {
                             </button>
                         </div>
                     </div>
-
+                    <div className="flex justify-end">
+    <button
+        type="button"
+        onClick={() => navigate("/forgot-password")}
+        className="text-sm text-[#089CCE] hover:underline"
+    >
+        Forgot Password?
+    </button>
+</div>
                     <button
                         onClick={handleLogin}
                         disabled={loading}

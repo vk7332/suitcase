@@ -3,6 +3,9 @@ import { Routes, Route } from "react-router-dom";
 // 🔐 Auth
 import LoginPage from "@/pages/auth/LoginPage";
 import SignupPage from "@/pages/auth/SignupPage";
+import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
+import RoleSelectionPage from "@/pages/auth/RoleSelectionPage";
 
 // 📊 Dashboard (adjust if needed)
 import LegalDashboard from "@/pages/dashboard/LegalDashboard";
@@ -73,6 +76,9 @@ export default function AppRoutes() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/role-selection" element={<RoleSelectionPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />

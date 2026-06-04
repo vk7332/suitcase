@@ -14,7 +14,6 @@ export default function StepProfile({ next }: any) {
             setError("Please fill in all fields");
             return;
         }
-
         setLoading(true);
         setError("");
 
@@ -23,13 +22,20 @@ export default function StepProfile({ next }: any) {
             if (!user) throw new Error("No user found");
 
             // Update profile with name and phone
-            await supabase
-                .from("profiles")
-                .update({ 
-                    full_name: name, 
-                    phone: phone 
-                })
-                .eq("id", user.id);
+const { error: profileError } = await supabase
+    .from("profiles")
+    .update({
+        full_name: name,
+        phone: phone,
+        profile_completed: true
+    })
+    .eq("id", user.id);
+
+console.log("PROFILE UPDATE ERROR:", profileError);
+
+if (profileError) {
+    throw profileError;
+}
 
             // Activate trial and check for existing enrollment
             await activateTrial(user.id, enrollment, "pro");
@@ -48,6 +54,10 @@ export default function StepProfile({ next }: any) {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleSkip = () => {
+        next();
     };
 
     return (
@@ -93,12 +103,18 @@ export default function StepProfile({ next }: any) {
                 </div>
 
                 <button
-                    onClick={handleContinue}
-                    disabled={loading}
-                    className="w-full bg-[#089CCE] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#078bb8] transition shadow-lg shadow-[#089CCE]/20 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-                >
-                    {loading ? "Processing..." : "Continue"}
-                </button>
+    onClick={handleContinue}
+    disabled={loading}
+    className="w-full bg-[#089CCE] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#078bb8] transition shadow-lg shadow-[#089CCE]/20 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+>
+    {loading ? "Processing..." : "Continue"}
+</button>
+<button
+    onClick={handleSkip}
+    className="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-bold text-lg hover:bg-gray-300 transition mt-2"
+>
+    Skip For Now
+</button>
             </div>
         </div>
     );

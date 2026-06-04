@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/utils/supabase/supabase-client";
 
-export default function SubscriptionGuard({ children }) {
+type SubscriptionGuardProps = {
+    children: ReactNode;
+};
+
+export default function SubscriptionGuard({ children }: SubscriptionGuardProps) {
     const [loading, setLoading] = useState(true);
     const [timedOut, setTimedOut] = useState(false);
     const navigate = useNavigate();
@@ -66,8 +70,15 @@ export default function SubscriptionGuard({ children }) {
                 }
 
                 // If no plan, redirect to onboarding
-                console.log("User has no plan, redirecting to onboarding");
-                navigate("/onboarding");
+                console.log(
+    "SUBSCRIPTION_GUARD_REDIRECT",
+    {
+        userId: user.id,
+        profile
+    }
+);
+
+navigate("/onboarding");
                 clearTimeout(timeoutId);
             } catch (err) {
                 console.error("Subscription check error:", err);

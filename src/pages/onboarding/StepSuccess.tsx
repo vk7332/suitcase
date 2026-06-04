@@ -1,12 +1,27 @@
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/utils/supabase/supabase-client";
 
 export default function StepSuccess() {
     const navigate = useNavigate();
 
-    const handleFinish = () => {
-        localStorage.setItem("onboardingComplete", "true");
-        navigate("/dashboard");
-    };
+const handleFinish = async () => {
+    const {
+        data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        return;
+    }
+
+    await supabase
+        .from("profiles")
+        .update({
+            onboarding_completed: true
+        })
+        .eq("id", user.id);
+
+    navigate("/dashboard");
+};
 
     return (
         <div className="w-full max-w-md bg-white p-12 rounded-[3rem] shadow-2xl border border-gray-100 text-center">

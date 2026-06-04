@@ -486,6 +486,17 @@ CREATE TABLE IF NOT EXISTS public.payout_requests (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+SELECT
+    id,
+    email,
+    role,
+    full_name,
+    enrollment_number,
+    subscription_plan,
+    is_active
+FROM profiles
+WHERE email = 'vk7332@gmail.com';
+
 -- 4. Enable RLS
 ALTER TABLE public.affiliates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.referrals ENABLE ROW LEVEL SECURITY;
@@ -506,6 +517,90 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS role TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS referral_code TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS referred_by TEXT;
+
+ALTER TABLE profiles
+ADD COLUMN is_affiliate BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE profiles
+ADD COLUMN affiliate_joined_at TIMESTAMPTZ;
+
+ALTER TABLE profiles
+ADD COLUMN affiliate_status TEXT DEFAULT 'inactive';
+
+UPDATE profiles
+SET
+    role = 'client',
+    is_affiliate = TRUE,
+    affiliate_status = 'active',
+    affiliate_joined_at = NOW()
+WHERE email = 'pkskt009@rediffmail.com';
+
+UPDATE profiles
+SET
+    role = 'client',
+    is_affiliate = TRUE,
+    affiliate_status = 'active',
+    affiliate_joined_at = NOW()
+WHERE email = 'pkskt009@rediffmail.com';
+
+ALTER TABLE profiles
+ADD COLUMN onboarding_completed BOOLEAN DEFAULT FALSE;
+
+UPDATE profiles
+SET onboarding_completed = TRUE
+WHERE role IN (
+    'admin',
+    'advocate',
+    'junior advocates',
+    'staff(clerks)',
+    'client',
+    'litigant',
+    'public'
+);
+UPDATE profiles
+SET onboarding_completed = TRUE
+WHERE role IN (
+    'admin',
+    'advocate',
+    'junior advocates',
+    'staff(clerks)',
+    'client',
+    'litigant',
+    'public'
+);
+
+UPDATE profiles
+SET
+    is_affiliate = TRUE,
+    affiliate_status = 'active',
+    affiliate_joined_at = NOW()
+WHERE id = 'daa92b07-d6c1-4398-aa33-44b852fe142d';
+
+UPDATE profiles
+SET
+    is_affiliate = TRUE,
+    affiliate_status = 'active',
+    affiliate_joined_at = NOW()
+WHERE email = 'pkskt009@rediffmail.com';
+
+SELECT
+    email,
+    role,
+    onboarding_completed
+FROM profiles
+WHERE email = 'actual_email_here';
+
+UPDATE profiles
+SET onboarding_completed = TRUE;
+
+ALTER TABLE profiles
+ADD COLUMN profile_completed BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE profiles
+ADD COLUMN first_case_created BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE profiles
+ADD COLUMN phone TEXT;
 
 SELECT
     enrollment_number,

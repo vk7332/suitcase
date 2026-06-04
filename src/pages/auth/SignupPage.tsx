@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/supabase-client";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -9,13 +9,22 @@ export default function SignupPage() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [enrollment, setEnrollment] = useState("");
-    const [role, setRole] = useState("advocate");
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const rolesRequiringEnrollment = ["advocate", "junior advocates"];
-    const isEnrollmentRequired = rolesRequiringEnrollment.includes(role);
+    const [selectedRole, setRole] = useState("advocate");
+    const selectedRolesRequiringEnrollment = ["advocate", "junior advocates"];
+    const isEnrollmentRequired = selectedRolesRequiringEnrollment.includes(selectedRole);
+
+useEffect(() => {
+    const role =
+        sessionStorage.getItem("selectedRole");
+
+    if (role) {
+        setRole(role);
+    }
+}, []);
 
     const handleSignup = async () => {
         if (!email || !password || !confirmPassword) {
@@ -70,7 +79,7 @@ export default function SignupPage() {
                 password,
                 options: {
                     data: {
-                        role: role,
+                        role: selectedRole,
                         enrollment_number: enrollment || null
                     }
                 }
@@ -83,7 +92,7 @@ export default function SignupPage() {
 // 🔐 3. Create profile
 const profileData: any = {
     id: data.user.id,
-    role: role,
+    role: selectedRole,
     enrollment_number: enrollment || null,
     advocate_enrollment_number: enrollment || null,
     subscription_plan: "free",
@@ -135,22 +144,15 @@ if (profileError) {
                 <h2 className="text-2xl font-bold mb-8 text-gray-900 text-center">Create Account</h2>
 
                 <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Select Role</label>
-                        <select 
-                            onChange={(e) => setRole(e.target.value)}
-                            className="w-full border border-gray-200 p-3.5 rounded-xl focus:ring-2 focus:ring-[#089CCE] focus:border-transparent outline-none transition bg-gray-50"
-                        >
-                            <option value="advocate">Advocate</option>
-                            <option value="admin">Admin</option>
-                            <option value="junior advocates">Junior Advocate</option>
-                            <option value="staff(clerks)">Staff / Clerk</option>
-                            <option value="client">Client</option>
-                            <option value="litigant">Litigant</option>
-                            <option value="public">Public</option>
-                        </select>
-                    </div>
+<div>
+    <label className="block text-sm font-semibold text-gray-700 mb-1">
+        Selected Role
+    </label>
 
+    <div className="w-full border border-gray-200 p-3.5 rounded-xl bg-gray-100">
+        {selectedRole}
+    </div>
+</div>
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
                         <input 
