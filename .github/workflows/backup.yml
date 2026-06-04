@@ -16,7 +16,7 @@ steps:
   - name: Checkout Repository
     uses: actions/checkout@v4
 
-  - name: Create Backup Archive
+  - name: Create Backup Zip
     run: |
       zip -r suitcase-backup.zip . \
       -x "node_modules/*" \
@@ -29,4 +29,3 @@ steps:
       name: suitcase-backup
       path: suitcase-backup.zip
       retention-days: 30
-```
