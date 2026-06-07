@@ -1,145 +1,168 @@
 import { useEffect, useState } from "react";
-import {
-    getTimeline,
-    addTimeline,
-    deleteTimeline,
-} from "../../services/case-timeline-service";
 
-export default function CaseTimeline({ caseId }: any) {
-    const [timeline, setTimeline] = useState<any[]>([]);
-    const [form, setForm] = useState({
-        hearing_date: "",
-        notes: "",
-        next_date: "",
-        stage: "",
-    });
+import {
+    createTimelineEvent,
+    getCaseTimeline,
+} from "@/services/case-timeline-service";
+
+type Props = {
+    caseId: string;
+};
+
+export default function CaseTimeline({ caseId }: Props) {
+    const [events, setEvents] = useState<any[]>([]);
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [hearingDate, setHearingDate] = useState("");
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         loadTimeline();
-    }, []);
+    }, [caseId]);
 
     const loadTimeline = async () => {
-        const data = await getTimeline(caseId);
-        setTimeline(data || []);
+        try {
+            const data = await getCaseTimeline(caseId);
+            setEvents(data || []);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    const handleAdd = async () => {
-        if (!form.hearing_date) return alert("Enter hearing date");
+    const handleCreate = async () => {
+        if (!title) {
+            alert("Event title required");
+            return;
+        }
 
-        await addTimeline({
-            ...form,
-            case_id: caseId,
-        });
+        try {
+            setLoading(true);
 
-        setForm({
-            hearing_date: "",
-            notes: "",
-            next_date: "",
-            stage: "",
-        });
+            await createTimelineEvent({
+                case_id: caseId,
+                title,
+                description,
+                hearing_date: hearingDate || null,
+                event_type: "hearing",
+            });
 
-        loadTimeline();
-    };
+            setTitle("");
+            setDescription("");
+            setHearingDate("");
 
-    const handleDelete = async (id: string) => {
-        await deleteTimeline(id);
-        loadTimeline();
+            await loadTimeline();
+        } catch (err: any) {
+            console.error(err);
+            alert(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <div className="border p-4 mt-6">
+        <div className="bg-white border border-gray-100 rounded-3xl shadow-sm p-6 mt-6">
 
-            <h3 className="font-bold mb-3">
-                📖 Case Diary / Timeline
-            </h3>
+            <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                    Case Timeline
+                </h2>
 
-            {/* ➕ ADD ENTRY */}
-            <div className="space-y-2 mb-4">
+                <p className="text-gray-500 mt-1">
+                    Hearings, orders, and litigation progress.
+                </p>
+            </div>
 
-                <input
-                    type="date"
-                    className="border p-2 w-full"
-                    value={form.hearing_date}
-                    onChange={(e) =>
-                        setForm({ ...form, hearing_date: e.target.value })
-                    }
-                />
+            {/* CREATE EVENT */}
+
+            <div className="border border-gray-100 rounded-2xl p-5 bg-gray-50 space-y-4">
 
                 <input
-                    placeholder="Stage (Evidence / Arguments)"
-                    className="border p-2 w-full"
-                    value={form.stage}
-                    onChange={(e) =>
-                        setForm({ ...form, stage: e.target.value })
-                    }
+                    type="text"
+                    placeholder="Event Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full border border-gray-200 rounded-xl p-3"
                 />
 
                 <textarea
-                    placeholder="Hearing Notes"
-                    className="border p-2 w-full"
-                    value={form.notes}
-                    onChange={(e) =>
-                        setForm({ ...form, notes: e.target.value })
-                    }
+                    placeholder="Description / Proceedings"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full border border-gray-200 rounded-xl p-3 min-h-[100px]"
                 />
 
                 <input
-                    type="date"
-                    className="border p-2 w-full"
-                    value={form.next_date}
-                    onChange={(e) =>
-                        setForm({ ...form, next_date: e.target.value })
-                    }
+                    type="datetime-local"
+                    value={hearingDate}
+                    onChange={(e) => setHearingDate(e.target.value)}
+                    className="border border-gray-200 rounded-xl p-3"
                 />
 
                 <button
-                    onClick={handleAdd}
-                    className="bg-green-600 text-white p-2 w-full"
+                    onClick={handleCreate}
+                    disabled={loading}
+                    className="bg-[#089CCE] text-white px-6 py-3 rounded-2xl font-bold hover:bg-[#078bb8] transition disabled:opacity-50"
                 >
-                    Add Hearing Entry
+                    {loading ? "Saving..." : "Add Timeline Event"}
                 </button>
             </div>
 
-            {/* 📋 TIMELINE LIST */}
-            <div className="space-y-3">
+            {/* TIMELINE */}
 
-                {timeline.map((t) => (
+            <div className="mt-8 space-y-5">
+
+                {events.length === 0 && (
+                    <div className="text-center py-10 text-gray-400">
+                        No timeline events yet.
+                    </div>
+                )}
+
+                {events.map((event) => (
                     <div
-                        key={t.id}
-                        className="border p-3 bg-gray-50"
+                        key={event.id}
+                        className="border-l-4 border-[#089CCE] bg-blue-50/30 rounded-r-2xl p-5"
                     >
-                        <p>
-                            <strong>Date:</strong>{" "}
-                            {new Date(t.hearing_date).toLocaleDateString()}
-                        </p>
+                        <div className="flex items-center justify-between">
+                            <h3 className="font-bold text-lg text-gray-900">
+                                {event.title}
+                            </h3>
 
-                        <p>
-                            <strong>Stage:</strong> {t.stage || "-"}
-                        </p>
+                            <span className="text-xs bg-[#089CCE] text-white px-3 py-1 rounded-full">
+                                {event.event_type}
+                            </span>
+                        </div>
 
-                        <p>
-                            <strong>Notes:</strong> {t.notes || "-"}
-                        </p>
+                        {event.hearing_date && (
+                            <p className="text-sm text-gray-500 mt-2">
+                                📅{" "}
+                                {new Date(
+                                    event.hearing_date
+                                ).toLocaleString()}
+                            </p>
+                        )}
 
-                        <p>
-                            <strong>Next Date:</strong>{" "}
-                            {t.next_date
-                                ? new Date(t.next_date).toLocaleDateString()
-                                : "-"}
-                        </p>
+                        {event.description && (
+                            <p className="mt-3 text-gray-700 whitespace-pre-wrap">
+                                {event.description}
+                            </p>
+                        )}
 
-                        <button
-                            onClick={() => handleDelete(t.id)}
-                            className="text-red-600 mt-2"
-                        >
-                            Delete
-                        </button>
+                        {event.order_summary && (
+                            <div className="mt-3 bg-white border border-gray-100 rounded-xl p-3">
+                                <p className="text-sm font-semibold text-gray-700">
+                                    Order Summary
+                                </p>
+
+                                <p className="text-sm text-gray-600 mt-1">
+                                    {event.order_summary}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 ))}
-
             </div>
         </div>
     );
 }
-
-

@@ -34,6 +34,7 @@ import ReportsPage from "@/pages/Reports";
 import PublicLoginPage from "@/pages/portal/PublicLoginPage";
 import CalendarPage from "@/pages/calendar/CalendarPage";
 import { SettingsPage } from "@/pages/SettingsPage";
+import ProfileSettingsPage from "@/pages/profile/ProfileSettingsPage";
 
 //  Admin Pages
 import SubscriptionPage from "@/pages/subscription/SubscriptionPage";
@@ -65,6 +66,7 @@ import Onboarding from "@/pages/onboarding/index";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentFailed from "@/pages/PaymentFailed";
 import AffiliateDashboard from "@/pages/affiliate/AffiliateDashboard";
+import CreateCasePage from "@/pages/cases/CreateCasePage";
 
 // ❌ 404 Page (create if missing)
 const NotFound = () => <div>404 - Page Not Found</div>;
@@ -87,6 +89,7 @@ export default function AppRoutes() {
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/payment-failed" element={<PaymentFailed />} />
+            <Route path="/settings/profile" element={<ProfileSettingsPage />} />
 
             {/* ADMIN */}
             <Route
@@ -127,7 +130,18 @@ export default function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
-
+            <Route
+    path="/profile"
+    element={
+        <ProtectedRoute>
+            <ProfileSettingsPage />
+        </ProtectedRoute>
+    }
+/>
+<Route
+    path="/settings/profile"
+    element={<ProfileSettingsPage />}
+/>
             <Route
                 path="/advocate/clients"
                 element={
@@ -154,6 +168,20 @@ export default function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+            <Route
+    path="/cases/create"
+    element={
+        <ProtectedRoute
+            allowedRoles={[
+                "advocate",
+                "junior advocates",
+                "staff(clerks)"
+            ]}
+        >
+            <CreateCasePage />
+        </ProtectedRoute>
+    }
+/>
 
             <Route
                 path="/advocate/fees"

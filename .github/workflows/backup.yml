@@ -1,31 +1,33 @@
-name: SUITCASE Backup Checkpoint
+name: SUITCASE Backup
 
 on:
-push:
-branches:
-- main
-- stable/**
-workflow_dispatch:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
 
 jobs:
-backup:
-runs-on: ubuntu-latest
+  backup:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  - name: Create Backup Zip
-    run: |
-      zip -r suitcase-backup.zip . \
-      -x "node_modules/*" \
-      -x ".git/*" \
-      -x "dist/*"
+      - name: Create ZIP Backup
+        run: |
+          zip -r suitcase-backup.zip . \
+          -x "*.git*" \
+          -x "node_modules/*" \
+          -x "dist/*"
 
-  - name: Upload Backup Artifact
-    uses: actions/upload-artifact@v4
-    with:
-      name: suitcase-backup
-      path: suitcase-backup.zip
-      retention-days: 30
+      - name: Upload Backup Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: suitcase-backup
+          path: suitcase-backup.zip
+      - name: Cleanup ZIP File
+        run: rm suitcase-backup.zip
+      - name: Notify Backup Completion
+        run: echo "SUITCASE backup completed successfully!"

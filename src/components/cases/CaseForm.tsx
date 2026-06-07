@@ -1,56 +1,151 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-export default function CaseForm({ onSave, editData, clients }: any) {
-    const [form, setForm] = useState({
-        client_id: "",
-        case_title: "",
-        court_name: "",
-        case_type: "",
-        case_number: "",
-        filing_date: "",
-        next_date: "",
-        status: "",
-    });
+type Props = {
+    initialValues?: any;
+    onSubmit: (values: any) => Promise<void>;
+    loading?: boolean;
+};
 
-    useEffect(() => {
-        if (editData) setForm(editData);
-    }, [editData]);
+export default function CaseForm({
+    initialValues,
+    onSubmit,
+    loading = false,
+}: Props) {
+    const [caseTitle, setCaseTitle] = useState(
+        initialValues?.case_title || ""
+    );
 
-    const handleChange = (e: any) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+    const [caseNumber, setCaseNumber] = useState(
+        initialValues?.case_number || ""
+    );
+
+    const [courtName, setCourtName] = useState(
+        initialValues?.court_name || ""
+    );
+
+    const [status, setStatus] = useState(
+        initialValues?.status || "active"
+    );
+
+    const [error, setError] = useState("");
+
+    const handleSubmit = async () => {
+        if (!caseTitle) {
+            setError("Case title is required");
+            return;
+        }
+
+        setError("");
+
+        try {
+            await onSubmit({
+                case_title: caseTitle,
+                case_number: caseNumber,
+                court_name: courtName,
+                status,
+            });
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || "Failed to save case");
+        }
     };
 
     return (
-        <div className="border p-4 mb-4">
-            <h3 className="font-bold mb-2">Case Form</h3>
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+            <div className="mb-8">
+                <h2 className="text-3xl font-bold text-gray-900">
+                    Case Information
+                </h2>
 
-            <select name="client_id" onChange={handleChange}>
-                <option value="">Select Client</option>
-                {clients?.map((c: any) => (
-                    <option key={c.id} value={c.id}>
-                        {c.name}
-                    </option>
-                ))}
-            </select>
+                <p className="text-gray-500 mt-2">
+                    Create and manage litigation matters professionally.
+                </p>
+            </div>
 
-            <input name="state_code" placeholder="State Code" />
-            <input name="district_code" placeholder="District Code" />
-            <input name="court_code" placeholder="Court Code" />
-            <input name="case_number" placeholder="Case Number" />
-            <input name="case_year" placeholder="Year" />
-            <input name="case_title" placeholder="Case Title" onChange={handleChange} />
-            <input name="court_name" placeholder="Court Name" onChange={handleChange} />
-            <input name="case_type" placeholder="Case Type" onChange={handleChange} />
-            <input name="case_number" placeholder="Case Number" onChange={handleChange} />
-            <input name="filing_date" type="date" onChange={handleChange} />
-            <input name="next_date" type="date" onChange={handleChange} />
-            <input name="status" placeholder="Status" onChange={handleChange} />
+            {error && (
+                <div className="mb-6 bg-red-50 border border-red-100 text-red-600 p-4 rounded-2xl text-sm">
+                    {error}
+                </div>
+            )}
 
-            <button onClick={() => onSave(form)} className="bg-blue-500 text-white p-2 mt-2">
-                Save Case
-            </button>
+            <div className="space-y-6">
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Case Title
+                    </label>
+
+                    <input
+                        type="text"
+                        value={caseTitle}
+                        onChange={(e) =>
+                            setCaseTitle(e.target.value)
+                        }
+                        placeholder="e.g. Sharma vs State of Punjab"
+                        className="w-full border border-gray-200 rounded-2xl p-4 focus:ring-2 focus:ring-[#089CCE] outline-none"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Case Number
+                    </label>
+
+                    <input
+                        type="text"
+                        value={caseNumber}
+                        onChange={(e) =>
+                            setCaseNumber(e.target.value)
+                        }
+                        placeholder="e.g. CRM-M-1234-2026"
+                        className="w-full border border-gray-200 rounded-2xl p-4 focus:ring-2 focus:ring-[#089CCE] outline-none"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Court Name
+                    </label>
+
+                    <input
+                        type="text"
+                        value={courtName}
+                        onChange={(e) =>
+                            setCourtName(e.target.value)
+                        }
+                        placeholder="Punjab & Haryana High Court"
+                        className="w-full border border-gray-200 rounded-2xl p-4 focus:ring-2 focus:ring-[#089CCE] outline-none"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Status
+                    </label>
+
+                    <select
+                        value={status}
+                        onChange={(e) =>
+                            setStatus(e.target.value)
+                        }
+                        className="w-full border border-gray-200 rounded-2xl p-4 focus:ring-2 focus:ring-[#089CCE] outline-none bg-white"
+                    >
+                        <option value="active">Active</option>
+                        <option value="pending">Pending</option>
+                        <option value="disposed">Disposed</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+
+                <button
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="w-full bg-[#089CCE] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#078bb8] transition shadow-lg shadow-[#089CCE]/20 disabled:opacity-50"
+                >
+                    {loading
+                        ? "Saving..."
+                        : "Save Case"}
+                </button>
+            </div>
         </div>
     );
 }
-
-

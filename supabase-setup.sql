@@ -519,6 +519,14 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS referral_code TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS referred_by TEXT;
 
 ALTER TABLE profiles
+ADD COLUMN IF NOT EXISTS avatar_url TEXT,
+ADD COLUMN IF NOT EXISTS signature_url TEXT,
+ADD COLUMN IF NOT EXISTS phone TEXT,
+ADD COLUMN IF NOT EXISTS chamber_name TEXT,
+ADD COLUMN IF NOT EXISTS website TEXT,
+ADD COLUMN IF NOT EXISTS professional_title TEXT;
+
+ALTER TABLE profiles
 ADD COLUMN is_affiliate BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE profiles
@@ -602,6 +610,41 @@ ADD COLUMN first_case_created BOOLEAN DEFAULT FALSE;
 ALTER TABLE profiles
 ADD COLUMN phone TEXT;
 
+<<<<<<< HEAD
+=======
+ALTER TABLE profiles
+ADD COLUMN plan_selected BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE profiles
+ADD COLUMN avatar_url TEXT;
+
+ALTER TABLE profiles
+ADD COLUMN bio TEXT;
+
+ALTER TABLE profiles
+ADD COLUMN address TEXT;
+
+ALTER TABLE profiles
+ADD COLUMN practice_areas TEXT[];
+
+ALTER TABLE profiles
+ADD COLUMN bar_council TEXT;
+
+CREATE POLICY "Users can update own files"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (
+    auth.uid()::text = (storage.foldername(name))[1]
+);
+
+CREATE POLICY "Public read access"
+ON storage.objects
+FOR SELECT
+TO public
+USING ( true );
+
+>>>>>>> 20dde84 (Added Case Timeline Engine + GitHub Backup Actions)
 SELECT
     enrollment_number,
     COUNT(*)
@@ -653,6 +696,135 @@ BEGIN
            LPAD(seq_num::TEXT, 4, '0');
 END;
 $$;
+
+DROP POLICY IF EXISTS "Users can upload own files" ON storage.objects;
+
+DROP POLICY IF EXISTS "Users can update own files" ON storage.objects;
+
+DROP POLICY IF EXISTS "Users can delete own files" ON storage.objects;
+
+DROP POLICY IF EXISTS "Public read access" ON storage.objects;
+
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+
+DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
+
+CREATE POLICY "Avatar Upload Policy"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'avatars'
+);
+
+CREATE POLICY "Avatar Read Policy"
+ON storage.objects
+FOR SELECT
+TO public
+USING (
+    bucket_id = 'avatars'
+);
+
+CREATE POLICY "Avatar Update Policy"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (
+    bucket_id = 'avatars'
+);
+
+CREATE POLICY "Avatar Delete Policy"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (
+    bucket_id = 'avatars'
+);
+
+CREATE POLICY "Signature Upload Policy"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'signatures'
+);
+
+CREATE POLICY "Signature Read Policy"
+ON storage.objects
+FOR SELECT
+TO public
+USING (
+    bucket_id = 'signatures'
+);
+
+CREATE POLICY "Signature Update Policy"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (
+    bucket_id = 'signatures'
+);
+
+CREATE POLICY "Signature Delete Policy"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (
+    bucket_id = 'signatures'
+);
+
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own profile"
+ON profiles
+FOR SELECT
+TO authenticated
+USING (
+    auth.uid() = id
+);
+
+CREATE POLICY "Users can update own profile"
+ON profiles
+FOR UPDATE
+TO authenticated
+USING (
+    auth.uid() = id
+);
+
+CREATE POLICY "Users can upload own logos"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'logos'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+);
+
+CREATE POLICY "Users can update own logos"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (
+    bucket_id = 'logos'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+);
+
+CREATE POLICY "Users can delete own logos"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (
+    bucket_id = 'logos'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+);
+
+CREATE POLICY "Public read access logos"
+ON storage.objects
+FOR SELECT
+TO public
+USING (
+    bucket_id = 'logos'
+);
 
 -- 4. Create/Replace Trigger Function
 CREATE OR REPLACE FUNCTION set_invoice_number()
@@ -762,6 +934,85 @@ on profiles
 for insert
 with check (auth.uid() = id);
 
+CREATE TABLE IF NOT EXISTS cases (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    created_by UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+
+    title TEXT NOT NULL,
+    case_number TEXT,
+    court_name TEXT,
+    case_type TEXT,
+
+    client_name TEXT,
+    opposite_party TEXT,
+
+    filing_date DATE,
+    next_hearing DATE,
+
+    stage TEXT DEFAULT 'Filing',
+
+    description TEXT,
+
+    status TEXT DEFAULT 'active',
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+SELECT * FROM cases;
+
+ALTER TABLE cases ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE cases
+ADD COLUMN created_by UUID REFERENCES auth.users(id);
+
+UPDATE cases
+SET created_by = auth.uid()
+WHERE created_by IS NULL;
+
+ALTER TABLE cases ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own cases"
+ON cases
+FOR SELECT
+TO authenticated
+USING (
+    created_by = auth.uid()
+);
+
+CREATE POLICY "Users can manage own cases"
+ON cases
+FOR ALL
+TO authenticated
+USING (
+    created_by = auth.uid()
+);
+
+CREATE POLICY "Users can create own cases"
+ON cases
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    created_by = auth.uid()
+);
+
+CREATE POLICY "Users can update own cases"
+ON cases
+FOR UPDATE
+TO authenticated
+USING (
+    created_by = auth.uid()
+);
+
+CREATE POLICY "Users can delete own cases"
+ON cases
+FOR DELETE
+TO authenticated
+USING (
+    created_by = auth.uid()
+);
+
 -- admin / advocate full access
 -- 1. Update Profiles Table (Adding Organization and Subscription columns)
 -- 1. Add organization_id to PROFILES first
@@ -773,6 +1024,10 @@ ALTER TABLE public.cases
 ADD COLUMN IF NOT EXISTS organization_id UUID;
 
 alter table cases enable row level security;
+
+ALTER TABLE cases
+ALTER COLUMN status
+SET DEFAULT 'active';
 
 create policy "Own cases only"
 on cases for all
@@ -841,9 +1096,97 @@ CREATE TABLE IF NOT EXISTS public.case_documents (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS documents (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
+
+    uploaded_by UUID REFERENCES profiles(id) ON DELETE CASCADE,
+
+    file_name TEXT,
+    file_url TEXT,
+    file_type TEXT,
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE POLICY "Users can upload case documents"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'case-documents'
+);
+
+CREATE POLICY "Public read case documents"
+ON storage.objects
+FOR SELECT
+TO public
+USING (
+    bucket_id = 'case-documents'
+);
+
+CREATE POLICY "Users can delete case documents"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (
+    bucket_id = 'case-documents'
+);
+
+DROP POLICY IF EXISTS "Users can view own documents" ON documents;
+
+DROP POLICY IF EXISTS "Users can upload own documents" ON documents;
+
+DROP POLICY IF EXISTS "Users can update own documents" ON documents;
+
+DROP POLICY IF EXISTS "Users can delete own documents" ON documents;
+
+DROP POLICY IF EXISTS "Users can view own documents" ON documents;
+
+DROP POLICY IF EXISTS "Users can upload own documents" ON documents;
+
+DROP POLICY IF EXISTS "Users can update own documents" ON documents;
+
+DROP POLICY IF EXISTS "Users can delete own documents" ON documents;
+
+ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+
 -- 2. Add the document_type column (since the error says it's missing)
 ALTER TABLE public.case_documents 
 ADD COLUMN IF NOT EXISTS document_type TEXT;
+
+CREATE POLICY "Users can view own documents"
+ON documents
+FOR SELECT
+TO authenticated
+USING (
+    user_id = auth.uid()
+);
+
+CREATE POLICY "Users can upload own documents"
+ON documents
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    user_id = auth.uid()
+);
+
+CREATE POLICY "Users can update own documents"
+ON documents
+FOR UPDATE
+TO authenticated
+USING (
+    user_id = auth.uid()
+);
+
+CREATE POLICY "Users can delete own documents"
+ON documents
+FOR DELETE
+TO authenticated
+USING (
+    user_id = auth.uid()
+);
 
 
 -- 3. Now create the indexes
