@@ -1,139 +1,374 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/supabase-client";
-import { useProfile } from "../../hooks/use-profile";
+import AvatarUpload from "@/components/profile/AvatarUpload";
+import SignatureUpload from "@/components/profile/SignatureUpload";
+import {
+    calculateProfileCompletion,
+} from "@/utils/profile-completion";
+import LogoUpload from "@/components/profile/LogoUpload";
 
-const ProfileSettingsPage: React.FC = () => {
-    const { profile, refetch } = useProfile();
+type Profile = {
+    full_name?: string;
+    phone?: string;
+    chamber_name?: string;
+    website?: string;
+    professional_title?: string;
+    avatar_url?: string;
+    logo_url?: string;
+    signature_url?: string;
+    bio?: string;
+    address?: string;
+    practice_areas?: string;
+    bar_council?: string;
+};
 
-    const [formData, setFormData] = useState<any>({
+export default function ProfileSettingsPage() {
+    const [userId, setUserId] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    
+    const [profile, setProfile] = useState<Profile>({
         full_name: "",
-        enrollment_number: "",
-        chamber_name: "",
         phone: "",
-        email: "",
+        chamber_name: "",
         website: "",
-        address: "",
+        professional_title: "",
+        avatar_url: "",
         logo_url: "",
         signature_url: "",
+        bio: "",
+        address: "",
+        practice_areas: "",
+        bar_council: "",
     });
 
-    useEffect(() => {
-        if (profile) {
-            setFormData(profile);
-        }
-    }, [profile]);
+    const completion = calculateProfileCompletion(profile);
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+    useEffect(() => {
+        loadProfile();
+    }, []);
+
+    const loadProfile = async () => {
+        try {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+
+            if (!user) return;
+
+            setUserId(user.id);
+
+            const { data, error } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", user.id)
+                .single();
+
+            if (error) throw error;
+
+            if (data) {
+                setProfile(data);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const uploadFile = async (
-        e: React.ChangeEvent<HTMLInputElement>,
-        bucket: string
-    ) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+const saveProfile = async () => {
+    try {
+        setSaving(true);
 
-        const { data: userData } = await supabase.auth.getUser();
-        const user = userData.user;
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
 
-        if (!user) return;
-
-        const filePath = `${user.id}-${Date.now()}`;
-
-        const { error } = await supabase.storage
-            .from(bucket)
-            .upload(filePath, file, { upsert: true });
-
-        if (error) {
-            alert("Upload failed");
+        if (!user) {
+            alert("User not found");
             return;
         }
 
-        const { data } = supabase.storage
-            .from(bucket)
-            .getPublicUrl(filePath);
+        const updateData = {
+            full_name: profile.full_name || "",
+            professional_title: profile.professional_title || "",
+            phone: profile.phone || "",
+            chamber_name: profile.chamber_name || "",
+            website: profile.website || "",
+            bio: profile.bio || "",
+            address: profile.address || "",
+            practice_areas: profile.practice_areas
+    ? profile.practice_areas
+          .split(",")
+          .map((item: string) => item.trim())
+    : [],
+            bar_council: profile.bar_council || "",
+            avatar_url: profile.avatar_url || "",
+            signature_url: profile.signature_url || "",
+            logo_url: profile.logo_url || "",
+            profile_completed: true,
+            updated_at: new Date().toISOString(),
+        };
 
-        setFormData((prev: any) => ({
-            ...prev,
-            [`${bucket.slice(0, -1)}_url`]: data.publicUrl,
-        }));
-    };
+        console.log("UPDATING PROFILE:", updateData);
 
-    const handleSubmit = async (
-        e: React.FormEvent
-    ) => {
-        e.preventDefault();
+        const { error } = await supabase
+            .from("profiles")
+            .update(updateData)
+            .eq("id", user.id);
 
-        const { data: userData } = await supabase.auth.getUser();
-        const user = userData.user;
+        if (error) {
+            console.error(error);
+            alert(error.message);
+            return;
+        }
 
-        if (!user) return;
-
-        await supabase.from("profiles").upsert({
-            id: user.id,
-            ...formData,
-        });
-
-        alert("Profile updated successfully!");
-        refetch();
-    };
-
-    return (
-        <div className="max-w-4xl mx-auto bg-white p-8 shadow rounded">
-            <h2 className="text-2xl font-bold mb-6">
-                Advocate Branding Profile
-            </h2>
-
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-                <input name="full_name" placeholder="Full Name"
-                    value={formData.full_name || ""} onChange={handleChange} className="border p-2" />
-
-                <input name="enrollment_number" placeholder="Enrollment Number"
-                    value={formData.enrollment_number || ""} onChange={handleChange} className="border p-2" />
-
-                <input name="chamber_name" placeholder="Chamber Name"
-                    value={formData.chamber_name || ""} onChange={handleChange} className="border p-2" />
-
-                <input name="phone" placeholder="Phone"
-                    value={formData.phone || ""} onChange={handleChange} className="border p-2" />
-
-                <input name="email" placeholder="Email"
-                    value={formData.email || ""} onChange={handleChange} className="border p-2" />
-
-                <input name="website" placeholder="Website"
-                    value={formData.website || ""} onChange={handleChange} className="border p-2" />
-
-                <input name="address" placeholder="Address"
-                    value={formData.address || ""} onChange={handleChange} className="border p-2 col-span-2" />
-
-                <div>
-                    <label className="block mb-1">Upload Logo</label>
-                    <input type="file" onChange={(e) => uploadFile(e, "logos")} />
-                </div>
-
-                <div>
-                    <label className="block mb-1">Upload Signature</label>
-                    <input type="file" onChange={(e) => uploadFile(e, "signatures")} />
-                </div>
-
-                <button
-                    type="submit"
-                    className="col-span-2 bg-blue-600 text-white py-2 rounded"
-                >
-                    Save Profile
-                </button>
-            </form>
-        </div>
-    );
+        alert("Profile updated successfully");
+    } catch (error) {
+        console.error(error);
+        alert("Failed to update profile");
+    } finally {
+        setSaving(false);
+    }
 };
 
-export default ProfileSettingsPage;
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                Loading profile...
+            </div>
+        );
+    }
 
+    return (
+        <div className="min-h-screen bg-gray-50 py-10 px-4">
+            <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+                <div className="flex items-center justify-between mb-10">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900">
+                            Profile Settings
+                        </h1>
 
+                        <p className="text-gray-500 mt-2">
+                            Manage your professional identity.
+                        </p>
+                    </div>
 
+                    <div className="text-right">
+                        <div className="text-sm text-gray-500 mb-2">
+                            Profile Completion
+                        </div>
+
+                        <div className="text-3xl font-bold text-[#089CCE]">
+                            {completion}%
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-10">
+                    <div className="space-y-6">
+                        <AvatarUpload
+                            userId={userId}
+                            avatarUrl={profile.avatar_url}
+                            onUpload={(url) =>
+                                setProfile({
+                                    ...profile,
+                                    avatar_url: url,
+                                })
+                            }
+                        />
+                        <LogoUpload
+    logoUrl={profile.logo_url}
+    onUpload={(url) =>
+        setProfile((prev: any) => ({
+            ...prev,
+            logo_url: url,
+        }))
+    }
+/>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Full Name
+                            </label>
+
+                            <input
+                                value={profile.full_name || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        full_name: e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Professional Title
+                            </label>
+
+                            <input
+                                value={profile.professional_title || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        professional_title:
+                                            e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Mobile Number
+                            </label>
+
+                            <input
+                                value={profile.phone || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        phone: e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Chamber Name
+                            </label>
+
+                            <input
+                                value={profile.chamber_name || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        chamber_name: e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Website
+                            </label>
+
+                            <input
+                                value={profile.website || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        website: e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-6">
+                        <SignatureUpload
+                            userId={userId}
+                            signatureUrl={profile.signature_url}
+                            onUpload={(url) =>
+                                setProfile({
+                                    ...profile,
+                                    signature_url: url,
+                                })
+                            }
+                        />
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Bio
+                            </label>
+
+                            <textarea
+                                rows={4}
+                                value={profile.bio || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        bio: e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Address
+                            </label>
+
+                            <textarea
+                                rows={3}
+                                value={profile.address || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        address: e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Practice Areas
+                            </label>
+
+                            <input
+                                value={profile.practice_areas || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        practice_areas:
+                                            e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Bar Council
+                            </label>
+
+                            <input
+                                value={profile.bar_council || ""}
+                                onChange={(e) =>
+                                    setProfile({
+                                        ...profile,
+                                        bar_council:
+                                            e.target.value,
+                                    })
+                                }
+                                className="w-full border rounded-xl p-3"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-10">
+                    <button
+                        onClick={saveProfile}
+                        className="bg-[#089CCE] text-white px-8 py-4 rounded-2xl font-bold shadow-lg"
+                    >
+                        Save Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}

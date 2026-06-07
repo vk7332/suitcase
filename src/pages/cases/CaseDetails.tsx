@@ -114,7 +114,7 @@ export default function CaseDetails() {
                                 <AutopilotBox />
                                 <LimitationBox caseId={caseId!} />
                                 <LifecycleTracker />
-                                <Timeline />
+                                <Timeline caseId={caseId!} />
                             </div>
                         </section>
                     </div>

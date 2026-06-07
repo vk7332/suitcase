@@ -1,28 +1,36 @@
 import { supabase } from "@/utils/supabase/supabase-client";
 
-// 📥 Get timeline
-export async function getTimeline(caseId: string) {
-    const { data } = await supabase
+export async function getCaseTimeline(caseId: string) {
+    const { data, error } = await supabase
         .from("case_timeline")
         .select("*")
         .eq("case_id", caseId)
         .order("hearing_date", { ascending: false });
 
+    if (error) throw error;
+
     return data;
 }
 
-// ➕ Add entry
-export async function addTimeline(entry: any) {
-    await supabase.from("case_timeline").insert([entry]);
-}
+export async function createTimelineEvent(payload: any) {
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
 
-// ❌ Delete entry
-export async function deleteTimeline(id: string) {
-    await supabase
+    if (!user) {
+        throw new Error("User not authenticated");
+    }
+
+    const { data, error } = await supabase
         .from("case_timeline")
-        .delete()
-        .eq("id", id);
+        .insert({
+            ...payload,
+            user_id: user.id,
+        })
+        .select()
+        .single();
+
+    if (error) throw error;
+
+    return data;
 }
-
-
-
