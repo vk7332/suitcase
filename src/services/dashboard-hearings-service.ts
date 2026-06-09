@@ -1,33 +1,6 @@
 import { supabase } from "@/utils/supabase/supabase-client";
 
-export async function getTodayCauseList() {
-    const today = new Date()
-        .toISOString()
-        .split("T")[0];
-
-    const { data, error } = await supabase
-        .from("hearings")
-        .select(`
-            *,
-            cases (
-                id,
-                case_title,
-                case_number,
-                court_name,
-                status
-            )
-        `)
-        .eq("hearing_date", today)
-        .order("hearing_date", {
-            ascending: true,
-        });
-
-    if (error) throw error;
-
-    return data || [];
-}
-
-export async function getUpcomingCauseList() {
+export async function getUpcomingHearings() {
     const today = new Date();
 
     const next7Days = new Date();
@@ -48,8 +21,7 @@ export async function getUpcomingCauseList() {
                 id,
                 case_title,
                 case_number,
-                court_name,
-                status
+                court_name
             )
         `)
         .gte("hearing_date", todayStr)

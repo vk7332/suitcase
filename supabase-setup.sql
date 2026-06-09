@@ -610,8 +610,6 @@ ADD COLUMN first_case_created BOOLEAN DEFAULT FALSE;
 ALTER TABLE profiles
 ADD COLUMN phone TEXT;
 
-<<<<<<< HEAD
-=======
 ALTER TABLE profiles
 ADD COLUMN plan_selected BOOLEAN DEFAULT FALSE;
 
@@ -644,7 +642,6 @@ FOR SELECT
 TO public
 USING ( true );
 
->>>>>>> 20dde84 (Added Case Timeline Engine + GitHub Backup Actions)
 SELECT
     enrollment_number,
     COUNT(*)
@@ -1188,6 +1185,125 @@ USING (
     user_id = auth.uid()
 );
 
+CREATE TABLE IF NOT EXISTS case_timeline (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    case_id UUID NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
+
+    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+
+    title TEXT NOT NULL,
+
+    description TEXT,
+
+    event_type TEXT DEFAULT 'hearing',
+
+    hearing_date TIMESTAMP,
+
+    next_date TIMESTAMP,
+
+    court_stage TEXT,
+
+    order_summary TEXT,
+
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+ALTER TABLE case_timeline ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage case timeline"
+ON case_timeline
+FOR ALL
+TO authenticated
+USING (
+    case_id IN (
+        SELECT id FROM cases
+        WHERE user_id = auth.uid()
+    )
+);
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS next_hearing_date DATE;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS description TEXT;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS case_stage TEXT;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS priority TEXT DEFAULT 'normal';
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE DEFAULT now();
+
+CREATE TABLE IF NOT EXISTS hearings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
+
+    created_by UUID REFERENCES auth.users(id),
+
+    hearing_date DATE NOT NULL,
+
+    stage TEXT,
+
+    court_hall TEXT,
+
+    proceedings TEXT,
+
+    adjournment_reason TEXT,
+
+    next_action TEXT,
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+ALTER TABLE hearings
+ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES auth.users(id);
+
+ALTER TABLE hearings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage hearings"
+ON hearings
+FOR ALL
+TO authenticated
+USING (
+    case_id IN (
+        SELECT id FROM cases
+        WHERE user_id = auth.uid()
+    )
+);
+
+CREATE POLICY "Users can view own hearings"
+ON hearings
+FOR SELECT
+TO authenticated
+USING (
+    created_by = auth.uid()
+);
+
+CREATE POLICY "Users can create own hearings"
+ON hearings
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    created_by = auth.uid()
+);
+
+CREATE POLICY "Users can update own hearings"
+ON hearings
+FOR UPDATE
+TO authenticated
+USING (
+    created_by = auth.uid()
+);
+
+CREATE POLICY "Users can delete own hearings"
+ON hearings
+FOR DELETE
+TO authenticated
+USING (
+    created_by = auth.uid()
+);
 
 -- 3. Now create the indexes
 CREATE INDEX IF NOT EXISTS idx_case_documents_case_id ON public.case_documents(case_id);
@@ -1523,6 +1639,40 @@ CREATE TABLE public.clients (
   email text,
   address text,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now())
+);
+
+ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own clients"
+ON clients
+FOR SELECT
+TO authenticated
+USING (
+    user_id = auth.uid()
+);
+
+CREATE POLICY "Users can create own clients"
+ON clients
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    user_id = auth.uid()
+);
+
+CREATE POLICY "Users can update own clients"
+ON clients
+FOR UPDATE
+TO authenticated
+USING (
+    user_id = auth.uid()
+);
+
+CREATE POLICY "Users can delete own clients"
+ON clients
+FOR DELETE
+TO authenticated
+USING (
+    user_id = auth.uid()
 );
 
 -- Cases belong to a client

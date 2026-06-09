@@ -5,6 +5,7 @@ import { runAutoReminders } from "../../engines/auto-reminder-engine";
 import { useEffect } from "react";
 import { supabase } from "@/utils/supabase/supabase-client";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import UpcomingHearingsCard from "@/components/dashboard/UpcomingHearingsCard";
 
 export default function LegalDashboard() {
     const { user, loading } = useAuth();
@@ -18,6 +19,8 @@ export default function LegalDashboard() {
     }, [user]);
 
     const loadCasesAndClients = async () => {
+        if (!user) return;
+
         const { data: cases } = await supabase
             .from("cases")
             .select("*")
@@ -90,5 +93,3 @@ export default function LegalDashboard() {
         </DashboardLayout>
     );
 }
-
-

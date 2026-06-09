@@ -69,19 +69,23 @@ if (error) {
 return data;
 }
 
-export async function updateCase(id: string, updates: any) {
-const { data, error } = await supabase
-.from("cases")
-.update(updates)
-.eq("id", id)
-.select()
-.single();
+export async function updateCase(
+    caseId: string,
+    updates: any
+) {
+    const { data, error } = await supabase
+        .from("cases")
+        .update({
+            ...updates,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", caseId)
+        .select()
+        .single();
 
-if (error) {
-    throw error;
-}
+    if (error) throw error;
 
-return data;
+    return data;
 }
 
 export async function deleteCase(id: string) {

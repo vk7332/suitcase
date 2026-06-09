@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Briefcase, CalendarDays, FileText, IndianRupee, Scale, Users } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import GlobalSearch from "@/components/search/GlobalSearch";
 
 type Stat = {
     label: string;
@@ -35,6 +36,7 @@ export default function RoleHome({ title, subtitle, stats, actions }: RoleHomePr
         <DashboardLayout>
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+                <GlobalSearch />
                 <p className="text-gray-500 mt-1">{subtitle}</p>
             </div>
 

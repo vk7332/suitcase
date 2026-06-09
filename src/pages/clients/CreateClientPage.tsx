@@ -1,55 +1,34 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
-import { createCase } from "@/services/case-service";
+import { createClient } from "@/services/client-service";
 
-import { getClients } from "@/services/client-service";
-
-export default function CreateCasePage() {
+export default function CreateClientPage() {
     const navigate = useNavigate();
 
-    const [caseTitle, setCaseTitle] =
+    const [clientName, setClientName] =
         useState("");
 
-    const [caseNumber, setCaseNumber] =
+    const [phoneNumber, setPhoneNumber] =
         useState("");
 
-    const [courtName, setCourtName] =
+    const [email, setEmail] =
         useState("");
 
-    const [clientId, setClientId] =
+    const [address, setAddress] =
         useState("");
-
-    const [clients, setClients] =
-        useState<any[]>([]);
 
     const [loading, setLoading] =
         useState(false);
 
-    useEffect(() => {
-        loadClients();
-    }, []);
-
-    const loadClients =
-        async () => {
-            try {
-                const data =
-                    await getClients();
-
-                setClients(data || []);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
     const handleCreate =
         async () => {
-            if (!caseTitle.trim()) {
+            if (!clientName.trim()) {
                 alert(
-                    "Case title is required"
+                    "Client name is required"
                 );
 
                 return;
@@ -58,32 +37,25 @@ export default function CreateCasePage() {
             try {
                 setLoading(true);
 
-                const createdCase =
-                    await createCase({
-                        case_title:
-                            caseTitle,
-
-                        case_number:
-                            caseNumber,
-
-                        court_name:
-                            courtName,
-
-                        client_id:
-                            clientId || null,
-
-                        status: "active",
+                const client =
+                    await createClient({
+                        client_name:
+                            clientName,
+                        phone_number:
+                            phoneNumber,
+                        email,
+                        address,
                     });
 
                 navigate(
-                    `/advocate/cases/${createdCase.id}`
+                    `/clients/${client.id}`
                 );
             } catch (err: any) {
                 console.error(err);
 
                 alert(
                     err.message ||
-                    "Failed to create case"
+                    "Failed to create client"
                 );
             } finally {
                 setLoading(false);
@@ -100,12 +72,12 @@ export default function CreateCasePage() {
                 <div className="mb-8">
 
                     <h1 className="text-4xl font-black text-gray-900">
-                        Create New Case
+                        Add Client
                     </h1>
 
                     <p className="text-gray-500 mt-2">
-                        Start managing a new
-                        litigation matter.
+                        Create a new litigation
+                        client profile.
                     </p>
 
                 </div>
@@ -114,107 +86,87 @@ export default function CreateCasePage() {
 
                 <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 space-y-6">
 
-                    {/* CLIENT */}
+                    {/* CLIENT NAME */}
 
                     <div>
 
                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                            Linked Client
-                        </label>
-
-                        <select
-                            value={clientId}
-                            onChange={(e) =>
-                                setClientId(
-                                    e.target.value
-                                )
-                            }
-                            className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[#089CCE]"
-                        >
-
-                            <option value="">
-                                Select Client
-                            </option>
-
-                            {clients.map(
-                                (client) => (
-                                    <option
-                                        key={
-                                            client.id
-                                        }
-                                        value={
-                                            client.id
-                                        }
-                                    >
-                                        {
-                                            client.client_name
-                                        }
-                                    </option>
-                                )
-                            )}
-
-                        </select>
-
-                    </div>
-
-                    {/* CASE TITLE */}
-
-                    <div>
-
-                        <label className="block text-sm font-bold text-gray-700 mb-2">
-                            Case Title
+                            Client Name
                         </label>
 
                         <input
-                            value={caseTitle}
+                            value={clientName}
                             onChange={(e) =>
-                                setCaseTitle(
+                                setClientName(
                                     e.target.value
                                 )
                             }
-                            placeholder="e.g. Sharma vs State of Punjab"
+                            placeholder="e.g. Rajesh Kumar"
                             className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[#089CCE]"
                         />
 
                     </div>
 
-                    {/* CASE NUMBER */}
+                    {/* PHONE */}
 
                     <div>
 
                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                            Case Number
+                            Phone Number
                         </label>
 
                         <input
-                            value={caseNumber}
+                            value={phoneNumber}
                             onChange={(e) =>
-                                setCaseNumber(
+                                setPhoneNumber(
                                     e.target.value
                                 )
                             }
-                            placeholder="e.g. CRM-M-1234-2026"
+                            placeholder="e.g. 9876543210"
                             className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[#089CCE]"
                         />
 
                     </div>
 
-                    {/* COURT */}
+                    {/* EMAIL */}
 
                     <div>
 
                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                            Court Name
+                            Email Address
                         </label>
 
                         <input
-                            value={courtName}
+                            type="email"
+                            value={email}
                             onChange={(e) =>
-                                setCourtName(
+                                setEmail(
                                     e.target.value
                                 )
                             }
-                            placeholder="e.g. Punjab & Haryana High Court"
+                            placeholder="e.g. client@gmail.com"
+                            className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[#089CCE]"
+                        />
+
+                    </div>
+
+                    {/* ADDRESS */}
+
+                    <div>
+
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                            Address
+                        </label>
+
+                        <textarea
+                            rows={4}
+                            value={address}
+                            onChange={(e) =>
+                                setAddress(
+                                    e.target.value
+                                )
+                            }
+                            placeholder="Client residential or office address..."
                             className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[#089CCE]"
                         />
 
@@ -233,13 +185,13 @@ export default function CreateCasePage() {
                         >
                             {loading
                                 ? "Creating..."
-                                : "Create Case"}
+                                : "Create Client"}
                         </button>
 
                         <button
                             onClick={() =>
                                 navigate(
-                                    "/advocate/cases"
+                                    "/clients"
                                 )
                             }
                             className="border border-gray-200 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 transition"
