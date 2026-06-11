@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import { useParams } from "react-router-dom";
 
 import { supabase } from "@/utils/supabase/supabase-client";
@@ -9,6 +9,10 @@ import CaseTimeline from "@/components/cases/CaseTimeline";
 import DocumentUploader from "@/components/documents/DocumentUploader";
 import EditCaseModal from "@/components/cases/EditCaseModal";
 import CaseStatusBadge from "@/components/cases/CaseStatusBadge";
+import {
+    searchByCNR,
+    openCaseStatusSearch
+} from "@/utils/ecourts";
 
 import { sendWhatsAppReminder } from "@/utils/whatsapp";
 import { sendEmailReminder } from "@/utils/email";
@@ -49,7 +53,16 @@ export default function CaseDetailsPage() {
 
             const { data, error } = await supabase
                 .from("cases")
-                .select("*")
+.select(`
+    *,
+    clients (
+        id,
+        client_name,
+        phone_number,
+        email,
+        address
+    )
+`)
                 .eq("id", id)
                 .single();
 
@@ -92,6 +105,41 @@ export default function CaseDetailsPage() {
             </DashboardLayout>
         );
     }
+
+const openCaseStatus = () => {
+    window.open(
+        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "_blank"
+    );
+};
+
+const openCnrSearch = () => {
+    window.open(
+        "https://services.ecourts.gov.in/",
+        "_blank"
+    );
+};
+
+const openAdvocateSearch = () => {
+    window.open(
+        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "_blank"
+    );
+};
+
+const openCauseList = () => {
+    window.open(
+        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "_blank"
+    );
+};
+
+const openJudgments = () => {
+    window.open(
+        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "_blank"
+    );
+};
 
     return (
         <DashboardLayout>
@@ -195,6 +243,74 @@ export default function CaseDetailsPage() {
                         </div>
 
                     </div>
+<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+    <button
+        onClick={openCaseStatus}
+        className="bg-blue-600 text-white rounded-2xl p-5 text-left hover:opacity-90"
+    >
+        <div className="text-xl font-bold">
+            Case Status
+        </div>
+
+        <p className="text-sm mt-2">
+            Search by party name, filing number and more.
+        </p>
+    </button>
+
+    <button
+        onClick={openCnrSearch}
+        className="bg-indigo-600 text-white rounded-2xl p-5 text-left hover:opacity-90"
+    >
+        <div className="text-xl font-bold">
+            CNR Search
+        </div>
+
+        <p className="text-sm mt-2">
+            Search directly using CNR number.
+        </p>
+    </button>
+
+    <button
+        onClick={openAdvocateSearch}
+        className="bg-emerald-600 text-white rounded-2xl p-5 text-left hover:opacity-90"
+    >
+        <div className="text-xl font-bold">
+            Advocate Search
+        </div>
+
+        <p className="text-sm mt-2">
+            Find cases linked to advocate details.
+        </p>
+    </button>
+
+    <button
+        onClick={openCauseList}
+        className="bg-orange-500 text-white rounded-2xl p-5 text-left hover:opacity-90"
+    >
+        <div className="text-xl font-bold">
+            Cause List
+        </div>
+
+        <p className="text-sm mt-2">
+            Daily court cause lists.
+        </p>
+    </button>
+
+    <button
+        onClick={openJudgments}
+        className="bg-purple-600 text-white rounded-2xl p-5 text-left hover:opacity-90"
+    >
+        <div className="text-xl font-bold">
+            Judgments
+        </div>
+
+        <p className="text-sm mt-2">
+            Search court judgments.
+        </p>
+    </button>
+
+</div>
 
                     {caseData.description && (
                         <div className="mt-6 pt-6 border-t border-gray-100">
@@ -212,54 +328,39 @@ export default function CaseDetailsPage() {
 
                     {/* CLIENT */}
 
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+<div className="bg-white rounded-2xl shadow p-6">
+    <h2 className="text-xl font-bold mb-4">
+        Client Information
+    </h2>
 
-                        <h2 className="text-xl font-bold mb-4">
-                            Client Information
-                        </h2>
+    {caseData?.clients ? (
+        <div className="space-y-2">
+            <p>
+                <strong>Name:</strong>{" "}
+                {caseData.clients.client_name}
+            </p>
 
-                        {client ? (
-                            <div className="space-y-3 text-sm">
+            <p>
+                <strong>Phone:</strong>{" "}
+                {caseData.clients.phone_number}
+            </p>
 
-                                <div>
-                                    <p className="text-gray-500">
-                                        Name
-                                    </p>
+            <p>
+                <strong>Email:</strong>{" "}
+                {caseData.clients.email}
+            </p>
 
-                                    <p className="font-semibold">
-                                        {client.name}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p className="text-gray-500">
-                                        Phone
-                                    </p>
-
-                                    <p className="font-semibold">
-                                        {client.phone || "-"}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p className="text-gray-500">
-                                        Email
-                                    </p>
-
-                                    <p className="font-semibold">
-                                        {client.email || "-"}
-                                    </p>
-                                </div>
-
-                            </div>
-                        ) : (
-                            <p className="text-gray-500 text-sm">
-                                No client linked yet.
-                            </p>
-                        )}
-
-                    </div>
-
+            <p>
+                <strong>Address:</strong>{" "}
+                {caseData.clients.address}
+            </p>
+        </div>
+    ) : (
+        <p className="text-gray-500">
+            No client linked yet.
+        </p>
+    )}
+</div>
                     {/* ACTIONS */}
 
                     <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
@@ -340,7 +441,8 @@ Next Date: ${caseData.next_hearing_date || "-"
 
                 <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
 
-                    <CaseTimeline caseId={id} />
+                    {/* 📖 CASE TIMELINE */}
+<CaseTimeline caseId={id || ""} />
 
                 </div>
 

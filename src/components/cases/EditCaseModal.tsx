@@ -43,21 +43,26 @@ export default function EditCaseModal({
     };
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-3xl w-full max-w-2xl p-8 space-y-5">
+<div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
 
-                <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold">
-                        Edit Case
-                    </h2>
+    <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
 
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500"
-                    >
-                        ✕
-                    </button>
-                </div>
+        {/* MODAL CONTENT */}
+
+<div className="flex items-center justify-between mb-6">
+
+    <h2 className="text-2xl font-bold">
+        Edit Case
+    </h2>
+
+    <button
+        onClick={onClose}
+        className="text-gray-500 hover:text-black text-xl"
+    >
+        ✕
+    </button>
+
+</div>
 
                 <input
                     value={form.case_title}

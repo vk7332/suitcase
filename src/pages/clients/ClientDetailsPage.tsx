@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+import { supabase } from "@/utils/supabase/supabase-client";
+
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
 import {
@@ -9,7 +11,6 @@ import {
     getClientById,
 } from "@/services/client-service";
 
-import { supabase } from "@/utils/supabase/supabase-client";
 
 export default function ClientDetailsPage() {
     const { id } = useParams();

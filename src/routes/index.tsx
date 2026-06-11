@@ -49,9 +49,10 @@ import RoleDashboardRedirect from "@/pages/dashboard/RoleDashboardRedirect";
 //  Advocate Pages
 import Clients from "@/pages/clients/ClientsPage";
 import Cases from "@/pages/cases/CasesPage";
-import CaseDetails from "@/pages/cases/CaseDetails";
+import CaseTimeline from "@/components/cases/CaseTimeline";
 import Fees from "@/pages/invoices/InvoiceListPage";
 
+import ECourtsHubPage from "@/pages/ecourts/eCourtsHubPage";
 
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ClientCaseDetails from "@/pages/client/ClientCaseDetails";
@@ -67,6 +68,7 @@ import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentFailed from "@/pages/PaymentFailed";
 import AffiliateDashboard from "@/pages/affiliate/AffiliateDashboard";
 import CreateCasePage from "@/pages/cases/CreateCasePage";
+import CaseDetailsPage from "@/pages/cases/CaseDetailsPage";
 
 // ❌ 404 Page (create if missing)
 const NotFound = () => <div>404 - Page Not Found</div>;
@@ -159,29 +161,33 @@ export default function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
-
             <Route
-                path="/advocate/cases/:id"
+    path="/advocate/cases/create"
+    element={<CreateCasePage />}
+/>
+
+<Route
+    path="/advocate/cases/:id"
+    element={<CaseDetailsPage />}
+/>
+            <Route
+                path="/ecourts"
+                element={<ECourtsHubPage />}
+            />
+            <Route
+                path="/cases/create"
                 element={
-                    <ProtectedRoute allowedRoles={["advocate", "junior advocates", "staff(clerks)", "litigant"]}>
-                        <CaseDetails />
+                    <ProtectedRoute
+                        allowedRoles={[
+                            "advocate",
+                            "junior advocates",
+                            "staff(clerks)"
+                        ]}
+                    >
+                        <CreateCasePage />
                     </ProtectedRoute>
                 }
             />
-            <Route
-    path="/cases/create"
-    element={
-        <ProtectedRoute
-            allowedRoles={[
-                "advocate",
-                "junior advocates",
-                "staff(clerks)"
-            ]}
-        >
-            <CreateCasePage />
-        </ProtectedRoute>
-    }
-/>
 
             <Route
                 path="/advocate/fees"

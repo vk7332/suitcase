@@ -297,6 +297,18 @@ using (
   and auth.uid()::text = (storage.foldername(name))[1]
 );
 
+CREATE POLICY "Authenticated upload"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'documents');
+
+CREATE POLICY "Authenticated read"
+ON storage.objects
+FOR SELECT
+TO authenticated
+USING (bucket_id = 'documents');
+
 CREATE TABLE document_versions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   document_id uuid,
@@ -1643,6 +1655,26 @@ CREATE TABLE public.clients (
 
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
 
+SELECT *
+FROM clients;
+SELECT id, client_name
+FROM clients;
+
+INSERT INTO clients (
+    user_id,
+    client_name,
+    phone_number,
+    email,
+    address
+)
+VALUES (
+    auth.uid(),
+    'Sukh Pal',
+    '9876543210',
+    'sukhpal@gmail.com',
+    'Sarkaghat, Himachal Pradesh'
+);
+
 CREATE POLICY "Users can view own clients"
 ON clients
 FOR SELECT
@@ -1686,6 +1718,41 @@ CREATE TABLE public.cases (
   status text DEFAULT 'active',
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now())
 );
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS cnr_number TEXT;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS court_state TEXT;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS court_district TEXT;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS court_complex TEXT;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS court_type TEXT;
+
+ALTER TABLE cases
+ADD COLUMN next_date DATE;
+
+ALTER TABLE cases
+ADD COLUMN case_type TEXT;
+
+ALTER TABLE cases
+ADD COLUMN party_type TEXT;
+
+ALTER TABLE cases
+ADD COLUMN case_stage TEXT;
+
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS case_type TEXT;
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS party_type TEXT;
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS case_stage TEXT;
+
 
 -- STEP 4: CREATE FINANCIAL TABLES
 -- Invoices belong to a client (and optionally a case)
