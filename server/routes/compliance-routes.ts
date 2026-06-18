@@ -3,8 +3,8 @@ import {
     cancelInvoice,
     createCreditNote,
     getAuditLogs,
-} from "../controllers/compliance-controller.ts";
-import { authMiddleware } from "../middleware/auth-middleware.ts";
+} from "../controllers/compliance-controller.js";
+import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const router = express.Router();
 

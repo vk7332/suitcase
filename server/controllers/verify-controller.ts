@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "../config/supabase";
+import { supabaseAdmin } from "../config/supabase.js";
 import { Request, Response } from 'express';
 import fs from "fs";
 import crypto from "crypto";

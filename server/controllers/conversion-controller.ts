@@ -1,4 +1,4 @@
-import { convertToWrittenStatement } from "../services/conversion-service.ts";
+import { convertToWrittenStatement } from "../services/conversion-service.js";
 import { Request, Response } from 'express';
 
 export const generateWrittenStatement = async (req: Request, res: Response) => {

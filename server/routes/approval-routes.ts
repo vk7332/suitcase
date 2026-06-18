@@ -3,8 +3,8 @@ import {
     getPendingApprovals,
     approveAction,
     rejectAction,
-} from "../controllers/approval-controller.ts";
-import { authMiddleware } from "../middleware/auth-middleware.ts";
+} from "../controllers/approval-controller.js";
+import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const router = express.Router();
 

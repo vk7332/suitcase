@@ -1,4 +1,4 @@
-import { legalResearch } from "../services/legal-research-service.ts";
+import { legalResearch } from "../services/legal-research-service.js";
 import { Request, Response } from 'express';
 
 export const askLegalAI = async (req: Request, res: Response) => {

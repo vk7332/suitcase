@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { assignUserToCase, getCaseAssignments } from "../services/case-assignment-service.ts";
+import { assignUserToCase, getCaseAssignments } from "../services/case-assignment-service.js";
 
 export const assignUser = async (req: Request, res: Response) => {
     try {

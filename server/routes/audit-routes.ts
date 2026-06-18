@@ -1,7 +1,7 @@
 import express from "express";
-import { downloadAuditReport } from "../controllers/audit-controller.ts";
-import { authenticate } from "../middleware/auth-middleware.ts";
-import { parseCertificate } from "../utils/certificate-util.ts";
+import { downloadAuditReport } from "../controllers/audit-controller.js";
+import { authenticate } from "../middleware/auth-middleware.js";
+import { parseCertificate } from "../utils/certificate-util.js";
 
 const router = express.Router();
 

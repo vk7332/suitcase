@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
-import { supabase, supabaseAdmin } from "../config/supabase";
+import { supabase, supabaseAdmin } from "../config/supabase.js";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
-import { generateHash } from "../utils/audit-logger";
-import { addWatermark } from "../utils/pdf-watermark";
-import { generateOTP } from "../services/otp-service.ts";
-import { signDocumentService } from "../services/signing-service.ts";
-import { parseDocxToParagraphs } from "../services/docx-service.ts";
-import { normalizeParagraphs } from "../services/format-service.ts";
-import { generatePdf } from "../services/pdf-service.ts";
-import { detectSections } from "../services/heading-service.ts";
+import { generateHash } from "../utils/audit-logger.js";
+import { addWatermark } from "../utils/pdf-watermark.js";
+import { generateOTP } from "../services/otp-service.js";
+import { signDocumentService } from "../services/signing-service.js";
+import { parseDocxToParagraphs } from "../services/docx-service.js";
+import { normalizeParagraphs } from "../services/format-service.js";
+import { generatePdf } from "../services/pdf-service.js";
+import { detectSections } from "../services/heading-service.js";
 import {
     detectCauseTitle,
     extractParties,
-} from "../services/cause-title-service.ts";
-import { validatePleading } from "../services/validation-service.ts";
+} from "../services/cause-title-service.js";
+import { validatePleading } from "../services/validation-service.js";
 
 export const uploadAndConvertDocx = async (req: Request, res: Response) => {
     try {

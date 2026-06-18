@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import { supabase } from "../config/supabase";
-import { sendSMS, sendWhatsApp } from "../services/notification-service.ts";
-import { sendPush } from "../services/push-service.ts";
+import { supabase } from "../config/supabase.js";
+import { sendSMS, sendWhatsApp } from "../services/notification-service.js";
+import { sendPush } from "../services/push-service.js";
 
 cron.schedule("0 * * * *", async () => {
     console.log("⏰ Checking reminders...");

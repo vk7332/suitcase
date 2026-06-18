@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 
 export const addEvent = async (data: any) => {
     return await supabase.from("case_events").insert([data]);

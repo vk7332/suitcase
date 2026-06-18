@@ -1,4 +1,4 @@
-import { generateFilingBundle } from "../services/bundle-pdf-service.ts";
+import { generateFilingBundle } from "../services/bundle-pdf-service.js";
 import { Request, Response } from 'express';
 
 export const createBundle = async (req: Request, res: Response) => {

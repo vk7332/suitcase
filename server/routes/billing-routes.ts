@@ -2,9 +2,9 @@ import express from "express";
 import {
     createSubscription,
     razorpayWebhook,
-} from "../controllers/billing-controller.ts";
-import { authMiddleware } from "../middleware/auth-middleware.ts";
-import { getUsage } from "../controllers/usage-controller.ts";
+} from "../controllers/billing-controller.js";
+import { authMiddleware } from "../middleware/auth-middleware.js";
+import { getUsage } from "../controllers/usage-controller.js";
 
 const router = express.Router();
 

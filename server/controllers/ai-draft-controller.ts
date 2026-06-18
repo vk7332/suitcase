@@ -1,4 +1,4 @@
-import { generateDraftFromQuery } from "../services/ai-draft-service.ts";
+import { generateDraftFromQuery } from "../services/ai-draft-service.js";
 import { Request, Response } from 'express';
 
 export const generateDraft = async (req: Request, res: Response) => {

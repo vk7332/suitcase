@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
 
 export const createInvoice = async (req: Request, res: Response) => {

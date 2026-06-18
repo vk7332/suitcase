@@ -1,4 +1,4 @@
-import { voiceToDraft } from "../services/voice-draft-service.ts";
+import { voiceToDraft } from "../services/voice-draft-service.js";
 import { Request, Response } from 'express';
 
 export const convertVoiceDraft = async (req: Request, res: Response) => {

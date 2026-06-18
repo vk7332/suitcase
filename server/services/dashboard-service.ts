@@ -1,5 +1,5 @@
-import { supabase } from "../config/supabase";
-import { supabaseAdmin } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
+import { supabaseAdmin } from "../config/supabase.js";
 
 export const getDashboardData = async (tenantId: string) => {
     // TODO: Implement real dashboard data fetching

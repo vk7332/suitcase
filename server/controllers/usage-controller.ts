@@ -1,6 +1,6 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
-import { PLAN_LIMITS } from "../config/plan-limits";
+import { PLAN_LIMITS } from "../config/plan-limits.js";
 
 export const getUsage = async (req: Request, res: Response) => {
     const user = req.user;

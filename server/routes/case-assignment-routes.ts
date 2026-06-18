@@ -2,10 +2,10 @@ import express from "express";
 import {
     assignUser,
     getAssignments,
-} from "../controllers/case-assignment-controller.ts";
+} from "../controllers/case-assignment-controller.js";
 
-import { authMiddleware } from "../middleware/auth-middleware.ts";
-import { allowRoles } from "../middleware/role-middleware.ts";
+import { authMiddleware } from "../middleware/auth-middleware.js";
+import { allowRoles } from "../middleware/role-middleware.js";
 
 const router = express.Router();
 

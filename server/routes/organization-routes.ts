@@ -1,6 +1,6 @@
 import express from "express";
-import { createOrganization } from "../controllers/organization-controller.ts";
-import { requireRole } from "../middleware/role-middleware.ts";
+import { createOrganization } from "../controllers/organization-controller.js";
+import { requireRole } from "../middleware/role-middleware.js";
 
 const router = express.Router();
 

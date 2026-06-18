@@ -1,5 +1,5 @@
-import { supabase } from "../config/supabase";
-import { getFinancialYear } from "./financial-year";
+import { supabase } from "../config/supabase.js";
+import { getFinancialYear } from "./financial-year.js";
 
 // 🔹 core RPC call
 const getInvoiceNumberRpc = async (

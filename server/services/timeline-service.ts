@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "../config/supabase";
+import { supabaseAdmin } from "../config/supabase.js";
 
 export const addEvent = async (event: any) => {
     const { data, error } = await supabaseAdmin

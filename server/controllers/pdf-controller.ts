@@ -1,4 +1,4 @@
-import { generatePdf } from "../services/pdf-service.ts";
+import { generatePdf } from "../services/pdf-service.js";
 import { Request, Response } from 'express';
 
 export const downloadArgumentsPdf = async (req: Request, res: Response) => {

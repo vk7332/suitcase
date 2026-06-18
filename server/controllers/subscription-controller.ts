@@ -1,6 +1,6 @@
 import Razorpay from "razorpay";
 import { Request, Response } from 'express';
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID!,

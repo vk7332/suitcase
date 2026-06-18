@@ -1,7 +1,7 @@
 import express from "express";
-import { requireAuth, authenticate } from "../middleware/auth-middleware.ts";
-import { downloadAuditPDF, exportAuditLogs, verifyAudit } from "../controllers/audit-controller.ts";
-import { requireRole } from "../middleware/role-middleware.ts";
+import { requireAuth, authenticate } from "../middleware/auth-middleware.js";
+import { downloadAuditPDF, exportAuditLogs, verifyAudit } from "../controllers/audit-controller.js";
+import { requireRole } from "../middleware/role-middleware.js";
 import {
     upload,
     uploadDocument,
@@ -9,8 +9,8 @@ import {
     getDocumentVersions,
     requestOTP,
     signDocument,
-} from "../controllers/document-controller.ts";
-import { uploadAndConvertDocx } from "../controllers/docx-controller.ts";
+} from "../controllers/document-controller.js";
+import { uploadAndConvertDocx } from "../controllers/docx-controller.js";
 
 const router = express.Router();
 

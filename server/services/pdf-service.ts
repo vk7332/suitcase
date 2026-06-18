@@ -2,11 +2,11 @@ import crypto, { hash } from "crypto";
 import signer from "node-signpdf";
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import QRCode from "qrcode";
-import { supabaseAdmin } from "../config/supabase";
-import { signHash } from "../utils/signature";
-import { generate65BCertificateText } from "./certificate-service.ts";
-import { saveAuditReport } from "./report-service.ts";
-import { generate65BCertificate } from "./affidavit-service.ts";
+import { supabaseAdmin } from "../config/supabase.js";
+import { signHash } from "../utils/signature.js";
+import { generate65BCertificateText } from "./certificate-service.js";
+import { saveAuditReport } from "./report-service.js";
+import { generate65BCertificate } from "./affidavit-service.js";
 
 export const generateAuditPdf = async ({
     chamber_id,

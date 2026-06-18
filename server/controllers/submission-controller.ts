@@ -1,4 +1,4 @@
-import { generateSubmissionPDF } from "../services/submission-pdf-service.ts";
+import { generateSubmissionPDF } from "../services/submission-pdf-service.js";
 import { Request, Response } from 'express';
 
 export const createSubmissionPDF = async (req: Request, res: Response) => {

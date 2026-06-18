@@ -1,5 +1,5 @@
 import express from "express";
-import { getSharedDocument } from "../controllers/client-controller.ts";
+import { getSharedDocument } from "../controllers/client-controller.js";
 
 const router = express.Router();
 

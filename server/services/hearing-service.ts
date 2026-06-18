@@ -1,5 +1,5 @@
-import { openai } from "../config/openai";
-import { supabaseAdmin } from "../config/supabase";
+import { openai } from "../config/openai.js";
+import { supabaseAdmin } from "../config/supabase.js";
 
 export const addHearing = async (hearing: any) => {
     const { data, error } = await supabaseAdmin

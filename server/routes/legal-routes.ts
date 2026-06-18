@@ -1,7 +1,7 @@
 import express from "express";
-import { getLegalSearch } from "../controllers/legal-search-controller.ts";
-import { rankCases } from "../controllers/case-ranking-controller.ts";
-import { askLegalAI } from "../controllers/legal-research-controller.ts";
+import { getLegalSearch } from "../controllers/legal-search-controller.js";
+import { rankCases } from "../controllers/case-ranking-controller.js";
+import { askLegalAI } from "../controllers/legal-research-controller.js";
 
 const router = express.Router();
 

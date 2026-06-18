@@ -1,4 +1,4 @@
-import { getNextLifecycleStep } from "../services/lifecycle-service.ts";
+import { getNextLifecycleStep } from "../services/lifecycle-service.js";
 import { Request, Response } from 'express';
 
 export const lifecycle = (req: Request, res: Response) => {

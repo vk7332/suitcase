@@ -1,4 +1,4 @@
-import { rankCaseLaws } from "../services/case-ranking-service.ts";
+import { rankCaseLaws } from "../services/case-ranking-service.js";
 import { Request, Response } from 'express';
 
 export const rankCases = (req: Request, res: Response) => {

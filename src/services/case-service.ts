@@ -14,10 +14,10 @@ const { data, error } = await supabase
     .from("cases")
     .insert([
         {
-            case_title: payload.case_title,
-            case_number: payload.case_number || null,
-            court_name: payload.court_name || null,
+            ...payload,
+
             status: payload.status || "active",
+
             created_by: user.id
         }
     ])

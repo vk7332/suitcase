@@ -1,10 +1,10 @@
-import { supabaseAdmin } from "../config/supabase";
-import { openai } from "../config/openai";
-import { detectSpeakers } from "./speaker-service.ts";
-import { logEvent } from "./log-service.ts";
-import { detectContradictions } from "./contradiction-service.ts";
-import { generateCrossExam } from "./cross-exam-service.ts";
-import { generateObjections } from "./objection-service.ts";
+import { supabaseAdmin } from "../config/supabase.js";
+import { openai } from "../config/openai.js";
+import { detectSpeakers } from "./speaker-service.js";
+import { logEvent } from "./log-service.js";
+import { detectContradictions } from "./contradiction-service.js";
+import { generateCrossExam } from "./cross-exam-service.js";
+import { generateObjections } from "./objection-service.js";
 
 export const generateHearingNotes = async ({
     transcript,

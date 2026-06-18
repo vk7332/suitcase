@@ -976,6 +976,37 @@ ALTER TABLE cases ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cases
 ADD COLUMN created_by UUID REFERENCES auth.users(id);
 
+ALTER TABLE cases
+ADD COLUMN IF NOT EXISTS filing_number text,
+
+ADD COLUMN IF NOT EXISTS filing_date date,
+
+ADD COLUMN IF NOT EXISTS registration_number text,
+
+ADD COLUMN IF NOT EXISTS registration_date date,
+
+ADD COLUMN IF NOT EXISTS first_hearing_date date,
+
+ADD COLUMN IF NOT EXISTS next_hearing_date date,
+
+ADD COLUMN IF NOT EXISTS case_stage text,
+
+ADD COLUMN IF NOT EXISTS judge_name text,
+
+ADD COLUMN IF NOT EXISTS petitioner_name text,
+
+ADD COLUMN IF NOT EXISTS petitioner_advocate text,
+
+ADD COLUMN IF NOT EXISTS respondent_name text,
+
+ADD COLUMN IF NOT EXISTS respondent_advocate text,
+
+ADD COLUMN IF NOT EXISTS under_acts text,
+
+ADD COLUMN IF NOT EXISTS under_sections text,
+
+ADD COLUMN IF NOT EXISTS client_side text;
+
 UPDATE cases
 SET created_by = auth.uid()
 WHERE created_by IS NULL;

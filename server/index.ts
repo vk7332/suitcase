@@ -1,5 +1,5 @@
 // server/index.ts
-import dotenv from "dotenv";
+import "dotenv/config";
 import express, { Request, Response, NextFunction } from 'express';
 import cors from "cors";
 import helmet from "helmet";
@@ -9,26 +9,23 @@ import fs from 'fs';
 import path from 'path';
 
 // Routes
-import webhookRoutes from "./routes/webhook-routes";
-import shareRoutes from "./routes/share-routes";
-import caseRoutes from "./routes/case-routes";
-import notificationRoutes from "./routes/notification-routes";
-import organizationRoutes from "./routes/organization-routes";
-import inviteRoutes from "./routes/invite-routes";
-import paymentRoutes from "./routes/payment-routes";
-import invoiceRoutes from "./routes/invoice-routes";
-import complianceRoutes from "./routes/compliance-routes";
-import approvalRoutes from "./routes/approval-routes";
-import clientRoutes from "./routes/client-routes";
-import documentRoutes from "./routes/document-routes";
-import aiRoutes from "./routes/ai-routes";
+import webhookRoutes from "./routes/webhook-routes.js";
+import shareRoutes from "./routes/share-routes.js";
+import caseRoutes from "./routes/case-routes.js";
+import notificationRoutes from "./routes/notification-routes.js";
+import organizationRoutes from "./routes/organization-routes.js";
+import inviteRoutes from "./routes/invite-routes.js";
+import paymentRoutes from "./routes/payment-routes.js";
+import invoiceRoutes from "./routes/invoice-routes.js";
+import complianceRoutes from "./routes/compliance-routes.js";
+import approvalRoutes from "./routes/approval-routes.js";
+import clientRoutes from "./routes/client-routes.js";
+import documentRoutes from "./routes/document-routes.js";
 
 // Config & Middleware
-import { errorHandler } from "./middleware/error-handler";
-import "./jobs/reminder-job";
+import { errorHandler } from "./middleware/error-handler.js";
+import "./jobs/reminder-job.js";
 import app from "./app.js";
-
-dotenv.config();
 
 console.log("-----------------------------------------");
 console.log("🚀 SUITCASE BACKEND STARTING...");
@@ -115,4 +112,3 @@ app.use("/api", complianceRoutes);
 app.use("/api", approvalRoutes);
 app.use("/api", clientRoutes);
 app.use("/api/documents", documentRoutes);
-app.use("/api", aiRoutes);

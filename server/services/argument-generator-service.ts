@@ -1,5 +1,5 @@
-import { searchJudgments } from "./vector-search-service.ts";
-import { openai } from "../config/openai";
+import { searchJudgments } from "./vector-search-service.js";
+import { openai } from "../config/openai.js";
 
 export const generateCourtArgument = async (query: string) => {
     // 🔍 Step 1: Fetch relevant cases

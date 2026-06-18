@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { fetchCitations } from "./citation-service.ts";
+import { fetchCitations } from "./citation-service.js";
 
 interface Citation {
     title: string;

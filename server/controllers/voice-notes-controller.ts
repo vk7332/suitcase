@@ -1,4 +1,4 @@
-import { generateHearingNotes } from "../services/voice-notes-service.ts";
+import { generateHearingNotes } from "../services/voice-notes-service.js";
 import { Request, Response } from 'express';
 
 export const processVoiceNotes = async (req: Request, res: Response) => {

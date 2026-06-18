@@ -1,6 +1,6 @@
-import { fetchCauseList } from "../services/cause-list-service.ts";
+import { fetchCauseList } from "../services/cause-list-service.js";
 import { Request, Response } from 'express';
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { match } from "assert/strict";
 
 export const syncNextHearing = async (req: Request, res: Response) => {

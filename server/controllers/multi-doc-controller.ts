@@ -1,4 +1,4 @@
-import { multiDocLegalReasoning } from "../services/multi-doc-reasoning-service.ts";
+import { multiDocLegalReasoning } from "../services/multi-doc-reasoning-service.js";
 import { Request, Response } from 'express';
 
 export const multiDocAnalysis = async (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
-import { generateCourtArgument } from "../services/argument-generator-service.ts";
+import { generateCourtArgument } from "../services/argument-generator-service.js";
 import { Request, Response } from 'express';
-import { generateWrittenArguments } from "../services/arguments-service.ts";
+import { generateWrittenArguments } from "../services/arguments-service.js";
 
 export const createArguments = async (req: Request, res: Response) => {
     try {

@@ -1,9 +1,9 @@
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
-import { supabaseAdmin } from "../config/supabase";
-import { signHash } from "../utils/signature";
-import { saveAuditReport } from "./report-service.ts";
-import { generateHash } from "./pdf-service.ts";
+import { supabaseAdmin } from "../config/supabase.js";
+import { signHash } from "../utils/signature.js";
+import { saveAuditReport } from "./report-service.js";
+import { generateHash } from "./pdf-service.js";
 
 
 export const generate65BCertificateText = ({

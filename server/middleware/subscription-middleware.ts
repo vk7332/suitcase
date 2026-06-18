@@ -1,4 +1,4 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response, NextFunction } from "express";
 
 export const requireActiveSubscription = async (req: Request, res: Response, next: NextFunction) => {

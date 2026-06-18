@@ -1,6 +1,6 @@
-import { generateFinalSubmission } from "../services/final-submission-service.ts";
+import { generateFinalSubmission } from "../services/final-submission-service.js";
 import { Request, Response } from 'express';
-import { generateFilingBundle } from "../services/bundle-pdf-service.ts";
+import { generateFilingBundle } from "../services/bundle-pdf-service.js";
 
 export const generateFinalBundle = async (req: Request, res: Response) => {
   const { transcript, caseTitle, advocateName } = req.body;

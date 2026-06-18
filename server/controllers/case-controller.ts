@@ -1,6 +1,6 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
-import { getCasesByTenant } from "../services/case-service.ts";
+import { getCasesByTenant } from "../services/case-service.js";
 
 // ==============================
 // CREATE CASE
@@ -83,7 +83,7 @@ export const getCases = async (req: Request, res: Response) => {
     }
 };
 
-import { initMemory } from "../services/memory-service.ts";
+import { initMemory } from "../services/memory-service.js";
 
 export const startHearing = async (req: Request, res: Response) => {
     const { caseId } = req.body;

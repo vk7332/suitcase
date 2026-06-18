@@ -1,5 +1,5 @@
-import { supabase } from "../config/supabase";
-import { generateEmbedding } from "./embedding-service.ts";
+import { supabase } from "../config/supabase.js";
+import { generateEmbedding } from "./embedding-service.js";
 
 export const searchJudgments = async (query: string) => {
     const embedding = await generateEmbedding(query);

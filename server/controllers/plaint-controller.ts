@@ -1,7 +1,7 @@
-import { generatePlaintTemplate } from "../services/vplaint-service.ts";
+import { generatePlaintTemplate } from "../services/vplaint-service.js";
 import { Request, Response } from 'express';
-import { supabaseAdmin } from "../config/supabase";
-import { generatePdf } from "../services/pdf-service.ts";
+import { supabaseAdmin } from "../config/supabase.js";
+import { generatePdf } from "../services/pdf-service.js";
 
 export const generatePlaint = async (req: Request, res: Response) => {
     const { case_id } = req.params;

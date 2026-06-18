@@ -1,6 +1,6 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
-import { sendNotification } from "../services/notification-service.ts";
+import { sendNotification } from "../services/notification-service.js";
 
 // 📋 get pending approvals
 export const getPendingApprovals = async (req: Request, res: Response) => {

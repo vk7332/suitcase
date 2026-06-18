@@ -1,4 +1,4 @@
-import { applyCitations } from "../services/citation-service.ts";
+import { applyCitations } from "../services/citation-service.js";
 import { Request, Response } from 'express';
 
 export const addCitations = (req: Request, res: Response) => {

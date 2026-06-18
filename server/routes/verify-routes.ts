@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
-import { supabaseAdmin } from "../config/supabase";
-import { generateHash } from "../utils/hash-util.ts";
+import { supabaseAdmin } from "../config/supabase.js";
+import { generateHash } from "../utils/hash-util.js";
 
 const router = express.Router();
 const upload = multer();

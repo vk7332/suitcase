@@ -1,4 +1,4 @@
-import { razorpay } from "../services/razorpay-service.ts";
+import { razorpay } from "../services/razorpay-service.js";
 import { Request, Response } from 'express';
 
 export const createSubscription = async (req: Request, res: Response) => {

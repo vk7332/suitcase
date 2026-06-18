@@ -1,4 +1,4 @@
-import { openai } from "../config/openai";
+import { openai } from "../config/openai.js";
 
 export const aiJudgeMood = async (text: string) => {
     const prompt = `

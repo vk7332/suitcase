@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
-import { continueHearing, startHearing } from "../services/hearing-service.ts";
-import { hearingToDraft } from "../services/hearing-to-draft-service.ts";
-import { addToHistory, getMemory } from "../services/memory-service.ts";
-import { detectContradiction } from "../services/contradiction-service.ts";
-import { generateFollowUp } from "../services/followup-service.ts";
-import { generateCrossExamChain } from "../services/cross-exam-service.ts";
-import { decideStrategy } from "../services/strategy-service.ts";
-import { decideTiming } from "../services/timing-service.ts";
-import { scoreWeakness } from "../services/weakness-service.ts";
-import { calculateWinProbability } from "../services/win-probability-service.ts";
-import { detectJudgeMood } from "../services/judge-mood-service.ts";
-import { generateObjections } from "../services/objection-service.ts";
+import { continueHearing, startHearing } from "../services/hearing-service.js";
+import { hearingToDraft } from "../services/hearing-to-draft-service.js";
+import { addToHistory, getMemory } from "../services/memory-service.js";
+import { detectContradiction } from "../services/contradiction-service.js";
+import { generateFollowUp } from "../services/followup-service.js";
+import { generateCrossExamChain } from "../services/cross-exam-service.js";
+import { decideStrategy } from "../services/strategy-service.js";
+import { decideTiming } from "../services/timing-service.js";
+import { scoreWeakness } from "../services/weakness-service.js";
+import { calculateWinProbability } from "../services/win-probability-service.js";
+import { detectJudgeMood } from "../services/judge-mood-service.js";
+import { generateObjections } from "../services/objection-service.js";
 
 export const hearingAssist = async (req: Request, res: Response) => {
     try {

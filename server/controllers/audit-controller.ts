@@ -1,14 +1,14 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
-import { generateAuditPDF } from "../utils/generate-audit-pdf";
-import { authenticate } from "../middleware/auth-middleware.ts";
-import { saveAuditReport } from "../services/report-service.ts";
-import { supabaseAdmin } from "../config/supabase";
-import { parseCertificate } from "../utils/certificate-util.ts";
-import { attachHashToLog } from "../services/hash-log-service.ts";
-import { generate65BCertificate } from "../services/certificate65-b-service.ts";
-import { getMemory } from "../services/memory-service.ts";
-import { verifyAudit as verifyAuditController } from "./verify-controller.ts";
+import { generateAuditPDF } from "../utils/generate-audit-pdf.js";
+import { authenticate } from "../middleware/auth-middleware.js";
+import { saveAuditReport } from "../services/report-service.js";
+import { supabaseAdmin } from "../config/supabase.js";
+import { parseCertificate } from "../utils/certificate-util.js";
+import { attachHashToLog } from "../services/hash-log-service.js";
+import { generate65BCertificate } from "../services/certificate65-b-service.js";
+import { getMemory } from "../services/memory-service.js";
+import { verifyAudit as verifyAuditController } from "./verify-controller.js";
 
 export const generateAudit = async (req: Request, res: Response) => {
     try {

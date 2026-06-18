@@ -1,6 +1,6 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
-import { getDashboardData } from "../services/dashboard-service.ts";
+import { getDashboardData } from "../services/dashboard-service.js";
 
 export const getDashboard = async (req: Request, res: Response) => {
     try {

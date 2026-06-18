@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-"scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "build:server": "tsup",
-  "preview": "vite preview"
-},
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:server": "tsup",
+    "preview": "vite preview"
+  },
   "engines": {
     "node": ">=20.0.0"
   },
@@ -25,7 +25,7 @@
     "emailjs-com": "^3.2.0",
     "ethers": "^6.16.0",
     "express": "^4.22.1",
-    "express-rate-limit": "^8.5.1",
+    "express-rate-limit": "^8.5.2",
     "helmet": "^8.1.0",
     "html2pdf.js": "^0.14.0",
     "jsonwebtoken": "^9.0.3",
@@ -42,6 +42,7 @@
     "openai": "^6.37.0",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.18.0",
+    "playwright": "^1.60.0",
     "postcss": "^8.5.14",
     "qrcode": "^1.5.4",
     "razorpay": "^2.9.6",
@@ -50,6 +51,7 @@
     "react-helmet": "^6.1.0",
     "react-is": "^19.2.6",
     "react-router-dom": "^6.23.1",
+    "react-toastify": "^11.1.0",
     "recharts": "^3.8.1",
     "tailwindcss": "^3.4.19",
     "twilio": "^4.20.0",

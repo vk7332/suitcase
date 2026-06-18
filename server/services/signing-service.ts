@@ -1,7 +1,7 @@
-import { generateHash } from "../utils/hash-util.ts";
-import { supabaseAdmin } from "../config/supabase";
-import { uploadDocumentVersion } from "./storage-service.ts";
-import { generatePdf } from "./pdf-service.ts";
+import { generateHash } from "../utils/hash-util.js";
+import { supabaseAdmin } from "../config/supabase.js";
+import { uploadDocumentVersion } from "./storage-service.js";
+import { generatePdf } from "./pdf-service.js";
 
 export const signDocumentService = async ({
     document_id,

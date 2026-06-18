@@ -1,4 +1,4 @@
-import { generateCrossExam } from "../services/cross-exam-service.ts";
+import { generateCrossExam } from "../services/cross-exam-service.js";
 import { Request, Response } from 'express';
 
 export const getCrossExam = async (req: Request, res: Response) => {

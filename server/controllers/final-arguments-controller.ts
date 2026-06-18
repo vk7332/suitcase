@@ -1,4 +1,4 @@
-import { generateFinalArguments } from "../services/final-arguments-service.ts";
+import { generateFinalArguments } from "../services/final-arguments-service.js";
 import { Request, Response } from 'express';
 
 export const getFinalArguments = (req: Request, res: Response) => {

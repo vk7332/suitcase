@@ -1,14 +1,14 @@
 // server/routes/case.routes.ts
 
 import express from "express";
-import { createCase, updateCaseStatus, allowCaseAccess, generatePdfController, getCaseDetails, publicCaseView } from "../controllers/case-controller.ts";
-import { enforcePlan } from "../middleware/plan-middleware.ts";
-import { authMiddleware } from "../middleware/auth-middleware.ts";
-import { createOrganization } from "../controllers/organization-controller.ts";
-import { createInvite as inviteMember } from "../controllers/invite-controller.ts";
-import { requireActiveSubscription as enforceSubscription } from "../middleware/subscription-middleware.ts";
-import { allowRoles } from "../middleware/role-middleware.ts";
-import { enforceTenant } from "../middleware/tenant-middleware.ts";
+import { createCase, updateCaseStatus, allowCaseAccess, generatePdfController, getCaseDetails, publicCaseView } from "../controllers/case-controller.js";
+import { enforcePlan } from "../middleware/plan-middleware.js";
+import { authMiddleware } from "../middleware/auth-middleware.js";
+import { createOrganization } from "../controllers/organization-controller.js";
+import { createInvite as inviteMember } from "../controllers/invite-controller.js";
+import { requireActiveSubscription as enforceSubscription } from "../middleware/subscription-middleware.js";
+import { allowRoles } from "../middleware/role-middleware.js";
+import { enforceTenant } from "../middleware/tenant-middleware.js";
 
 const router = express.Router();
 

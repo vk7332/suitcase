@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 // server/controllers/notification.controller.ts
 
-import { getPreferences, updatePreferences } from "../services/notification-preference-service.ts";
+import { getPreferences, updatePreferences } from "../services/notification-preference-service.js";
 
 export const fetchPreferences = async (req: Request, res: Response) => {
     const { userId } = req.params;

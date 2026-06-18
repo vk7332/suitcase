@@ -1,3 +1,3 @@
-import { judgePattern } from "./analytics-service.ts";
+import { judgePattern } from "./analytics-service.js";
 
 export { judgePattern };

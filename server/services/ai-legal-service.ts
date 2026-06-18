@@ -1,6 +1,6 @@
-import { openai } from "../config/openai";
-import { retrieveJudgments } from "./rag-service.ts";
-import { searchJudgments } from "./vector-search-service.ts";
+import { openai } from "../config/openai.js";
+import { retrieveJudgments } from "./rag-service.js";
+import { searchJudgments } from "./vector-search-service.js";
 
 export const aiLegalResearch = async (query: string) => {
     const matches = await searchJudgments(query);

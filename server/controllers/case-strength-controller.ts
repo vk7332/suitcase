@@ -1,4 +1,4 @@
-import { analyzeCaseStrength } from "../services/case-strength-service.ts";
+import { analyzeCaseStrength } from "../services/case-strength-service.js";
 import { Request, Response } from 'express';
 
 export const getCaseStrength = (req: Request, res: Response) => {

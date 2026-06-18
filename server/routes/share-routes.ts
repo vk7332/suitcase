@@ -1,7 +1,7 @@
 // server/routes/share.routes.ts
 
 import express from "express";
-import { createShareLink, accessSharedDocument } from "../controllers/share-controller.ts";
+import { createShareLink, accessSharedDocument } from "../controllers/share-controller.js";
 
 const router = express.Router();
 

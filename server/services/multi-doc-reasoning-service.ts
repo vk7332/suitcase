@@ -1,5 +1,5 @@
-import { searchJudgments } from "./vector-search-service.ts";
-import { openai } from "../config/openai";
+import { searchJudgments } from "./vector-search-service.js";
+import { openai } from "../config/openai.js";
 
 export const multiDocLegalReasoning = async (query: string) => {
     // 🔍 Step 1: Retrieve top 5 relevant judgments

@@ -1,4 +1,4 @@
-import { generateWrittenArguments } from "../services/written-arguments-service.ts";
+import { generateWrittenArguments } from "../services/written-arguments-service.js";
 import { Request, Response } from 'express';
 
 export const getWrittenArguments = (req: Request, res: Response) => {

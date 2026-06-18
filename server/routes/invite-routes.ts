@@ -1,7 +1,7 @@
 import express from "express";
-import { createInvite } from "../controllers/invite-controller.ts";
-import { requireAuth } from "../middleware/auth-middleware.ts";
-import { requireRole } from "../middleware/role-middleware.ts";
+import { createInvite } from "../controllers/invite-controller.js";
+import { requireAuth } from "../middleware/auth-middleware.js";
+import { requireRole } from "../middleware/role-middleware.js";
 
 const router = express.Router();
 

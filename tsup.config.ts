@@ -10,9 +10,13 @@ export default defineConfig({
   minify: false,
   target: 'node20',
   platform: 'node',
-  noExternal: [/(.*)/],
   external: [
     'canvas',
+    'chromium-bidi',
+    'chromium-bidi/lib/cjs/bidiMapper/BidiMapper',
+    'chromium-bidi/lib/cjs/cdp/CdpConnection',
+    'playwright',
+    'playwright-core',
     'fsevents',
     'fs',
     'path'

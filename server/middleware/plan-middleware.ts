@@ -1,5 +1,5 @@
-import { supabase } from "../config/supabase";
-import { PLAN_LIMITS } from "../config/plan-limits";
+import { supabase } from "../config/supabase.js";
+import { PLAN_LIMITS } from "../config/plan-limits.js";
 import { Request, Response, NextFunction } from 'express';
 
 export const enforcePlan = (feature: "cases" | "members") => {

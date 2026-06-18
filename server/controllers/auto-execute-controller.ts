@@ -1,4 +1,4 @@
-import { autoExecute } from "../services/auto-execute-service.ts";
+import { autoExecute } from "../services/auto-execute-service.js";
 import { Request, Response } from 'express';
 
 export const runAutoStep = async (req: Request, res: Response) => {

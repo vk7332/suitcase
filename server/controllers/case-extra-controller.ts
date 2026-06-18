@@ -1,7 +1,7 @@
-import { addEvent, getTimeline } from "../services/timeline-service.ts";
+import { addEvent, getTimeline } from "../services/timeline-service.js";
 import { Request, Response } from 'express';
-import { addHearing, getHearings } from "../services/hearing-service.ts";
-import { addDocument, getDocuments } from "../services/dashboard-service.ts";
+import { addHearing, getHearings } from "../services/hearing-service.js";
+import { addDocument, getDocuments } from "../services/dashboard-service.js";
 
 export const createEvent = async (req: Request, res: Response) => {
     try {

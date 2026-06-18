@@ -2,10 +2,10 @@ import {
     calculateFromAI,
     detectLimitationFromFacts,
     detectMultipleTriggers,
-} from "../services/limitation-ai-service.ts";
+} from "../services/limitation-ai-service.js";
 import { Request, Response } from 'express';
-import { addEvent } from "../services/calendar-service.ts";
-import { evaluateTriggers } from "../services/limitation-service.ts";
+import { addEvent } from "../services/calendar-service.js";
+import { evaluateTriggers } from "../services/limitation-service.js";
 
 export const detectLimitation = async (req: Request, res: Response) => {
     const { facts } = req.body;

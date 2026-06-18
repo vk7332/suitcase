@@ -1,5 +1,5 @@
-import { supabase, supabaseAdmin } from "../config/supabase";
-import { generateHash } from "../utils/hash-util.ts";
+import { supabase, supabaseAdmin } from "../config/supabase.js";
+import { generateHash } from "../utils/hash-util.js";
 
 export const createAuditLog = async (log: Record<string, unknown>) => {
     const { data: lastLog } = await supabaseAdmin

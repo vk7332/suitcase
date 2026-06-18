@@ -1,6 +1,6 @@
 import express from "express";
-import { createSubscription } from "../controllers/subscription-controller.ts";
-import { authMiddleware } from "../middleware/auth-middleware.ts";
+import { createSubscription } from "../controllers/subscription-controller.js";
+import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const router = express.Router();
 

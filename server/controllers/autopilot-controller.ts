@@ -1,4 +1,4 @@
-import { getNextStep } from "../services/autopilot-service.ts";
+import { getNextStep } from "../services/autopilot-service.js";
 import { Request, Response } from 'express';
 
 export const autopilot = async (req: Request, res: Response) => {

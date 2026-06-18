@@ -1,5 +1,5 @@
 import PDFDocument from "pdfkit";
-import { generate65BCertificate } from "./affidavit-service.ts";
+import { generate65BCertificate } from "./affidavit-service.js";
 import QRCode from "qrcode";
 
 export const generateCourtBundle = async ({

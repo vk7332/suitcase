@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import crypto from "crypto";
-import { logger } from "../utils/logger";
+import { logger } from "../utils/logger.js";
 
 export const handleRazorpayWebhook = (
     req: Request,

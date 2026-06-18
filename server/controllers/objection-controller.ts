@@ -1,4 +1,4 @@
-import { generateObjections } from "../services/objection-service.ts";
+import { generateObjections } from "../services/objection-service.js";
 import { Request, Response } from 'express';
 
 export const getObjection = async (req: Request, res: Response) => {

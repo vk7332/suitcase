@@ -1,6 +1,6 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
-import { createAuditLog } from "../utils/audit-logger";
+import { createAuditLog } from "../utils/audit-logger.js";
 
 export const getSharedDocument = async (req: Request, res: Response) => {
     try {

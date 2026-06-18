@@ -108,35 +108,35 @@ export default function CaseDetailsPage() {
 
 const openCaseStatus = () => {
     window.open(
-        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "https://services.ecourts.gov.in/ecourtindia_v6/?p=casestatus/index&app_token=",
         "_blank"
     );
 };
 
 const openCnrSearch = () => {
     window.open(
-        "https://services.ecourts.gov.in/",
+        "https://services.ecourts.gov.in/ecourtindia_v6/?p=cnrsearch/index&app_token=",
         "_blank"
     );
 };
 
 const openAdvocateSearch = () => {
     window.open(
-        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "https://services.ecourts.gov.in/ecourtindia_v6/?p=casestatus/index&app_token=",
         "_blank"
     );
 };
 
 const openCauseList = () => {
     window.open(
-        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "https://services.ecourts.gov.in/ecourtindia_v6/?p=cause_list/index&app_token=",
         "_blank"
     );
 };
 
 const openJudgments = () => {
     window.open(
-        "https://services.ecourts.gov.in/ecourtindia_v6/",
+        "https://services.ecourts.gov.in/ecourtindia_v6/?p=courtorder/index&app_token=",
         "_blank"
     );
 };
@@ -166,6 +166,75 @@ const openJudgments = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 
+<div>
+    <p className="text-gray-500">
+        Filing Number
+    </p>
+
+    <p className="font-semibold">
+        {caseData.filing_number || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        CNR Number
+    </p>
+
+    <p className="font-semibold">
+        {caseData.cnr_number || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        Judge
+    </p>
+
+    <p className="font-semibold">
+        {caseData.judge_name || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        Petitioner
+    </p>
+
+    <p className="font-semibold">
+        {caseData.petitioner_name || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        Respondent
+    </p>
+
+    <p className="font-semibold">
+        {caseData.respondent_name || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        Under Act
+    </p>
+
+    <p className="font-semibold">
+        {caseData.under_acts || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        Under Sections
+    </p>
+
+    <p className="font-semibold">
+        {caseData.under_sections || "-"}
+    </p>
+</div>
                                 <div>
                                     <p className="text-gray-500">
                                         Case Number
@@ -208,14 +277,12 @@ const openJudgments = () => {
 
                                 <div>
                                     <p className="text-gray-500">
-                                        Next Hearing
+                                        Next Hearing Date
                                     </p>
 
                                     <p className="font-semibold">
-                                        {caseData.next_hearing_date
-                                            ? new Date(
-                                                caseData.next_hearing_date
-                                            ).toLocaleDateString()
+                                        {caseData.next_date
+                                            ? new Date(caseData.next_date).toLocaleDateString()
                                             : "-"}
                                     </p>
                                 </div>

@@ -1,12 +1,18 @@
-import { supabase } from "../config/supabase";
-import { sendInvoiceEmail } from "./email-service.ts";
-import { sendSMS as sendSMSClient } from "./sms-service.ts";
+import { supabase } from "../config/supabase.js";
+import { sendInvoiceEmail } from "./email-service.js";
+import { sendSMS as sendSMSClient } from "./sms-service.js";
 import twilio from "twilio";
 
-const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID!,
-    process.env.TWILIO_AUTH_TOKEN!
-);
+const getWhatsAppClient = () => {
+    if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_PHONE) {
+        throw new Error("Twilio WhatsApp credentials are not configured");
+    }
+
+    return twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN
+    );
+};
 
 export const sendSMS = async (to: string, message: string) => {
     try {
@@ -23,6 +29,8 @@ export const sendWhatsApp = async (
     message: string
 ) => {
     try {
+        const client = getWhatsAppClient();
+
         await client.messages.create({
             body: message,
             from: "whatsapp:" + process.env.TWILIO_PHONE,

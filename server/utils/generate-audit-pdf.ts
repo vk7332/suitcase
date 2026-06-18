@@ -2,8 +2,8 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import QRCode from "qrcode";
-import { supabase } from "../config/supabase";
-import { generateSignature } from "./signature";
+import { supabase } from "../config/supabase.js";
+import { generateSignature } from "./signature.js";
 
 export const generateAuditPDF = async (document_id: string) => {
     const filePath = path.join(__dirname, `../../tmp/audit-${document_id}.pdf`);

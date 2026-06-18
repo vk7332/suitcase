@@ -1,6 +1,6 @@
 import cron from "node-cron";
-import { supabase } from "../config/supabase";
-import { fetchCauseList } from "../services/cause-list-service.ts";
+import { supabase } from "../config/supabase.js";
+import { fetchCauseList } from "../services/cause-list-service.js";
 
 const normalize = (str: string) =>
     str.replace(/\s+/g, "").toLowerCase();

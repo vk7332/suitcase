@@ -1,4 +1,4 @@
-import { searchLegalCases } from "../services/legal-search-service.ts";
+import { searchLegalCases } from "../services/legal-search-service.js";
 import { Request, Response } from 'express';
 
 export const getLegalSearch = async (req: Request, res: Response) => {

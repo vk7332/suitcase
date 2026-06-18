@@ -1,6 +1,6 @@
-import { supabase } from "../config/supabase";
+import { supabase } from "../config/supabase.js";
 import { Request, Response } from 'express';
-import { logAudit } from "../services/audit-service.ts";
+import { logAudit } from "../services/audit-service.js";
 
 // 🧾 CREATE CREDIT NOTE
 export const createCreditNote = async (req: Request, res: Response) => {

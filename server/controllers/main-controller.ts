@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { convertToWrittenStatement } from "../services/conversion-service.ts";
-import { generateEvidenceAffidavit } from "../services/evidence-service.ts";
-import { generateWrittenArguments as generateArgumentText } from "../services/arguments-service.ts";
-import { generatePdf } from "../services/pdf-service.ts";
-import { generateFinalArguments } from "../services/final-arguments-service.ts";
-import { generateWrittenArguments as generateWrittenArgumentsDoc } from "../services/written-arguments-service.ts";
-import { applyCitations } from "../services/citation-service.ts";
+import { convertToWrittenStatement } from "../services/conversion-service.js";
+import { generateEvidenceAffidavit } from "../services/evidence-service.js";
+import { generateWrittenArguments as generateArgumentText } from "../services/arguments-service.js";
+import { generatePdf } from "../services/pdf-service.js";
+import { generateFinalArguments } from "../services/final-arguments-service.js";
+import { generateWrittenArguments as generateWrittenArgumentsDoc } from "../services/written-arguments-service.js";
+import { applyCitations } from "../services/citation-service.js";
 
 export const generateFullCaseBundle = async (req: Request, res: Response) => {
     try {
