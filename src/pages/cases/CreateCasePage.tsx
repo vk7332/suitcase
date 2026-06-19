@@ -183,7 +183,7 @@ const payload = {
 
     first_hearing_date: firstHearingDate,
 
-    next_date: nextHearingDate,
+    next_hearing_date: nextHearingDate,
 
     judge_name: judgeName,
 
@@ -562,4 +562,47 @@ const payload = {
             </div>
         </DashboardLayout>
     );
+}
+
+async function updateCase(
+    id: any,
+    payload: {
+        case_title: string;
+        case_number: string;
+        court_name: string;
+        case_type: string;
+        case_stage: string;
+        filing_number: string;
+        registration_number: string;
+        cnr_number: string;
+        first_hearing_date: string;
+        next_date: string;
+        judge_name: string;
+        petitioner_name: string;
+        petitioner_advocate: string;
+        respondent_name: string;
+        respondent_advocate: string;
+        under_acts: string;
+        under_sections: string;
+        client_side: string;
+        client_id: string | null;
+        status: "active";
+    }
+) {
+    if (!id) {
+        console.warn("updateCase called without id; skipping update.");
+        return null;
+    }
+
+    const { data, error } = await supabase
+        .from("cases")
+        .update(payload)
+        .eq("id", id)
+        .select();
+
+    if (error) {
+        throw error;
+    }
+
+    return Array.isArray(data) ? data[0] : data;
 }

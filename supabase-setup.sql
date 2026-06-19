@@ -969,6 +969,11 @@ CREATE TABLE IF NOT EXISTS cases (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+update cases
+set next_hearing_date = next_date
+where next_hearing_date is null
+and next_date is not null;
+
 SELECT * FROM cases;
 
 ALTER TABLE cases ENABLE ROW LEVEL SECURITY;

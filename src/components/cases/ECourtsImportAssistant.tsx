@@ -39,15 +39,15 @@ const caseTitleMatch =
     const caseTypeMatch =
         ecourtText.match(/Case Type[:\s]*([^\n]+)/i);
 
-const filingNumberMatch =
-    ecourtText.match(
-        /Filing Number\s+([0-9\/]+)/i
-    );
-
 const registrationNumberMatch =
-    ecourtText.match(
-        /Registration Number\s+([0-9\/]+)/i
-    );
+  ecourtText.match(
+      /Registration Number\s+([0-9\/]+)/i
+  );
+
+const filingNumberMatch =
+  ecourtText.match(
+      /Filing Number\s+([0-9\/]+)/i
+  );
 
 const courtNameMatch =
     ecourtText.match(

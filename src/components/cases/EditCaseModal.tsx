@@ -12,17 +12,40 @@ export default function EditCaseModal({
     onClose,
     onUpdated,
 }: Props) {
-    const [form, setForm] = useState({
-        case_title: caseData.case_title || "",
-        case_number: caseData.case_number || "",
-        court_name: caseData.court_name || "",
-        status: caseData.status || "active",
-        next_hearing_date:
-            caseData.next_hearing_date || "",
-        case_stage: caseData.case_stage || "",
-        description: caseData.description || "",
-        priority: caseData.priority || "normal",
-    });
+const formatDateForInput = (
+    date?: string | null
+) => {
+    if (!date) return "";
+
+    return date.slice(0, 10);
+};
+
+const [form, setForm] = useState({
+    case_title: caseData.case_title || "",
+    case_number: caseData.case_number || "",
+    court_name: caseData.court_name || "",
+    status: caseData.status || "active",
+
+    first_hearing_date:
+        formatDateForInput(
+            caseData.first_hearing_date
+        ),
+
+    next_hearing_date:
+        formatDateForInput(
+            caseData.next_hearing_date ||
+            caseData.next_date
+        ),
+
+    case_stage:
+        caseData.case_stage || "",
+
+    description:
+        caseData.description || "",
+
+    priority:
+        caseData.priority || "normal",
+});
 
     const [loading, setLoading] = useState(false);
 
@@ -30,7 +53,20 @@ export default function EditCaseModal({
         try {
             setLoading(true);
 
-            await updateCase(caseData.id, form);
+await updateCase(
+  caseData.id,
+  {
+    ...form,
+
+    first_hearing_date:
+      form.first_hearing_date ||
+      null,
+
+    next_hearing_date:
+      form.next_hearing_date ||
+      null,
+  }
+);
 
             onUpdated();
             onClose();
