@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 // import '@/styles/global.css';
 // 🔐 Auth
 import LoginPage from "@/pages/auth/LoginPage";
@@ -69,6 +69,7 @@ import PaymentFailed from "@/pages/PaymentFailed";
 import AffiliateDashboard from "@/pages/affiliate/AffiliateDashboard";
 import CreateCasePage from "@/pages/cases/CreateCasePage";
 import CaseDetailsPage from "@/pages/cases/CaseDetailsPage";
+import EditCasePage from "@/pages/cases/EditCasePage";
 
 // ❌ 404 Page (create if missing)
 const NotFound = () => <div>404 - Page Not Found</div>;
@@ -161,10 +162,6 @@ export default function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
-            <Route
-    path="/advocate/cases/create"
-    element={<CreateCasePage />}
-/>
 
 <Route
     path="/advocate/cases/:id"
@@ -174,20 +171,42 @@ export default function AppRoutes() {
                 path="/ecourts"
                 element={<ECourtsHubPage />}
             />
-            <Route
-                path="/cases/create"
-                element={
-                    <ProtectedRoute
-                        allowedRoles={[
-                            "advocate",
-                            "junior advocates",
-                            "staff(clerks)"
-                        ]}
-                    >
-                        <CreateCasePage />
-                    </ProtectedRoute>
-                }
-            />
+<Route
+    path="/advocate/cases/create"
+    element={
+        <ProtectedRoute
+            allowedRoles={[
+                "advocate",
+                "junior advocates",
+                "staff(clerks)",
+                "litigant",
+            ]}
+        >
+            <CreateCasePage />
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/advocate/cases/:id"
+    element={
+        <ProtectedRoute
+            allowedRoles={[
+                "advocate",
+                "junior advocates",
+                "staff(clerks)",
+                "litigant",
+            ]}
+        >
+            <CaseDetailsPage />
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/advocate/cases/:id/edit"
+    element={<EditCasePage />}
+/>
 
             <Route
                 path="/advocate/fees"

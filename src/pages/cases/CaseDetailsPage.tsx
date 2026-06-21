@@ -1,5 +1,5 @@
 import { useEffect, useState, MouseEvent } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { supabase } from "@/utils/supabase/supabase-client";
 
@@ -7,7 +7,6 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 
 import CaseTimeline from "@/components/cases/CaseTimeline";
 import DocumentUploader from "@/components/documents/DocumentUploader";
-import EditCaseModal from "@/components/cases/EditCaseModal";
 import CaseStatusBadge from "@/components/cases/CaseStatusBadge";
 import {
     searchByCNR,
@@ -20,15 +19,16 @@ import { addToGoogleCalendar } from "@/utils/google-calendar";
 import { openECourt } from "@/utils/ecourts";
 
 import { sendWhatsAppAPI } from "@/services/whats-app-service";
+import { formatDate } from "@/utils/date-formatter";
 
 export default function CaseDetailsPage() {
+    const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
     const [caseData, setCaseData] = useState<any>(null);
     const [client, setClient] = useState<any>(null);
 
     const [loading, setLoading] = useState(true);
-    const [showEdit, setShowEdit] = useState(false);
 
     useEffect(() => {
         if (!id) return;
@@ -178,11 +178,31 @@ const openJudgments = () => {
 
 <div>
     <p className="text-gray-500">
+        Registration Number
+    </p>
+
+    <p className="font-semibold">
+        {caseData.registration_number || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
         CNR Number
     </p>
 
     <p className="font-semibold">
         {caseData.cnr_number || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        Court Name
+    </p>
+
+    <p className="font-semibold">
+        {caseData.court_name || "-"}
     </p>
 </div>
 
@@ -195,6 +215,28 @@ const openJudgments = () => {
         {caseData.judge_name || "-"}
     </p>
 </div>
+
+<div>
+    <p className="text-gray-500">
+       First Hearing Date
+    </p>
+
+    <p className="font-semibold">
+        {caseData.first_hearing_date || "-"}
+    </p>
+</div>
+
+                                <div>
+                                    <p className="text-gray-500">
+                                        Next Hearing Date
+                                    </p>
+
+                                    <p className="font-semibold">
+                                        {formatDate(
+                                            caseData.next_hearing_date
+                                        )}
+                                    </p>
+                                </div>
 
 <div>
     <p className="text-gray-500">
@@ -218,6 +260,26 @@ const openJudgments = () => {
 
 <div>
     <p className="text-gray-500">
+        Petitioner Advocate
+    </p>
+
+    <p className="font-semibold">
+        {caseData.petitioner_addvocate_name || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
+        Respondent Advocate
+    </p>
+
+    <p className="font-semibold">
+        {caseData.respondent_addvocate_name || "-"}
+    </p>
+</div>
+
+<div>
+    <p className="text-gray-500">
         Under Act
     </p>
 
@@ -235,35 +297,7 @@ const openJudgments = () => {
         {caseData.under_sections || "-"}
     </p>
 </div>
-                                <div>
-                                    <p className="text-gray-500">
-                                        Case Number
-                                    </p>
 
-                                    <p className="font-semibold">
-                                        {caseData.case_number || "-"}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p className="text-gray-500">
-                                        Court
-                                    </p>
-
-                                    <p className="font-semibold">
-                                        {caseData.court_name || "-"}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p className="text-gray-500">
-                                        Case Stage
-                                    </p>
-
-                                    <p className="font-semibold">
-                                        {caseData.case_stage || "-"}
-                                    </p>
-                                </div>
 
                                 <div>
                                     <p className="text-gray-500">
@@ -274,31 +308,19 @@ const openJudgments = () => {
                                         {caseData.priority || "normal"}
                                     </p>
                                 </div>
-
-                                <div>
-                                    <p className="text-gray-500">
-                                        Next Hearing Date
-                                    </p>
-
-                                    <p className="font-semibold">
-                                        {caseData.next_date
-                                            ? new Date(caseData.next_date).toLocaleDateString()
-                                            : "-"}
-                                    </p>
-                                </div>
-
-                            </div>
+                           </div>
 
                         </div>
 
                         <div className="flex flex-wrap gap-3">
 
-                            <button
-                                onClick={() => setShowEdit(true)}
-                                className="bg-[#089CCE] text-white px-5 py-3 rounded-2xl font-semibold hover:bg-[#078bb8]"
-                            >
-                                Edit Case
-                            </button>
+<button
+    onClick={() =>
+        navigate(`/advocate/cases/${caseData.id}/edit`)
+    }
+>
+    Edit Case
+</button>
 
                             <button
                                 onClick={() => openECourt()}
@@ -514,14 +536,6 @@ Next Date: ${caseData.next_hearing_date || "-"
                 </div>
 
             </div>
-
-            {showEdit && (
-                <EditCaseModal
-                    caseData={caseData}
-                    onClose={() => setShowEdit(false)}
-                    onUpdated={loadCase}
-                />
-            )}
 
         </DashboardLayout>
     );

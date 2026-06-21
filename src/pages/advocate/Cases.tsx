@@ -25,6 +25,13 @@ export default function Cases() {
         loadCases();
     }, []);
 
+    const editCase = async (id: string) => {
+        const newTitle = prompt("New title:");
+        if (!newTitle) return;
+        await supabase.from("cases").update({ title: newTitle }).eq("id", id);
+        loadCases();
+    };
+
     return (
         <div>
             <h2>Cases</h2>
@@ -35,6 +42,7 @@ export default function Cases() {
             {cases.map((c) => (
                 <div key={c.id}>
                     {c.title}
+                    <button onClick={() => editCase(c.id)}>Edit</button>
                     <button onClick={() => deleteCase(c.id)}>Delete</button>
                 </div>
             ))}

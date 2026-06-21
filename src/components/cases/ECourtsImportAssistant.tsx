@@ -120,8 +120,10 @@ const underSections =
         respondent: respondentMatch?.[1]?.trim() || "",
                 underActs: underActs || "",
                 underSections: underSections || "",
-        clientName: petitionerMatch?.[1]?.trim() || "",
-        partyType: "Plaintiff",
+clientName:
+  petitionerMatch?.[1]?.trim() || "",
+
+partyType: "Plaintiff",
     };
 
     console.log("PARSED DATA:", parsedData);

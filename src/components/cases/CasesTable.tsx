@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import StageBadge from "./StageBadge";
+import { formatDate } from "@/utils/date-formatter";
+
 
 export default function CasesTable({
     cases,
@@ -9,40 +12,55 @@ export default function CasesTable({
         <table className="w-full border">
             <thead>
                 <tr className="bg-gray-100">
-                    <th>Case Title</th>
-                    <th>Court</th>
-                    <th>Case No.</th>
-                    <th>Status</th>
-                    <th>Action</th>
+<th>Case Title</th>
+<th>Case Number</th>
+<th>Client Side</th>
+<th>Stage</th>
+<th>Next Hearing</th>
+<th>Actions</th>
                 </tr>
             </thead>
 
             <tbody>
                 {cases?.map((c: any) => (
                     <tr key={c.id} className="border-t">
-                        <td>{c.case_title}</td>
-                        <td>{c.court_name}</td>
-                        <td>{c.case_number}</td>
-                        <td>{c.status}</td>
+<td>{c.case_title}</td>
+<td>{c.case_number}</td>
+<td>{c.client_side}</td>
+<td>
+    <StageBadge stage={c.case_stage} />
+</td>
 
+<td>
+    {formatDate(
+        c.next_hearing_date
+    )}
+</td>
                         <td className="space-x-2">
-                            <Link
-                                to={`/case/${c.id}`}
-                                className="text-blue-600"
-                            >
-                                Open
-                            </Link>
 
-                            <button onClick={() => onEdit(c)}>
-                                Edit
-                            </button>
+<Link
+    to={`/advocate/cases/${c.id}`}
+    className="px-3 py-1 rounded-lg bg-blue-50 text-blue-600"
+>
+    Open
+</Link>
 
-                            <button
-                                onClick={() => onDelete(c.id)}
-                                className="text-red-500"
-                            >
-                                Delete
-                            </button>
+<button
+    onClick={() =>
+        onEdit(c)
+    }
+    className="px-3 py-1 rounded-lg bg-amber-50 text-amber-600"
+>
+ Edit
+</button>
+
+<button
+    onClick={() =>
+        onDelete(c.id)
+    }
+>
+    Delete
+</button>
                         </td>
                     </tr>
                 ))}

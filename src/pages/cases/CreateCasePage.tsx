@@ -7,6 +7,7 @@ import { createCase } from "@/services/case-service";
 import ECourtsImportAssistant from "@/components/cases/ECourtsImportAssistant";
 
 export default function CreateCasePage() {
+     console.log("CREATE CASE PAGE LOADED");
     const navigate = useNavigate();
 const [clientId, setClientId] = useState<string>("");
 const [clients, setClients] = useState<Array<any>>([]);
@@ -34,6 +35,21 @@ const [caseType, setCaseType] = useState("");
 const [courtName, setCourtName] = useState("");
 const [cnrNumber, setCnrNumber] = useState("");
 const [nextHearingDate, setNextHearingDate] = useState("");
+const [clientSide, setClientSide] =
+  useState<"Plaintiff" | "Defendant">("Plaintiff");
+
+// additional form fields
+const [priority, setPriorityState] = useState<string>("normal");
+const [description, setDescription] = useState<string>("");
+const [notes, setNotes] = useState<string>("");
+
+useEffect(() => {
+    if (clientSide === "Plaintiff") {
+        setClientName(petitioner);
+    } else {
+        setClientName(respondent);
+    }
+}, [clientSide, petitioner, respondent]);
 
 function formatDate(date: Date) {
 
@@ -111,43 +127,13 @@ setNextHearingDate(
     setUnderSections(
         data.underSections || ""
     );
-
-    setClientName(
-        data.clientName || ""
-    );
-
-    if (
-        data.clientName &&
-        data.clientName === data.petitioner
-    ) {
-        setPartyType("Plaintiff");
-    } else if (
-        data.clientName &&
+    const detectedSide =
         data.clientName === data.respondent
-    ) {
-        setPartyType("Defendant");
-    } else {
-        setPartyType(
-            data.partyType || "Plaintiff"
-        );
-        if (
-    data.clientName &&
-    data.clientName === data.petitioner
-) {
-    setPartyType("Plaintiff");
-}
-else if (
-    data.clientName &&
-    data.clientName === data.respondent
-) {
-    setPartyType("Defendant");
-}
-else {
-    setPartyType(
-        data.partyType || "Plaintiff"
-    );
-}
-    }
+            ? "Defendant"
+            : "Plaintiff";
+
+    setClientSide(detectedSide);
+    setPartyType(detectedSide);
 
     alert("Case imported successfully");
 };
@@ -181,9 +167,15 @@ const payload = {
 
     cnr_number: cnrNumber,
 
-    first_hearing_date: firstHearingDate,
+first_hearing_date:
+    firstHearingDate?.trim()
+        ? firstHearingDate
+        : null,
 
-    next_hearing_date: nextHearingDate,
+next_hearing_date:
+    nextHearingDate?.trim()
+        ? nextHearingDate
+        : null,
 
     judge_name: judgeName,
 
@@ -199,7 +191,7 @@ const payload = {
 
     under_sections: underSections,
 
-    client_side: partyType,
+    client_side: clientSide,
 
     client_id:
     clientId && clientId.trim() !== ""
@@ -248,6 +240,11 @@ const payload = {
         }
     }
 
+    function setPriority(value: string): void {
+        // simple wrapper to update priority state from select input
+        setPriorityState(value);
+    }
+
     return (
         <DashboardLayout>
             <div className="max-w-5xl mx-auto">
@@ -274,19 +271,17 @@ const payload = {
                 </div>
 
                 {/* MAIN CARD */}
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col">
 
                     <h2 className="text-2xl font-bold mb-8">
                         New Case Details
                     </h2>
 
-<ECourtsImportAssistant
-    onImport={handleImportedData}
-/>
+<ECourtsImportAssistant onImport={handleImportedData} />
 
                     {/* FORM */}
-{/* FORM */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    {/* FORM */}
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 items-stretch">
 
     {/* CASE TITLE */}
     <div className="md:col-span-2">
@@ -485,49 +480,117 @@ const payload = {
     </div>
 
     {/* CLIENT */}
-    <div>
-        <label className="block mb-2 font-semibold">
-            Client
-        </label>
+<div className="space-y-2 md:col-span-2">
+   <label className="block mb-2 font-semibold">
+    My Client Is
+  </label>
 
-        <input
-            value={clientName}
-            onChange={(e) => setClientName(e.target.value)}
-            className="w-full border rounded-2xl px-4 py-3"
-            placeholder="Your Client Name"
-        />
-    </div>
+  <div className="flex gap-6">
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input
+        type="radio"
+        name="clientSide"
+        value="Plaintiff"
+        checked={clientSide === "Plaintiff"}
+        onChange={() => {
+          setClientSide("Plaintiff");
 
+          setClientName(petitioner);
+
+          setPartyType("Plaintiff");
+          
+        }}
+      />
+
+      Plaintiff / Petitioner
+    </label>
+
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input
+        type="radio"
+        name="clientSide"
+        value="Defendant"
+        checked={clientSide === "Defendant"}
+        onChange={() => {
+          setClientSide("Defendant");
+
+          setClientName(respondent);
+
+          setPartyType("Defendant");
+        }}
+      />
+
+      Defendant / Respondent
+    </label>
+  </div>
+
+    
     {/* PARTY TYPE */}
     <div>
         <label className="block mb-2 font-semibold">
             Party Type
         </label>
 
+
 <select
     value={partyType}
     onChange={(e) =>
         setPartyType(e.target.value)
     }
+             className="w-full border rounded-2xl px-4 py-3"
+        >
+ <option value="Individual">
+        Individual
+    </option>
+
+
+    <option value="Company">
+        Company
+    </option>
+
+
+    <option value="Government">
+        Government
+    </option>
+
+
+    <option value="Partnership">
+        Partnership
+    </option>
+
+
+    <option value="Society">
+        Society
+    </option>
+        </select>
+    </div>    
+    
+        <div>
+         <label className="block mb-2 font-semibold">
+            priority</label>
+        <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
             className="w-full border rounded-2xl px-4 py-3"
         >
-            <option value="Plaintiff">Plaintiff</option>
-            <option value="Defendant">Defendant</option>
-            <option value="Petitioner">Petitioner</option>
-            <option value="Respondent">Respondent</option>
+            <option value="low">Low</option>
+            <option value="normal">Normal</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
         </select>
     </div>
 
+
     {/* ACT */}
     <div>
-        <label className="block mb-2 font-semibold">
+       <label className="block mb-2 font-semibold">
             Under Act(s)
         </label>
 
         <input
             value={underActs}
             onChange={(e) => setUnderActs(e.target.value)}
-            className="w-full border rounded-2xl px-4 py-3"
+              className="w-full border rounded-2xl px-4 py-3"
             placeholder="CODE OF CIVIL PROCEDURE"
         />
     </div>
@@ -541,14 +604,51 @@ const payload = {
         <input
             value={underSections}
             onChange={(e) => setUnderSections(e.target.value)}
-            className="w-full border rounded-2xl px-4 py-3"
+              className="w-full border rounded-2xl px-4 py-3"
             placeholder="34"
         />
     </div>
 
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <div className="flex flex-col">
+        <label className="block text-sm font-medium mb-2">
+            Description
+        </label>
+
+        <textarea
+            value={description}
+            onChange={(e) =>
+                setDescription(e.target.value)
+            }
+            rows={8}
+            className="w-full border rounded-xl p-3 h-40 resize-none"
+            placeholder="Case Description"
+        />
+    </div>
+
+    <div className="flex flex-col">
+        <label className="block text-sm font-medium mb-2">
+            Notes
+        </label>
+
+        <textarea
+            value={notes}
+            onChange={(e) =>
+                setNotes(e.target.value)
+            }
+            rows={8}
+            className="w-full border rounded-xl p-3 h-40 resize-none"
+            placeholder="Internal Notes"
+        />
+    </div>
+
 </div>
+        </div>
+
                     {/* ACTION */}
-                    <div className="mt-10">
+                    <div className="mt-10 md:col-span-2">
                         <button
                             onClick={handleCreate}
                             disabled={loading}
@@ -559,6 +659,7 @@ const payload = {
                     </div>
 
                 </div>
+            </div>
             </div>
         </DashboardLayout>
     );
@@ -606,3 +707,14 @@ async function updateCase(
 
     return Array.isArray(data) ? data[0] : data;
 }
+
+let globalLoadingState = false;
+
+function setLoading(value: boolean) {
+    globalLoadingState = value;
+    console.warn(
+        "setLoading called outside of React component context. " +
+        "This helper updates a module-level loading flag only."
+    );
+}
+
