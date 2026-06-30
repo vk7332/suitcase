@@ -45,8 +45,10 @@ const { data, error } = await supabase
     .select("*")
     .eq("created_by", user.id)
     .order("created_at", {
-        ascending: false
+        ascending: false,
     });
+
+console.log("CASES FROM DATABASE:", data);
 
 if (error) {
     throw error;

@@ -580,7 +580,6 @@ next_hearing_date:
         </select>
     </div>
 
-
     {/* ACT */}
     <div>
        <label className="block mb-2 font-semibold">

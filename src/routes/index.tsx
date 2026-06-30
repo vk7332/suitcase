@@ -188,22 +188,6 @@ export default function AppRoutes() {
 />
 
 <Route
-    path="/advocate/cases/:id"
-    element={
-        <ProtectedRoute
-            allowedRoles={[
-                "advocate",
-                "junior advocates",
-                "staff(clerks)",
-                "litigant",
-            ]}
-        >
-            <CaseDetailsPage />
-        </ProtectedRoute>
-    }
-/>
-
-<Route
     path="/advocate/cases/:id/edit"
     element={<EditCasePage />}
 />

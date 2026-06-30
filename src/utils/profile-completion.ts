@@ -13,8 +13,10 @@ export type ProfileCompletionProfile = {
 };
 
 export function calculateProfileCompletion(
-    profile: ProfileCompletionProfile
+    profile?: ProfileCompletionProfile | null
 ): number {
+    if (!profile) return 0;
+
     const fields = [
         profile.full_name,
         profile.phone,
@@ -40,7 +42,7 @@ export function calculateProfileCompletion(
 }
 
 export function isProfileComplete(
-    profile: ProfileCompletionProfile
+    profile?: ProfileCompletionProfile | null
 ): boolean {
     return calculateProfileCompletion(profile) >= 80;
 }

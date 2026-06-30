@@ -251,6 +251,19 @@ ADD COLUMN final_hash text,
 ADD COLUMN locked boolean DEFAULT false,
 ADD COLUMN locked_at timestamp;
 
+ALTER TABLE documents
+ADD COLUMN IF NOT EXISTS category text DEFAULT 'Miscellaneous',
+ADD COLUMN IF NOT EXISTS version integer DEFAULT 1;
+
+ALTER TABLE documents
+ADD COLUMN IF NOT EXISTS category text DEFAULT 'Miscellaneous';
+
+ALTER TABLE documents
+ADD COLUMN IF NOT EXISTS version integer DEFAULT 1;
+
+ALTER TABLE documents
+ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
+
 alter table documents enable row level security;
 
 alter table documents enable row level security;
@@ -363,10 +376,51 @@ create table case_timeline (
 create index idx_case_timeline_case_id on case_timeline(case_id);
 create index idx_case_timeline_hearing_date on case_timeline(hearing_date);
 
+ALTER TABLE hearings
+ADD COLUMN outcome text;
+
+ALTER TABLE hearings
+ADD COLUMN next_date date;
+
 -- Removed redundant ALTER TABLE clients ADD COLUMN email statement (already defined in CREATE TABLE clients)
 -- create index idx_clients_user_id on clients(user_id); -- Commented out to prevent error if column does not exist
 
+CREATE TABLE hearing_audit_logs (
 
+    id UUID PRIMARY KEY
+        DEFAULT gen_random_uuid(),
+
+    hearing_id UUID NOT NULL,
+
+    case_id UUID NOT NULL,
+
+    action TEXT NOT NULL,
+
+    old_value TEXT,
+
+    new_value TEXT,
+
+    created_by UUID,
+
+    created_at TIMESTAMP
+        DEFAULT NOW()
+
+);
+
+ALTER TABLE hearing_audit_logs
+ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "audit_logs_insert"
+ON hearing_audit_logs
+FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+CREATE POLICY "audit_logs_select"
+ON hearing_audit_logs
+FOR SELECT
+TO authenticated
+USING (true);
 
 create table invitations (
   id uuid primary key default gen_random_uuid(),
@@ -973,6 +1027,12 @@ update cases
 set next_hearing_date = next_date
 where next_hearing_date is null
 and next_date is not null;
+
+ALTER TABLE cases
+ADD COLUMN disposed_date DATE;
+
+ALTER TABLE cases
+ADD COLUMN disposal_reason text;
 
 SELECT * FROM cases;
 

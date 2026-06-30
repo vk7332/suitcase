@@ -45,22 +45,25 @@ useEffect(() => {
                         bar_council
                     `)
                     .eq("id", user.id)
-                    .single();
+                    .maybeSingle();
 
                 if (error) {
                     console.error("Profile load failed:", error);
                 }
 
-                setProfile(profileData);
+                setProfile(profileData ?? null);
+            } else {
+                setProfile(null);
             }
         } catch (err) {
             console.error(err);
+            setProfile(null);
         } finally {
             setLoading(false);
         }
     };
 
-    loadUser();
+    void loadUser();
 }, []);
 
 const handleLogout = async () => {

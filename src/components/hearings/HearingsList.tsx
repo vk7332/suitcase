@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react";
 
 import {
-    getHearings,
+    getHearings, 
     deleteHearing,
 } from "@/services/hearing-service";
 
 import AddHearingModal from "./AddHearingModal";
+import EditHearingModal from "./EditHearingModal";
 
 type Props = {
     caseId: string;
+    caseStatus?: string;
+    onChanged?: () => void;
 };
 
 export default function HearingsList({
     caseId,
+    caseStatus,
 }: Props) {
     const [hearings, setHearings] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-
+    const [selectedHearing, setSelectedHearing] = useState<any>(null);
+    const [editingHearing, setEditingHearing] =
+    useState<any>(null);
+    const [showEdit, setShowEdit] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
 
     useEffect(() => {
@@ -35,6 +42,20 @@ export default function HearingsList({
         } finally {
             setLoading(false);
         }
+    };
+
+    const formatDate = (value?: string | Date | null): string => {
+        if (!value) return "-";
+
+        const date = value instanceof Date ? value : new Date(value);
+
+        if (Number.isNaN(date.getTime())) return "-";
+
+        return new Intl.DateTimeFormat("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        }).format(date);
     };
 
     const handleDelete = async (id: string) => {
@@ -94,14 +115,14 @@ export default function HearingsList({
                     </p>
                 </div>
 
-                <button
-                    onClick={() =>
-                        setShowAdd(true)
-                    }
-                    className="bg-[#089CCE] text-white px-5 py-3 rounded-2xl font-bold hover:bg-[#078bb8]"
-                >
-                    Add Hearing
-                </button>
+{caseStatus !== "disposed" && (
+    <button
+        onClick={() => setShowAdd(true)}
+        className="bg-[#089CCE] text-white px-5 py-3 rounded-2xl font-bold hover:bg-[#078bb8]"
+    >
+        Add Hearing
+    </button>
+)}
 
             </div>
 
@@ -130,117 +151,66 @@ export default function HearingsList({
                     {hearings.map((hearing) => (
                         <div
                             key={hearing.id}
-                            className="bg-white border border-gray-100 rounded-3xl shadow-sm p-6"
+                            className="bg-white border border-gray-200 rounded-2xl px-5 py-4 hover:shadow-md transition"
                         >
 
-                            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+                            <div className="flex items-start justify-between">
 
-                                {/* LEFT */}
+                                <div className="flex-1">
 
-                                <div className="space-y-3 flex-1">
+                                    <div className="flex items-center gap-3">
 
-                                    <div className="flex items-center gap-3 flex-wrap">
-
-                                        <h3 className="text-lg font-bold text-gray-900">
-
-                                            {new Date(
-                                                hearing.hearing_date
-                                            ).toLocaleDateString()}
-
-                                        </h3>
+                                        <span className="font-bold text-lg">
+                                            {formatDate(hearing.hearing_date)}
+                                        </span>
 
                                         <span
-                                            className={`px-3 py-1 rounded-full border text-xs font-bold ${getStatusColor(
+                                            className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-semibold ${getStatusColor(
                                                 hearing.status
                                             )}`}
                                         >
-                                            {(
-                                                hearing.status ||
-                                                "scheduled"
-                                            ).toUpperCase()}
+                                            {hearing.status || "Unknown"}
                                         </span>
-
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                    <div className="mt-2 flex flex-wrap gap-8 text-sm">
 
                                         <div>
-                                            <p className="text-gray-500">
-                                                Stage
-                                            </p>
 
-                                            <p className="font-semibold">
-                                                {hearing.stage || "-"}
-                                            </p>
+                                            <p className="text-gray-400">Stage</p>
+                                            <p className="font-semibold">{hearing.stage}</p>
+
                                         </div>
 
                                         <div>
-                                            <p className="text-gray-500">
-                                                Created
+
+                                            <p className="text-gray-400">Notes</p>
+                                            <p className="font-semibold">{hearing.notes || "-"}</p>
+
+                                        </div>
+
+                                        <div>
+
+                                            <p className="text-gray-400">Created</p>
+                                            <p className="font-semibold">
+                                                {formatDate(hearing.created_at)}
                                             </p>
 
-                                            <p className="font-semibold">
-                                                {new Date(
-                                                    hearing.created_at
-                                                ).toLocaleDateString()}
-                                            </p>
                                         </div>
 
                                     </div>
 
-                                    {hearing.notes && (
-                                        <div className="pt-3 border-t border-gray-100">
-
-                                            <p className="text-gray-500 text-sm mb-1">
-                                                Notes
-                                            </p>
-
-                                            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                                                {hearing.notes}
-                                            </p>
-
-                                        </div>
-                                    )}
-
                                 </div>
 
-                                {/* ACTIONS */}
-
-                                <div className="flex gap-3">
-
-                                    <button
-                                        onClick={() =>
-                                            handleDelete(
-                                                hearing.id
-                                            )
-                                        }
-                                        className="bg-red-50 text-red-600 px-4 py-2 rounded-2xl font-semibold hover:bg-red-100"
-                                    >
-                                        Delete
-                                    </button>
-
+                                <div className="flex gap-2">
+                                    <button className="btn-edit">Edit</button>
+                                    <button className="btn-delete">Delete</button>
                                 </div>
-
                             </div>
-
                         </div>
                     ))}
-
                 </div>
             )}
-
-            {/* MODAL */}
-
-            {showAdd && (
-                <AddHearingModal
-                    caseId={caseId}
-                    onClose={() =>
-                        setShowAdd(false)
-                    }
-                    onCreated={loadHearings}
-                />
-            )}
-
         </div>
     );
 }
